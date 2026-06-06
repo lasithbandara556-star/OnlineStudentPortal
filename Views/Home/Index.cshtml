@@ -1,0 +1,160 @@
+﻿@model List<TutionApp.Models.Student>
+
+@{
+    ViewData["Title"] = "Tution Internal Tracker";
+    var totalStudents = Model.Count;
+    var paidStudents = Model.Count(s => s.IsPaid);
+    var totalIncome = Model.Where(s => s.IsPaid).Sum(s => s.MonthlyFee);
+}
+
+<style>
+    .gradient-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+    }
+    .gradient-card-add {
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        border-left: 5px solid #218838;
+    }
+    .gradient-search {
+        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        border: 1px solid #7dd3fc;
+    }
+    .badge-paid { background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); }
+    .badge-pending { background: linear-gradient(135deg, #ffc107 0%, #d39e00 100%); color: #212529; }
+    .badge-sent { background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); }
+    .badge-notset { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); }
+    .badge-active { background: linear-gradient(135deg, #20c997 0%, #158c6c 100%); }
+    .badge-noaccess { background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%); }
+</style>
+
+<div class="container mt-5">
+    <div class="text-center gradient-header p-4 rounded shadow mb-4">
+        <h2 class="fw-bold">මගේ පෞද්ගලික සිස්ටම් එක (Internal Tracker)</h2>
+        <p class="mb-0 text-white-50">ළමයින්ට පෙනෙන්නේ නැත - පෞද්ගලික සටහන් සඳහා පමණි</p>
+    </div>
+
+    <div class="card shadow p-4 mb-4 gradient-card-add">
+        <h5 class="text-success mb-3"><b>+ අලුත් ළමයෙක් ඇතුළත් කරන්න</b></h5>
+        <form asp-action="AddStudent" method="post" class="row g-3">
+            <div class="col-md-2">
+                <input type="text" name="code" class="form-control" placeholder="Student Code" required />
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="name" class="form-control" placeholder="ළමයාගේ නම" required />
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="address" class="form-control" placeholder="ලිපිනය (Address)" required />
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="mobile" class="form-control" placeholder="දුරකථනය" required />
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="batch" class="form-control" placeholder="Batch (Eg: Online 27)" required />
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="fee" class="form-control" placeholder="ගාස්තුව (Rs.)" value="3000" required />
+            </div>
+            <div class="col-12 text-end mt-3">
+                <button type="submit" class="btn btn-success px-4 shadow-sm">Add Student</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card shadow p-3 mb-4 gradient-search">
+        <div class="row align-items-center">
+            <div class="col-md-9">
+                <input type="text" id="searchInput" class="form-control bg-white" placeholder="නම, Code එක, ලිපිනය හෝ Batch එක ටයිප් කර සොයන්න..." onkeyup="searchStudents()" />
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary w-100 shadow-sm" onclick="searchStudents()">🔍 Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow p-4 mb-4">
+        <h4 class="mb-3 text-secondary">සිසුන්ගේ නාමලේඛනය සහ තත්ත්වය</h4>
+        <table class="table table-hover table-bordered shadow-sm" id="studentTable">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Student Code</th>
+                    <th>Student Name</th>
+                    <th>Address</th>
+                    <th>Mobile Number</th>
+                    <th>Batch</th>
+                    <th>Payment Status</th>
+                    <th>Tute Sent</th>
+                    <th>Website Access</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model)
+                {
+                    <tr>
+                        <td class="text-center"><b>@student.StudentCode</b></td>
+                        <td>@student.StudentName</td>
+                        <td>@student.Address</td>
+                        <td class="text-center">@student.MobileNumber</td>
+                        <td class="text-center"><span class="badge bg-secondary p-2">@student.Batch</span></td>
+                        <td class="text-center">
+                            <input type="checkbox" checked="@student.IsPaid" onclick="updateStatus(@student.Id, 'paid', this.checked)" class="form-check-input me-1" /> 
+                            <span class="badge p-2 @(student.IsPaid ? "badge-paid" : "badge-pending")">@(student.IsPaid ? "Paid" : "Pending")</span>
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" checked="@student.HasTute" onclick="updateStatus(@student.Id, 'tute', this.checked)" class="form-check-input me-1" /> 
+                            <span class="badge p-2 @(student.HasTute ? "badge-sent" : "badge-notset")">@(student.HasTute ? "Sent" : "Not Sent")</span>
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" checked="@student.HasWebAccess" onclick="updateStatus(@student.Id, 'web', this.checked)" class="form-check-input me-1" /> 
+                            <span class="badge p-2 @(student.HasWebAccess ? "badge-active" : "badge-noaccess")">@(student.HasWebAccess ? "Active" : "No Access")</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-light p-3 text-center border-start border-primary border-4 shadow-sm">
+                <h6 class="text-muted">මුළු සිසුන් ගණන</h6>
+                <h3 class="fw-bold text-primary">@totalStudents</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light p-3 text-center border-start border-success border-4 shadow-sm">
+                <h6 class="text-muted">මුදල් ගෙවූ සිසුන්</h6>
+                <h3 class="fw-bold text-success">@paidStudents</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light p-3 text-center border-start border-warning border-4 shadow-sm">
+                <h6 class="text-muted">මේ මාසයේ මුළු ආදායම</h6>
+                <h3 class="fw-bold text-warning">Rs. @totalIncome.ToString("N2")</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateStatus(id, type, val) {
+        fetch(`/Home/UpdateStatus?id=${id}&type=${type}&val=${val}`, { method: 'POST' })
+        .then(() => location.reload());
+    }
+
+    function searchStudents() {
+        var input = document.getElementById("searchInput");
+        var filter = input.value.toLowerCase();
+        var table = document.getElementById("studentTable");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 1; i < tr.length; i++) {
+            var rowText = tr[i].textContent || tr[i].innerText;
+            if (rowText.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+</script>
