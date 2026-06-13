@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prabath Ariyasinghe - ArtofAccounting.lk Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+Sinhala:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0c14;
+            --bg-secondary: rgba(20, 26, 42, 0.6);
+            --bg-card: rgba(24, 32, 51, 0.65); /* වීදුරු වැනි පෙනුම සඳහා */
+            --bg-card-hover: rgba(35, 46, 74, 0.8);
+            --bg-input: rgba(14, 18, 30, 0.8);
+            --accent-blue: #5b9cf6;
+            --accent-cyan: #22d3ee;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-red: #f87171;
+            --accent-purple: #a78bfa;
+            --accent-pink: #f472b6;
+            --text-primary: #eef2ff;
+            --text-secondary: #b8c4e0;
+            --text-muted: #6b7a9e;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-medium: rgba(255,255,255,0.12);
+        }
+
+        /* LOGIN OVERLAY - ENHANCED */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0a0c14 0%, #0f1423 50%, #1a1530 100%);
+            z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        /* Animated background blobs for login */
+        #loginOverlay::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(91, 156, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(34, 211, 238, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(52, 211, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 20%, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
+            animation: blobShift 15s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes blobShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, 30px) scale(1.1); }
+        }
+
+        /* Login box styling */
+        .login-box {
+            background: linear-gradient(135deg, rgba(24, 32, 51, 0.85) 0%, rgba(35, 46, 74, 0.75) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 60px 50px;
+            border-radius: 25px;
+            width: 420px;
+            text-align: center;
+            border: 1px solid rgba(91, 156, 246, 0.4);
+            box-shadow: 
+                0 25px 80px rgba(91, 156, 246, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Gradient border effect */
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #5b9cf6, #22d3ee, #34d399, #fbbf24, #a78bfa, #5b9cf6);
+            border-radius: 25px;
+            z-index: -1;
+            opacity: 0;
+            animation: gradientShift 4s infinite ease-in-out;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.3; }
+        }
+
+        .login-box h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #22d3ee, #5b9cf6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .login-box p {
+            color: #a7bfd4;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-input-group {
+            margin-bottom: 22px;
+            text-align: left;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .login-input-group:nth-child(1) { animation-delay: 0.4s; }
+        .login-input-group:nth-child(2) { animation-delay: 0.5s; }
+
+        .login-input-group label {
+            display: block;
+            background: linear-gradient(90deg, #22d3ee, #5b9cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .login-input-group input {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(14, 18, 30, 0.9) 0%, rgba(20, 26, 42, 0.85) 100%) !important;
+            border: 1.5px solid rgba(91, 156, 246, 0.3) !important;
+            color: #eef2ff;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-input-group input::placeholder {
+            color: #5a6b87;
+        }
+
+        .login-input-group input:focus {
+            border-color: #22d3ee !important;
+            box-shadow: 
+                0 0 0 3px rgba(34, 211, 238, 0.1),
+                inset 0 1px 3px rgba(91, 156, 246, 0.15) !important;
+            outline: none;
+            background: linear-gradient(135deg, rgba(14, 18, 30, 1) 0%, rgba(20, 26, 42, 1) 100%) !important;
+        }
+
+        .login-input-group input:hover {
+            border-color: #5b9cf6 !important;
+            background: linear-gradient(135deg, rgba(14, 18, 30, 0.95) 0%, rgba(20, 26, 42, 0.9) 100%) !important;
+        }
+
+        /* Login button */
+        #loginBtn {
+            width: 100%;
+            background: linear-gradient(135deg, #5b9cf6 0%, #22d3ee 50%, #34d399 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out 0.6s both;
+        }
+
+        #loginBtn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        #loginBtn:hover::before {
+            left: 100%;
+        }
+
+        #loginBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
+        }
+
+        #loginBtn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Error message */
+        .login-error {
+            color: #fca5a5;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: none;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(251, 113, 133, 0.1) 100%);
+            border-left: 4px solid #f87171;
+            border-radius: 8px;
+            animation: slideInError 0.3s ease-out;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInError {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Demo credentials info */
+        .login-demo-info {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(91, 156, 246, 0.2);
+            animation: fadeIn 0.8s ease-out 0.7s both;
+        }
+
+        .login-demo-info p {
+            font-size: 0.85rem;
+            color: #7a8ca0;
+            margin-bottom: 12px;
+        }
+
+        .login-demo-creds {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 14px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .login-demo-creds code {
+            display: block;
+            color: #34d399;
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+        }
+
+        /* Hidden initially */
+        #mainContent { display: none; }
+        
+        /* Logout Button */
+        .logout-btn {
+            background: linear-gradient(135deg, #f87171, #fb7185) !important;
+            border: none !important;
+            color: #fff !important;
+            padding: 8px 16px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            border-radius: 6px !important;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(248, 113, 113, 0.3);
+        }
+
+        /* Notification Toast Style */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+        .toast-msg {
+            background: #1e293b; color: #fbbf24; padding: 15px 20px;
+            border-left: 5px solid #fbbf24; border-radius: 8px;
+            margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: flex; align-items: center; gap: 10px; font-size: 13px;
+        }
+
+        * { box-sizing: border-box; }
+        html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', 'Noto Sans Sinhala', sans-serif;
+            font-size: 14px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ══ ANIMATED BACKGROUND BLOBS ══ */
+        .bg-animations {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.45;
+            animation: floatAnimation 20s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, rgba(91,156,246,0.8) 0%, transparent 80%);
+            animation-duration: 18s;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -5%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(167,139,250,0.7) 0%, transparent 80%);
+            animation-duration: 25s;
+            animation-delay: -4s;
+        }
+
+        .blob-3 {
+            top: 35%;
+            left: 40%;
+            width: 35vw;
+            height: 35vw;
+            background: radial-gradient(circle, rgba(34,211,238,0.6) 0%, transparent 80%);
+            animation-duration: 15s;
+            animation-delay: -8s;
+        }
+
+        @keyframes floatAnimation {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, 15%) scale(1.1); }
+            100% { transform: translate(-8%, -10%) scale(0.9); }
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        .master-header {
+            background: linear-gradient(135deg, rgba(23, 30, 48, 0.75) 0%, rgba(31, 45, 72, 0.75) 50%, rgba(23, 30, 48, 0.75) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(91,156,246,0.25);
+            border-radius: 16px;
+            padding: 28px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .master-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #5b9cf6, #22d3ee, #a78bfa, transparent);
+        }
+        .master-header h2 { font-size: 1.6rem; font-weight: 700; color: #eef2ff; margin: 0; }
+        .master-header p { color: #8fa4c8; margin: 6px 0 0; font-size: 0.85rem; }
+
+        .pro-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 20px 22px;
+            transition: all 0.3s ease;
+        }
+        .pro-card:hover { 
+            border-color: rgba(255,255,255,0.18); 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .pro-card.accent-green { border-left: 3px solid var(--accent-green); }
+        .pro-card.accent-amber { border-left: 3px solid var(--accent-amber); }
+        .pro-card.accent-cyan  { border-left: 3px solid var(--accent-cyan); }
+        .pro-card.accent-blue  { border-left: 3px solid var(--accent-blue); }
+        .pro-card.accent-red   { border-left: 3px solid var(--accent-red); }
+        .pro-card.accent-purple{ border-left: 3px solid var(--accent-purple); }
+
+        .card-title { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+        .card-title.green  { color: var(--accent-green); }
+        .card-title.amber  { color: var(--accent-amber); }
+        .card-title.cyan   { color: var(--accent-cyan); }
+        .card-title.blue   { color: var(--accent-blue); }
+        .card-title.red    { color: var(--accent-red); }
+        .card-title.purple { color: var(--accent-purple); }
+
+        .month-bar {
+            background: rgba(22, 30, 52, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(167,139,250,0.25);
+            border-radius: 12px;
+            padding: 14px 20px;
+        }
+
+        .form-control, .form-select {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-medium) !important;
+            border-radius: 8px !important;
+            color: var(--text-primary) !important;
+            font-size: 13px;
+            height: 38px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2) !important;
+            background: rgba(7, 10, 18, 0.9) !important;
+        }
+        .form-control::placeholder { color: var(--text-muted) !important; }
+
+        .btn-pro {
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 7px 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-pro:active { transform: scale(0.97); }
+        .btn-pro.green  { background: var(--accent-green); color: #fff; }
+        .btn-pro.amber  { background: var(--accent-amber); color: #000; }
+        .btn-pro.blue   { background: var(--accent-blue); color: #fff; }
+        .btn-pro.red    { background: transparent; color: var(--accent-red); border: 1px solid rgba(239,68,68,0.3); }
+        .btn-pro.ghost  { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-medium); }
+        .btn-pro.ghost:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        
+        .btn-wa-action {
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 6px;
+            border: none;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            transition: transform 0.1s;
+        }
+        .btn-wa-action:active { transform: scale(0.95); }
+        .btn-wa-action.wa-pay { background: #128C7E; }
+        .btn-wa-action.wa-web { background: #0070f3; }
+        .btn-wa-action.wa-jpg { background: #7c3aed; }
+        .btn-wa-action.wa-send-jpg { background: #db2777; }
+        .btn-wa-action.wa-edit { background: #fbbf24; color: #000; }
+        .btn-wa-action.wa-delete { background: #f87171; color: #fff; font-weight: 600; border: 1px solid #fb7185; }
+
+        .pro-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 6px; font-size: 11px; font-weight: 600; padding: 3px 9px; }
+        .pro-badge.paid    { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+        .pro-badge.pending { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+        .pro-badge.active  { background: rgba(34,211,238,0.15); color: #22d3ee; border: 1px solid rgba(34,211,238,0.2); }
+        .pro-badge.noaccess{ background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+        .pro-badge.count   { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); font-size:13px; padding:4px 12px; }
+
+        .pro-table { width: 100%; border-collapse: separate; border-spacing: 0 3px; }
+        .pro-table thead th {
+            background: rgba(91,156,246,0.15);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-medium);
+        }
+        .pro-table tbody td {
+            padding: 12px;
+            color: #ffffff !important;
+            background-color: rgba(20, 26, 42, 0.65);
+            vertical-align: middle;
+        }
+        .pro-table tbody tr:hover td { background-color: rgba(30, 39, 61, 0.75); }
+        .student-title-text { color: #ffffff !important; font-size: 14px; font-weight: 600; }
+        .student-sub-text { color: #cbd5e1 !important; font-size: 12px; }
+
+        .batch-block { background: rgba(30, 36, 51, 0.4); backdrop-filter: blur(10px); border: 1px solid var(--border-subtle); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+        .batch-header {
+            display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; cursor: pointer;
+            background: rgba(255,255,255,0.02); border-left: 3px solid var(--accent-blue); user-select: none;
+        }
+        .batch-header .batch-name { font-weight: 600; font-size: 15px; color: #fff; }
+        .batch-body { display: none; border-top: 1px solid var(--border-subtle); overflow-x: auto; }
+        .batch-body.open { display: block; }
+
+        .tute-zone { max-height: 100px; overflow-y: auto; padding: 2px; }
+        .tute-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 12px; color: #ffffff; }
+        .tute-item input[type="checkbox"] { accent-color: var(--accent-amber); width: 14px; height: 14px; cursor: pointer; }
+
+        .tute-manage { max-height: 140px; overflow-y: auto; }
+        .tute-manage-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;
+            background: rgba(255,255,255,0.02); border-radius: 6px; margin-bottom: 4px; border: 1px solid var(--border-subtle);
+        }
+
+        .stat-card { background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px 20px; text-align: center; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-label { font-size: 11px; color: #7a93b8; text-transform: uppercase; margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 700; }
+        .stat-value.blue   { color: var(--accent-blue); }
+        .stat-value.green  { color: var(--accent-green); }
+        .stat-value.amber  { color: var(--accent-amber); }
+
+        .section-heading { font-size: 16px; font-weight: 600; color: #d0daf0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .section-heading::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+
+        .ledger-table { width: 100%; font-size: 13px; }
+        .ledger-table th { background: rgba(91,156,246,0.12); color: #ffffff; font-size: 10px; text-transform: uppercase; padding: 10px 14px; }
+        .ledger-table td { padding: 9px 14px; border-bottom: 1px solid var(--border-subtle); color: #ffffff !important; background-color: rgba(20, 26, 42, 0.55); }
+
+        .search-bar { background: rgba(23, 29, 46, 0.65); backdrop-filter: blur(12px); border: 1px solid rgba(91,156,246,0.15); border-radius: 12px; padding: 14px 18px; }
+        .field-label { font-size: 10px; color: #7a93b8; text-transform: uppercase; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div id="loginOverlay">
+    <div class="login-box">
+        <h3>🔐 Login</h3>
+         <p>Login to your account</p>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="login-input-group">
+                <label for="loginEmail">📧  / Email</label>
+                <input type="email" id="loginEmail" placeholder="admin@test.com" required />
+            </div>
+            <div class="login-input-group">
+                <label for="loginPassword">🔑 / Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" required />
+            </div>
+            <button type="submit" id="loginBtn">Log In</button>
+            <div class="login-error" id="loginError"></div>
+        </form>
+        <div class="login-demo-info">
+            <p>Demo Account:</p>
+            <div class="login-demo-creds">
+                <code>Email: admin@test.com</code>
+                <code>Password: 123456</code>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="mainContent">
+
+<canvas id="pointerTrail" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; width: 100vw; height: 100vh;"></canvas>
+
+<div class="bg-animations">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+
+<div class="container-fluid px-4 py-4">
+
+    <div class="master-header mb-4">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h2>Prabath Ariyasinghe - ArtofAccounting.lk</h2>
+                <p>පෞද්ගලික කළමනාකරණ පද්ධතිය - බුදු සරණයි ! දෙවි පිහිටයි</p>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <span class="pro-badge count" id="tableMonthBadge">2026-06</span>
+                <button class="logout-btn" onclick="handleLogout()">🔓 Log Out</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="month-bar mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <div class="field-label" style="color:#a78bfa;">Active Month</div>
+                <select id="currentMonthSelect" class="form-select" onchange="switchMonth()">
+                    <option value="2026-05">2026 මැයි (May)</option>
+                    <option value="2026-06" selected>2026 ජූනි (June)</option>
+                    <option value="2026-07">2026 ජූලි (July)</option>
+                    <option value="2026-08">2026 අගෝස්තු (August)</option>
+                </select>
+            </div>
+            <div class="col-md-7 text-end" style="color:var(--text-muted); font-size:12px;">
+                * ප්‍රධාන ලේඛනයේ සහ දැනුම්දීම්වල දත්ත තෝරාගත් මාසය අනුව වෙනස් වේ.
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+            <div class="pro-card accent-green h-100">
+                <div class="card-title green" id="formActionTitle">නව ශිෂ්‍යයෙකු ඇතුළත් කිරීම</div>
+                <form id="addStudentForm" onsubmit="handleFormSubmit(event)">
+                    <input type="hidden" id="editStudentId" value="" />
+                    
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-2 col-6">
+                            <div class="field-label">Code</div>
+                            <input type="text" id="studentCode" class="form-control" placeholder="ACC-O27-01" required />
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="field-label">නම</div>
+                            <input type="text" id="studentName" class="form-control" placeholder="ශිෂ්‍යයාගේ නම" required />
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="field-label">ලිපිනය</div>
+                            <input type="text" id="address" class="form-control" placeholder="ලිපිනය" required />
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="field-label">දුරකථනය</div>
+                            <input type="text" id="mobileNumber" class="form-control" placeholder="07XXXXXXXX" required />
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="field-label">WhatsApp</div>
+                            <input type="text" id="whatsappNumber" class="form-control" placeholder="07XXXXXXXX" required />
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="field-label">Batch</div>
+                            <input type="text" id="batch" class="form-control" placeholder="Online 27" required />
+                        </div>
+                    </div>
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-3 col-6">
+                            <div class="field-label">ගාස්තුව (Rs.)</div>
+                            <input type="number" id="monthlyFee" class="form-control" value="3000" required />
+                        </div>
+                        <div class="col-md-6 col-6 d-flex gap-2">
+                            <button type="submit" class="btn-pro green w-100" id="submitFormBtn">Add Student</button>
+                            <button type="button" class="btn-pro ghost d-none" id="cancelEditBtn" onclick="resetFormState()">Cancel</button>
+                            <button type="button" class="btn-pro ghost" onclick="exportToCSV()">Export CSV</button>
+                            <button type="button" class="btn-pro ghost" onclick="exportToExcelByBatch()">Export Excel (Batch wise)</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="pro-card accent-amber mb-3">
+                <div class="card-title amber">නව නිබන්ධනයක් (Tute) එකතු කිරීම</div>
+                <form id="addTuteForm" onsubmit="handleAddTute(event)">
+                    <div class="mb-2">
+                        <input type="text" id="tuteName" class="form-control" placeholder="නිබන්ධනයේ නම (Eg: Tute 1)" required />
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <select id="tuteBatchAssign" class="form-select" required></select>
+                        </div>
+                        <div class="col-6">
+                            <select id="tuteMonthAssign" class="form-select" required>
+                                <option value="2026-05">May 2026</option>
+                                <option value="2026-06" selected>June 2026</option>
+                                <option value="2026-07">July 2026</option>
+                                <option value="2026-08">August 2026</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-pro amber w-100">Add to Batch & Month</button>
+                </form>
+            </div>
+
+            <div class="pro-card accent-cyan">
+                <div class="card-title cyan">Tutes Control Panel</div>
+                <div class="tute-manage" id="tuteManageContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-bar mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="සෙවීම (නම, කේතය හෝ ලිපිනය)..." onkeyup="renderAll()" />
+            </div>
+            <div class="col-md-6">
+                <select id="batchFilter" class="form-select" onchange="renderAll()">
+                    <option value="All">All Batches</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-heading">සිසුන්ගේ නාමලේඛනය</div>
+    <div id="batchAccordionContainer" class="mb-4"></div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">මුළු සිසුන් ගණන</div>
+                <div class="stat-value blue" id="totalStudents">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label"><span id="summaryPaidMonthLabel">June</span> - ගෙවූ සිසුන්</div>
+                <div class="stat-value green" id="paidStudents">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label"><span id="summaryIncomeMonthLabel">June</span> - මුළු ආදායම</div>
+                <div class="stat-value amber" id="totalIncome">Rs. 0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pro-card accent-purple mb-4">
+        <div class="card-title purple">All-Time Payment History Ledger</div>
+        <div style="max-height:220px; overflow-y:auto;">
+            <table class="ledger-table">
+                <thead>
+                    <tr>
+                        <th>මාසය</th>
+                        <th>Batch</th>
+                        <th>Paid Count</th>
+                        <th>Collected Revenue</th>
+                    </tr>
+                </thead>
+                <tbody id="allTimeHistoryTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="pro-card accent-red mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="card-title red mb-0">Dropped Students Alert List</div>
+            <span class="pro-badge" style="background:rgba(239,68,68,0.15);color:#f87171;" id="alertCountBadge">0 Students</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:12px;">පෙර මාසයේ පන්ති ගාස්තු ගෙවා, වත්මන් මාසයේ තවමත් ගෙවා නොමැති සිසුන් ලැයිස්තුව.</p>
+        <div style="overflow-x:auto;">
+            <table class="ledger-table">
+                <thead>
+                    <tr>
+                        <th>Batch</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="dropoutAlertTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+const initialStudents = [
+    { id: 1, studentCode: "ACC-O27-01", studentName: "කසුන් පෙරේරා", address: "කොළඹ", mobileNumber: "0771234567", whatsappNumber: "0771234567", batch: "Online 27", monthlyFee: 3000, hasWebAccess: true, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: true, tutes: {} } } },
+    { id: 2, studentCode: "ACC-O27-02", studentName: "නමාලි ප්‍රනාන්දු", address: "මීගමුව", mobileNumber: "0719876543", whatsappNumber: "0719876543", batch: "Online 27", monthlyFee: 3000, hasWebAccess: false, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: false, tutes: {} } } },
+    { id: 3, studentCode: "ACC-O27-03", studentName: "චතුරංග ජයසිංහ", address: "කුරුණෑගල", mobileNumber: "0723456789", whatsappNumber: "0723456789", batch: "Online 27", monthlyFee: 3000, hasWebAccess: false, monthlyData: { "2026-05": { isPaid: false, tutes: {} }, "2026-06": { isPaid: true, tutes: {} } } },
+    { id: 4, studentCode: "ACC-O27-04", studentName: "ඉනෝකා කුමාරි", address: "අනුරාධපුරය", mobileNumber: "0712223334", whatsappNumber: "0712223334", batch: "Online 27", monthlyFee: 3000, hasWebAccess: true, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: false, tutes: {} } } },
+    { id: 5, studentCode: "ACC-O27-05", studentName: "ළහිරු මධුශංඛ", address: "ගම්පහ", mobileNumber: "0785556667", whatsappNumber: "0785556667", batch: "Online 27", monthlyFee: 3000, hasWebAccess: true, monthlyData: { "2026-06": { isPaid: true, tutes: {} } } },
+    { id: 23, studentCode: "ACC-O28-01", studentName: "දසුන් සිල්වා", address: "ගාල්ල", mobileNumber: "0765432109", whatsappNumber: "0765432109", batch: "Online 28", monthlyFee: 3500, hasWebAccess: true, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: true, tutes: {} } } }
+];
+
+const initialTutes = [
+    { id: 1, name: "Theory Tute 01 - හවුල් ව්‍යාපාර", batch: "Online 27", month: "2026-06" },
+    { id: 2, name: "Revision Tute 01", batch: "Online 28", month: "2026-06" }
+];
+
+let students = JSON.parse(localStorage.getItem('tracker_students')) || initialStudents;
+let tutes = JSON.parse(localStorage.getItem('tracker_tutes')) || initialTutes;
+let currentMonth = "2026-06";
+
+function saveToStorage() {
+    localStorage.setItem('tracker_students', JSON.stringify(students));
+    localStorage.setItem('tracker_tutes', JSON.stringify(tutes));
+}
+
+function showNotification(studentName) {
+    let container = document.getElementById('toast-container');
+    let toast = document.createElement('div');
+    toast.className = 'toast-msg';
+    toast.innerHTML = `<span>⚠️ <b>${studentName}</b> ගේ පේමන්ට් එක මාර්ක් කළා. WhatsApp පණිවිඩය යැවීමට අමතක කරන්න එපා!</span>`;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 6000);
+}
+
+function switchMonth() {
+    currentMonth = document.getElementById('currentMonthSelect').value;
+    document.getElementById('tableMonthBadge').innerText = currentMonth;
+    document.getElementById('summaryPaidMonthLabel').innerText = currentMonth;
+    document.getElementById('summaryIncomeMonthLabel').innerText = currentMonth;
+    renderAll();
+}
+
+function handleFormSubmit(e) {
+    e.preventDefault();
+    const editId = document.getElementById('editStudentId').value;
+    const codeInput = document.getElementById('studentCode').value.trim();
+
+    const isCodeDuplicate = students.some(s => s.studentCode.toLowerCase() === codeInput.toLowerCase() && s.id.toString() !== editId);
+    if (isCodeDuplicate) {
+        alert("මෙම Student Code එක දැනටමත් භාවිතයේ පවතී!");
+        return;
+    }
+
+    if (editId) {
+        const studentIndex = students.findIndex(s => s.id.toString() === editId);
+        if (studentIndex !== -1) {
+            students[studentIndex].studentCode = codeInput;
+            students[studentIndex].studentName = document.getElementById('studentName').value;
+            students[studentIndex].address = document.getElementById('address').value;
+            students[studentIndex].mobileNumber = document.getElementById('mobileNumber').value;
+            students[studentIndex].whatsappNumber = document.getElementById('whatsappNumber').value;
+            students[studentIndex].batch = document.getElementById('batch').value;
+            students[studentIndex].monthlyFee = parseFloat(document.getElementById('monthlyFee').value);
+            alert("ශිෂ්‍ය විස්තර සාර්ථකව යාවත්කාලීන කරන ලදී!");
+        }
+    } else {
+        const newStudent = {
+            id: Date.now(),
+            studentCode: codeInput,
+            studentName: document.getElementById('studentName').value,
+            address: document.getElementById('address').value,
+            mobileNumber: document.getElementById('mobileNumber').value,
+            whatsappNumber: document.getElementById('whatsappNumber').value,
+            batch: document.getElementById('batch').value,
+            monthlyFee: parseFloat(document.getElementById('monthlyFee').value),
+            hasWebAccess: false,
+            monthlyData: {}
+        };
+        newStudent.monthlyData[currentMonth] = { isPaid: false, tutes: {} };
+        students.push(newStudent);
+    }
+
+    saveToStorage();
+    resetFormState();
+    renderAll();
+}
+
+function startEditStudent(id) {
+    const student = students.find(s => s.id === id);
+    if (!student) return;
+
+    document.getElementById('editStudentId').value = student.id;
+    document.getElementById('studentCode').value = student.studentCode;
+    document.getElementById('studentName').value = student.studentName;
+    document.getElementById('address').value = student.address;
+    document.getElementById('mobileNumber').value = student.mobileNumber;
+    document.getElementById('whatsappNumber').value = student.whatsappNumber;
+    document.getElementById('batch').value = student.batch;
+    document.getElementById('monthlyFee').value = student.monthlyFee;
+
+    document.getElementById('formActionTitle').innerText = "ශිෂ්‍ය විස්තර සංස්කරණය (Editing Mode)";
+    document.getElementById('submitFormBtn').innerText = "Update Details";
+    document.getElementById('submitFormBtn').className = "btn-pro amber w-100";
+    document.getElementById('cancelEditBtn').classList.remove('d-none');
+
+    document.getElementById('addStudentForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteStudent(id) {
+    const student = students.find(s => s.id === id);
+    if (!student) return;
+    
+    const confirmDelete = confirm(`${student.studentName} (${student.studentCode}) ඉවතට කරන්නද?`);
+    if (confirmDelete) {
+        students = students.filter(s => s.id !== id);
+        saveToStorage();
+        showNotification(`${student.studentName} ඉවතට කරන ලදී.`);
+        renderAll();
+    }
+}
+
+function resetFormState() {
+    document.getElementById('addStudentForm').reset();
+    document.getElementById('editStudentId').value = "";
+    document.getElementById('formActionTitle').innerText = "නව ශිෂ්‍යයෙකු ඇතුළත් කිරීම";
+    document.getElementById('submitFormBtn').innerText = "Add Student";
+    document.getElementById('submitFormBtn').className = "btn-pro green w-100";
+    document.getElementById('cancelEditBtn').classList.add('d-none');
+}
+
+function handleAddTute(e) {
+    e.preventDefault();
+    const newTute = {
+        id: Date.now(),
+        name: document.getElementById('tuteName').value,
+        batch: document.getElementById('tuteBatchAssign').value,
+        month: document.getElementById('tuteMonthAssign').value
+    };
+    tutes.push(newTute);
+    saveToStorage();
+    e.target.reset();
+    renderAll();
+}
+
+function togglePayment(id) {
+    const student = students.find(s => s.id === id);
+    if (student) {
+        if (!student.monthlyData[currentMonth]) {
+            student.monthlyData[currentMonth] = { isPaid: false, tutes: {} };
+        }
+        student.monthlyData[currentMonth].isPaid = !student.monthlyData[currentMonth].isPaid;
+        
+        // Notification Logic
+        if (student.monthlyData[currentMonth].isPaid) {
+            showNotification(student.studentName);
+        }
+
+        saveToStorage();
+        renderAll();
+    }
+}
+
+function toggleTuteStatus(studentId, tuteId) {
+    const student = students.find(s => s.id === studentId);
+    if (student) {
+        if (!student.monthlyData[currentMonth]) {
+            student.monthlyData[currentMonth] = { isPaid: false, tutes: {} };
+        }
+        if (!student.monthlyData[currentMonth].tutes) {
+            student.monthlyData[currentMonth].tutes = {};
+        }
+        student.monthlyData[currentMonth].tutes[tuteId] = !student.monthlyData[currentMonth].tutes[tuteId];
+        saveToStorage();
+    }
+}
+
+function toggleWebAccess(id) {
+    const student = students.find(s => s.id === id);
+    if (student) {
+        student.hasWebAccess = !student.hasWebAccess;
+        saveToStorage();
+        renderAll();
+    }
+}
+
+function getMessageText(student, type) {
+    let message = "";
+    if (type === 'payment') {
+        const isPaid = student.monthlyData[currentMonth]?.isPaid;
+        if (isPaid) {
+            message = `OFFICIAL PAYMENT RECEIPT\n\n` +
+                      `Prabath Ariyasinghe Education\n\n` +
+                      `Dear ${student.studentName},\n\n` +
+                      `We have successfully received your course fee payment for the month of ${currentMonth}.\n\n` +
+                      `Payment Details:\n` +
+                      `- Amount: Rs. ${student.monthlyFee}/=\n` +
+                      `- Student Code: ${student.studentCode}\n` +
+                      `- Status: Completed\n\n` +
+                      `Thank you for the payment. Best wishes for your studies.`;
+        } else {
+            message = `OFFICIAL PAYMENT REMINDER\n\n` +
+                      `Prabath Ariyasinghe Education\n\n` +
+                      `Dear ${student.studentName},\n\n` +
+                      `This is a kind reminder that your course fee payment for the month of ${currentMonth} is currently pending.\n\n` +
+                      `Payment Details:\n` +
+                      `- Monthly Fee: Rs. ${student.monthlyFee}/=\n` +
+                      `- Student Code: ${student.studentCode}\n\n` +
+                      `Please settle the payment at your earliest to ensure uninterrupted access. Thank you.`;
+        }
+    } else if (type === 'access') {
+        if (student.hasWebAccess) {
+            message = `PORTAL ACCESS ACTIVATED\n\n` +
+                      `Prabath Ariyasinghe Education\n\n` +
+                      `Dear ${student.studentName},\n\n` +
+                      `Your web portal access for slbsresults.mrt.lk has been successfully activated.\n\n` +
+                      `Access Details:\n` +
+                      `- Student Code: ${student.studentCode}\n\n` +
+                      `You can now log in to view recordings and learning materials. Thank you.`;
+        } else {
+            message = `PORTAL ACCESS SUSPENDED\n\n` +
+                      `Prabath Ariyasinghe Education\n\n` +
+                      `Dear ${student.studentName},\n\n` +
+                      `Your web portal access has been temporarily suspended. Please contact the management. Thank you.`;
+        }
+    }
+    return message;
+}
+
+function sendWhatsAppAlert(id, type) {
+    const student = students.find(s => s.id === id);
+    if (!student || !student.whatsappNumber) {
+        alert("WhatsApp අංකයක් ඇතුළත් කර නොමැත.");
+        return;
+    }
+    let phone = student.whatsappNumber.trim();
+    if (phone.startsWith('0')) phone = '94' + phone.substring(1);
+    
+    let message = getMessageText(student, type);
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+function generateReceiptCanvas(student) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600; canvas.height = 750;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#13161f'; ctx.fillRect(0, 0, 600, 750);
+    const gradient = ctx.createLinearGradient(0, 0, 600, 140);
+    gradient.addColorStop(0, '#171e30'); gradient.addColorStop(0.5, '#1f2d48'); gradient.addColorStop(1, '#171e30');
+    ctx.fillStyle = gradient; ctx.fillRect(0, 0, 600, 140);
+
+    ctx.fillStyle = '#5b9cf6'; ctx.fillRect(0, 0, 600, 4);
+    ctx.fillStyle = '#eef2ff'; ctx.font = 'bold 26px sans-serif'; ctx.fillText('Prabath Ariyasinghe', 40, 60);
+    ctx.fillStyle = '#8fa4c8'; ctx.font = '14px sans-serif'; ctx.fillText('Official Digital Payment Receipt', 40, 95);
+
+    ctx.fillStyle = '#1e2433'; ctx.fillRect(40, 180, 520, 450);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1; ctx.strokeRect(40, 180, 520, 450);
+
+    ctx.fillStyle = '#a78bfa'; ctx.font = 'bold 13px sans-serif'; ctx.fillText('RECEIPT STATEMENT', 60, 220);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(60, 235, 480, 1);
+
+    let currentY = 280;
+    function addReceiptRow(label, dataValue, isHighlighted = false) {
+        ctx.fillStyle = '#6b7a9e'; ctx.font = '13px sans-serif'; ctx.fillText(label, 60, currentY);
+        ctx.fillStyle = isHighlighted ? '#34d399' : '#eef2ff';
+        ctx.font = isHighlighted ? 'bold 16px sans-serif' : '500 15px sans-serif';
+        ctx.fillText(dataValue, 220, currentY); currentY += 45;
+    }
+
+    const isPaid = student.monthlyData[currentMonth]?.isPaid || false;
+    addReceiptRow('Student Name:', student.studentName);
+    addReceiptRow('Student Code:', student.studentCode);
+    addReceiptRow('Batch:', student.batch);
+    addReceiptRow('Active Month:', currentMonth);
+    addReceiptRow('Amount Paid:', 'Rs. ' + student.monthlyFee.toLocaleString() + '.00 /=');
+    addReceiptRow('Payment Status:', isPaid ? 'COMPLETED' : 'PENDING', true);
+    addReceiptRow('Issued Date:', new Date().toLocaleDateString());
+
+    ctx.fillStyle = 'rgba(52, 211, 153, 0.15)'; ctx.fillRect(60, 570, 480, 40);
+    ctx.strokeStyle = 'rgba(52, 211, 153, 0.3)'; ctx.strokeRect(60, 570, 480, 40);
+    ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('VERIFIED SECURE SYSTEM RECORD', 300, 594);
+
+    ctx.fillStyle = '#6b7a9e'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Thank you for your payment. Best wishes for your advanced level exam preparations.', 300, 680);
+    ctx.fillText('Generated via Master Tuition Tracker Pro - Prabath Ariyasinghe', 300, 700);
+
+    return canvas;
+}
+
+function downloadReceiptJPG(id) {
+    const student = students.find(s => s.id === id);
+    if (!student) return;
+    const canvas = generateReceiptCanvas(student);
+    const downloadLink = document.createElement('a');
+    downloadLink.download = `Receipt_${student.studentCode}_${currentMonth}.png`;
+    downloadLink.href = canvas.toDataURL('image/png');
+    downloadLink.click();
+}
+
+function sendReceiptJpgViaWhatsApp(id) {
+    const student = students.find(s => s.id === id);
+    if (!student || !student.whatsappNumber) {
+        alert("WhatsApp අංකයක් ඇතුළත් කර නොමැත.");
+        return;
+    }
+
+    const canvas = generateReceiptCanvas(student);
+    canvas.toBlob(async (blob) => {
+        try {
+            await navigator.clipboard.write([ new ClipboardItem({ [blob.type]: blob }) ]);
+            alert("Receipt පින්තූරය Copy වුණා! WhatsApp එක විවෘත වූ පසු එතැන Paste (Ctrl+V) කරන්න.");
+        } catch (err) {
+            const downloadLink = document.createElement('a');
+            downloadLink.download = `Receipt_${student.studentCode}_${currentMonth}.png`;
+            downloadLink.href = canvas.toDataURL('image/png');
+            downloadLink.click();
+            alert("පින්තූරය කෙලින්ම Copy කිරීමට නොහැකි විය. එය බාගත කරගන්නා ලදී (Downloaded). කරුණාකර Attach කර යවන්න.");
+        }
+
+        let phone = student.whatsappNumber.trim();
+        if (phone.startsWith('0')) phone = '94' + phone.substring(1);
+        let message = getMessageText(student, 'payment');
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    }, 'image/png');
+}
+
+function renderAll() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const filterBatch = document.getElementById('batchFilter').value;
+    const batches = [...new Set(students.map(s => s.batch))];
+    
+    const batchFilterSelect = document.getElementById('batchFilter');
+    const currentFilterVal = batchFilterSelect.value;
+    batchFilterSelect.innerHTML = '<option value="All">All Batches</option>';
+    batches.forEach(b => { batchFilterSelect.innerHTML += `<option value="${b}">${b}</option>`; });
+    batchFilterSelect.value = currentFilterVal;
+
+    const tuteBatchAssign = document.getElementById('tuteBatchAssign');
+    tuteBatchAssign.innerHTML = '';
+    batches.forEach(b => { tuteBatchAssign.innerHTML += `<option value="${b}">${b}</option>`; });
+
+    const filteredStudents = students.filter(s => {
+        const matchesSearch = s.studentName.toLowerCase().includes(search) || 
+                              s.studentCode.toLowerCase().includes(search) || 
+                              s.address.toLowerCase().includes(search);
+        return matchesSearch && (filterBatch === "All" || s.batch === filterBatch);
+    });
+
+    const grouped = {};
+    filteredStudents.forEach(s => {
+        if (!grouped[s.batch]) grouped[s.batch] = [];
+        grouped[s.batch].push(s);
+    });
+
+    const container = document.getElementById('batchAccordionContainer');
+    container.innerHTML = "";
+
+    if (Object.keys(grouped).length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-muted">සිසුන් කිසිවෙකු සොයාගත නොහැකි විය.</div>`;
+    }
+
+    Object.keys(grouped).forEach((batchName) => {
+        const batchStudents = grouped[batchName];
+        let rowsHTML = "";
+        
+        batchStudents.forEach(s => {
+            const isPaid = s.monthlyData[currentMonth]?.isPaid || false;
+            const currentTutes = tutes.filter(t => t.batch === s.batch && t.month === currentMonth);
+            
+            let tuteCheckboxes = "";
+            currentTutes.forEach(t => {
+                const isTuteChecked = s.monthlyData[currentMonth]?.tutes?.[t.id] ? 'checked' : '';
+                tuteCheckboxes += `
+                    <div class="tute-item">
+                        <input type="checkbox" id="tute_${s.id}_${t.id}" ${isTuteChecked} onchange="toggleTuteStatus(${s.id}, ${t.id})" />
+                        <label for="tute_${s.id}_${t.id}">${t.name}</label>
+                    </div>`;
+            });
+
+            rowsHTML += `
+                <tr>
+                    <td><code>${s.studentCode}</code></td>
+                    <td><div class="student-title-text">${s.studentName}</div><div class="student-sub-text">${s.address}</div></td>
+                    <td>${s.mobileNumber}</td>
+                    <td>
+                        <input type="checkbox" class="form-check-input" style="accent-color:var(--accent-green); width:18px; height:18px;" 
+                            ${isPaid ? 'checked' : ''} onchange="togglePayment(${s.id})" />
+                        <span class="pro-badge ${isPaid ? 'paid' : 'pending'} ms-1">${isPaid ? 'Paid' : 'Pending'}</span>
+                    </td>
+                    <td>
+                        <input type="checkbox" class="form-check-input" style="accent-color:var(--accent-cyan); width:18px; height:18px;" 
+                            ${s.hasWebAccess ? 'checked' : ''} onchange="toggleWebAccess(${s.id})" />
+                        <span class="pro-badge ${s.hasWebAccess ? 'active' : 'noaccess'} ms-1">${s.hasWebAccess ? 'Active' : 'No Access'}</span>
+                    </td>
+                    <td><div class="tute-zone">${tuteCheckboxes || '<span class="student-sub-text">නැත</span>'}</div></td>
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <button class="btn-wa-action wa-edit" onclick="startEditStudent(${s.id})">✏️ Edit</button>
+                            <button class="btn-wa-action wa-delete" onclick="deleteStudent(${s.id})">🗑️ Delete</button>
+                            <button class="btn-wa-action wa-pay" onclick="sendWhatsAppAlert(${s.id}, 'payment')">Pay Msg</button>
+                            <button class="btn-wa-action wa-web" onclick="sendWhatsAppAlert(${s.id}, 'access')">Web Msg</button>
+                            <button class="btn-wa-action wa-jpg" onclick="downloadReceiptJPG(${s.id})">JPG Rec</button>
+                            <button class="btn-wa-action wa-send-jpg" onclick="sendReceiptJpgViaWhatsApp(${s.id})">Send Image Rec</button>
+                        </div>
+                    </td>
+                </tr>`;
+        });
+
+        container.innerHTML += `
+            <div class="batch-block">
+                <div class="batch-header open" onclick="this.nextElementSibling.classList.toggle('open')">
+                    <span class="batch-name">Batch: ${batchName} (${batchStudents.length} Students)</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="batch-body open">
+                    <table class="pro-table table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>නම / ලිපිනය</th>
+                                <th>දුරකථනය</th>
+                                <th>Payment (${currentMonth})</th>
+                                <th>Web Portal</th>
+                                <th>Tutes</th>
+                                <th>Smart Alerts</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHTML}</tbody>
+                    </table>
+                </div>
+            </div>`;
+    });
+
+    document.getElementById('totalStudents').innerText = students.length;
+    document.getElementById('paidStudents').innerText = students.filter(s => s.monthlyData[currentMonth]?.isPaid).length;
+    const revenue = students.reduce((acc, s) => acc + (s.monthlyData[currentMonth]?.isPaid ? s.monthlyFee : 0), 0);
+    document.getElementById('totalIncome').innerText = `Rs. ${revenue.toLocaleString()}.00`;
+
+    const tuteManageContainer = document.getElementById('tuteManageContainer');
+    tuteManageContainer.innerHTML = "";
+    tutes.forEach(t => {
+        tuteManageContainer.innerHTML += `
+            <div class="tute-manage-item">
+                <span><strong>${t.name}</strong> <br> <small class="text-muted">${t.batch} | ${t.month}</small></span>
+                <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteTute(${t.id})">×</button>
+            </div>`;
+    });
+
+    renderLedgers();
+}
+
+function deleteTute(id) {
+    tutes = tutes.filter(t => t.id !== id);
+    saveToStorage();
+    renderAll();
+}
+
+function renderLedgers() {
+    const historyTable = document.getElementById('allTimeHistoryTableBody');
+    historyTable.innerHTML = "";
+    const months = ["2026-05", "2026-06", "2026-07", "2026-08"];
+    const batches = [...new Set(students.map(s => s.batch))];
+
+    months.forEach(m => {
+        batches.forEach(b => {
+            const targetStudents = students.filter(s => s.batch === b);
+            const paid = targetStudents.filter(s => s.monthlyData[m]?.isPaid).length;
+            const rev = targetStudents.reduce((acc, s) => acc + (s.monthlyData[m]?.isPaid ? s.monthlyFee : 0), 0);
+            if (targetStudents.length > 0) {
+                historyTable.innerHTML += `
+                    <tr>
+                        <td><code>${m}</code></td>
+                        <td>${b}</td>
+                        <td><span class="pro-badge paid">${paid} Paid</span></td>
+                        <td>Rs. ${rev.toLocaleString()}.00</td>
+                    </tr>`;
+            }
+        });
+    });
+
+    const alertTable = document.getElementById('dropoutAlertTableBody');
+    alertTable.innerHTML = "";
+    let dropoutCount = 0;
+    const prevMonth = currentMonth === "2026-06" ? "2026-05" : null;
+    
+    if (prevMonth) {
+        students.forEach(s => {
+            if ((s.monthlyData[prevMonth]?.isPaid) && !(s.monthlyData[currentMonth]?.isPaid)) {
+                dropoutCount++;
+                alertTable.innerHTML += `
+                    <tr>
+                        <td>${s.batch}</td>
+                        <td><code>${s.studentCode}</code></td>
+                        <td><strong>${s.studentName}</strong></td>
+                        <td>${s.mobileNumber}</td>
+                        <td><button class="btn-wa-action wa-pay" onclick="sendWhatsAppAlert(${s.id}, 'payment')">Send Reminder</button></td>
+                    </tr>`;
+            }
+        });
+    }
+    document.getElementById('alertCountBadge').innerText = `${dropoutCount} Students`;
+    if (dropoutCount === 0) alertTable.innerHTML = `<tr><td colspan="5" class="text-center text-muted">කිසිදු ශිෂ්‍යයෙකු නැත.</td></tr>`;
+}
+
+function exportToExcelByBatch() {
+    if (!students || students.length === 0) {
+        alert("Export කිරීමට ලමයින් කිසිවෙක් රෙජිස්ටර් කර නැත!");
+        return;
+    }
+
+    // Collect all months across all students' monthlyData (sorted)
+    let allMonths = [];
+    students.forEach(s => {
+        if (s.monthlyData) {
+            Object.keys(s.monthlyData).forEach(m => {
+                if (!allMonths.includes(m)) allMonths.push(m);
+            });
+        }
+    });
+    allMonths.sort();
+    if (!allMonths.includes(currentMonth)) allMonths.push(currentMonth);
+
+    // Group students by batch
+    let batchGroups = {};
+    students.forEach(s => {
+        const b = s.batch || "Unassigned";
+        if (!batchGroups[b]) batchGroups[b] = [];
+        batchGroups[b].push(s);
+    });
+
+    const wb = XLSX.utils.book_new();
+
+    Object.keys(batchGroups).forEach(batchName => {
+        const rows = [];
+
+        const header = [
+            "Student Code",
+            "Name",
+            "Address",
+            "Mobile",
+            "WhatsApp",
+            "Monthly Fee",
+            "Web Access"
+        ];
+        allMonths.forEach(m => header.push(m + " Payment"));
+        header.push("Tutes Issued");
+        rows.push(header);
+
+        batchGroups[batchName].forEach(s => {
+            const row = [
+                s.studentCode || "",
+                s.studentName || "",
+                s.address || "",
+                s.mobileNumber || "",
+                s.whatsappNumber || "",
+                s.monthlyFee || 0,
+                s.hasWebAccess ? "Yes" : "No"
+            ];
+
+            allMonths.forEach(m => {
+                const md = s.monthlyData ? s.monthlyData[m] : null;
+                row.push(md && md.isPaid ? "Paid" : "Not Paid");
+            });
+
+            // Tutes issued summary
+            let tuteParts = [];
+            if (s.monthlyData) {
+                Object.keys(s.monthlyData).forEach(m => {
+                    const md = s.monthlyData[m];
+                    if (md && md.tutes) {
+                        Object.keys(md.tutes).forEach(tuteId => {
+                            if (md.tutes[tuteId]) {
+                                const tuteObj = tutes.find(t => t.id == tuteId);
+                                const tuteName = tuteObj ? tuteObj.name : `Tute#${tuteId}`;
+                                tuteParts.push(`${tuteName} (${m})`);
+                            }
+                        });
+                    }
+                });
+            }
+            row.push(tuteParts.length > 0 ? tuteParts.join(" | ") : "No tutes issued");
+
+            rows.push(row);
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+
+        ws['!cols'] = header.map((h, idx) => {
+            if (idx === 1) return { wch: 24 };       // Name
+            if (idx === 2) return { wch: 22 };       // Address
+            if (idx === header.length - 1) return { wch: 50 }; // Tutes
+            return { wch: 14 };
+        });
+
+        let safeName = batchName.toString().substring(0, 31).replace(/[\\\/\?\*\[\]:]/g, "-");
+        if (!safeName) safeName = "Batch";
+        let finalName = safeName;
+        let counter = 1;
+        while (wb.SheetNames.includes(finalName)) {
+            finalName = (safeName.substring(0, 28) + "_" + counter);
+            counter++;
+        }
+
+        XLSX.utils.book_append_sheet(wb, ws, finalName);
+    });
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(wb, `ArtofAccounting_Students_${todayStr}.xlsx`);
+}
+
+function exportToCSV() {
+    let csv = `Code,Name,Address,Mobile,Batch,Fee,Paid Status (${currentMonth})\n`;
+    students.forEach(s => {
+        csv += `\"${s.studentCode}\",\"${s.studentName}\",\"${s.address}\",\"${s.mobileNumber}\",\"${s.batch}\",${s.monthlyFee},\"${s.monthlyData[currentMonth]?.isPaid ? "Paid" : "Pending"}\"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", `student_ledger_${currentMonth}.csv`);
+    link.click();
+}
+
+// ══ MOUSE POINTER TRAIL EFFECT LOGIC ══
+const trailCanvas = document.getElementById('pointerTrail');
+const trailCtx = trailCanvas.getContext('2d');
+let coords = { x: 0, y: 0 };
+let particles = [];
+
+function resizeTrailCanvas() {
+    trailCanvas.width = window.innerWidth;
+    trailCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeTrailCanvas);
+resizeTrailCanvas();
+
+window.addEventListener('mousemove', function(e) {
+    coords.x = e.clientX;
+    coords.y = e.clientY;
+    particles.push(new TrailParticle(coords.x, coords.y));
+});
+
+class TrailParticle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        const colors = ['#5b9cf6', '#22d3ee', '#a78bfa'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.size = Math.random() * 4 + 2;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.02 + 0.015;
+    }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.alpha -= this.decay;
+    }
+    draw() {
+        trailCtx.save();
+        trailCtx.globalAlpha = this.alpha;
+        trailCtx.shadowBlur = 10;
+        trailCtx.shadowColor = this.color;
+        trailCtx.fillStyle = this.color;
+        trailCtx.beginPath();
+        trailCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        trailCtx.fill();
+        trailCtx.restore();
+    }
+}
+
+function animateTrail() {
+    trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) {
+            particles.splice(i, 1);
+            i--;
+        }
+    }
+    requestAnimationFrame(animateTrail);
+}
+
+// ══ LOGIN SYSTEM FUNCTIONS ══
+const CORRECT_EMAIL = "admin@test.com";
+const CORRECT_PASSWORD = "123456";
+const LOGIN_SESSION_KEY = "isLoggedIn";
+
+function handleLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const errorDiv = document.getElementById('loginError');
+
+    // Clear previous error
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+
+    if (email === CORRECT_EMAIL && password === CORRECT_PASSWORD) {
+        // Login successful
+        sessionStorage.setItem(LOGIN_SESSION_KEY, 'true');
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        renderAll();
+        animateTrail();
+    } else {
+        // Login failed
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = '❌ ඉ-තැපෙල හෝ රහස්‍ය පදය වැරදිය. නැවත උත්සාහ කරන්න.';
+    }
+}
+
+function handleLogout() {
+    sessionStorage.removeItem(LOGIN_SESSION_KEY);
+    document.getElementById('loginForm').reset();
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('mainContent').style.display = 'none';
+}
+
+function checkLoginStatus() {
+    const isLoggedIn = sessionStorage.getItem(LOGIN_SESSION_KEY) === 'true';
+    if (isLoggedIn) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } else {
+        document.getElementById('loginOverlay').style.display = 'flex';
+        document.getElementById('mainContent').style.display = 'none';
+    }
+}
+
+// Run Startup System
+window.onload = function() {
+    checkLoginStatus();
+    // renderAll and animateTrail are called from checkLoginStatus if user is logged in
+};
+
+</script>
+</body>
+</html>
