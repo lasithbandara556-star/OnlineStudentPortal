@@ -663,7 +663,8 @@
                         <label>Security Crypt Password</label>
                         <input type="password" id="loginPassword" placeholder="••••••••" required>
                     </div>
-                    <button type="submit" class="btn-primary" style="width: 100%;">
+                    <div id="loginError" style="display:none; color:#ef4444; background:rgba(239,68,68,0.1); border-left:3px solid #ef4444; padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;"></div>
+                    <button type="submit" id="loginBtn" class="btn-primary" style="width: 100%;">
                         <i class="fa-solid fa-shield"></i> Initialize Verification
                     </button>
                 </form>
@@ -696,6 +697,7 @@
                     <div class="badge-account">
                         <i class="fa-solid fa-circle-check"></i> <span id="currentUserName">Connecting Node...</span>
                     </div>
+                    <button class="btn-exit" onclick="showLoginHistory()" style="background:linear-gradient(135deg,#a78bfa,#6366f1); margin-right:6px;"><i class="fa-solid fa-clock-rotate-left"></i> Login History</button>
                     <button class="btn-exit" onclick="handleLogout()"><i class="fa-solid fa-power-off"></i> Disconnect</button>
                 </div>
             </header>
@@ -738,9 +740,10 @@
                                 <input type="text" id="stuSchool" placeholder="Current School Name" required>
                             </div>
                             <div class="input-wrapper">
-                                <label>Science Institute Center</label>
+                                <label>Institute Center</label>
                                 <select id="stuCenter" required>
-                                    <option value="">Select Science Center - Kegalle</option>
+                    
+                                    <option value="Science Center - Kegalle">Science Center - Kegalle</option>
                                     <option value="Unique - Matale">Unique - Matale</option>
                                     <option value="Sesip - Rambukkana">Sesip - Rambukkana</option>
                                 </select>
@@ -926,25 +929,57 @@
         </div>
     </div>
 
+    <!-- Payment WhatsApp Confirm Modal -->
+    <div class="modal-overlay" id="paymentMsgModal">
+        <div class="modal-body" style="text-align: center; max-width: 400px;">
+            <div style="width: 56px; height: 56px; background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.3); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px auto;">
+                <i class="fa-brands fa-whatsapp" style="font-size: 1.8rem; color: #25d366;"></i>
+            </div>
+            <h3 style="color:#fff; margin-bottom: 10px; font-weight:600; font-size: 1.1rem;">WhatsApp Receipt යවන්නද?</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">
+                <strong id="paymentMsgStudentName" style="color:#fff;"></strong> ට
+            </p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 25px;">
+                <span id="paymentMsgMonth" style="color: #6ee7b7; font-weight:600;"></span> payment receipt message යවන්නද?
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn-primary" style="flex: 1; background: linear-gradient(135deg, #16a34a, #15803d); gap: 8px;" onclick="confirmSendPaymentMsg()">
+                    <i class="fa-brands fa-whatsapp"></i> යවන්න
+                </button>
+                <button class="btn-secondary" style="flex: 1;" onclick="cancelPaymentMsg()">
+                    <i class="fa-solid fa-xmark"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Dynamic Batch Config Window Modal -->
     <div class="modal-overlay" id="batchModal">
-        <div class="modal-body">
-            <h3 style="color:#fff; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-weight:600; font-size:1.2rem;">
-                <span><i class="fa-solid fa-layer-group" style="color: var(--brand-primary); font-size:1.1rem;"></i> Stream Batch Registry</span>
+        <div class="modal-body" style="max-width:560px; width:95vw;">
+            <h3 style="color:#fff; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-weight:600; font-size:1.1rem;">
+                <span><i class="fa-solid fa-layer-group" style="color: var(--brand-primary);"></i> Batch Manager</span>
                 <i class="fa-solid fa-xmark" onclick="closeBatchModal()" style="cursor: pointer; color: var(--text-secondary); font-size:1rem;"></i>
             </h3>
-            
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;">
-                <input type="text" id="newBatchInput" placeholder="ex: 2026 Revision">
-                <input type="text" id="newBatchLinkInput" placeholder="WhatsApp Community Router / Group Link">
-                <button type="button" class="btn-primary" onclick="addNewBatch()"><i class="fa-solid fa-plus"></i> Inject New Stream</button>
+
+            <!-- Add New Batch -->
+            <div style="background:rgba(99,102,241,0.06); border:1px solid rgba(99,102,241,0.2); border-radius:10px; padding:16px; margin-bottom:20px;">
+                <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">✨ නව Batch Add කරන්න</div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <input type="text" id="newBatchInput" placeholder="Batch නම (eg: 2027 Theory)"
+                        onkeydown="if(event.key==='Enter') addNewBatch()"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(99,102,241,0.3); color:#f3f4f6; padding:10px 14px; border-radius:8px; font-size:0.88rem; font-family:Inter,sans-serif; outline:none;">
+                    <input type="text" id="newBatchLinkInput" placeholder="WhatsApp Group Link (optional)"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(99,102,241,0.2); color:#f3f4f6; padding:10px 14px; border-radius:8px; font-size:0.88rem; font-family:Inter,sans-serif; outline:none;">
+                    <button type="button" class="btn-primary" onclick="addNewBatch()" style="justify-content:center;"><i class="fa-solid fa-plus"></i> Add Batch</button>
+                </div>
             </div>
-            
-            <label style="margin-bottom: 10px; display: block; font-weight: 500; font-size:0.75rem;">Active Matrix Streams:</label>
-            <div id="batchListContainer" style="background: #12141c; padding: 12px; border-radius: 8px; max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--border-color);">
+
+            <!-- Batch List -->
+            <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">📋 Current Batches</div>
+            <div id="batchListContainer" style="background: #0d0f18; padding: 10px; border-radius: 10px; max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--border-color);">
             </div>
-            
-            <button class="btn-secondary" style="margin: 25px auto 0 auto; display: block; padding: 10px 24px;" onclick="closeBatchModal()">Commit View</button>
+
+            <button class="btn-secondary" style="margin: 20px auto 0 auto; display: block; padding: 10px 28px;" onclick="closeBatchModal()"><i class="fa-solid fa-check"></i> Done</button>
         </div>
     </div>
 
@@ -959,18 +994,15 @@
     </footer>
 
     <script>
-        const accountsConfig = [
-            { email: "admin@class.com", password: "admin123", name: "Head Master (Admin)", role: "ADMIN" },
-            { email: "staff@class.com", password: "staff123", name: "Gate Terminal Staff", role: "STAFF" }
-        ];
+        // ════════════════════════════════════════════════════════════════
+        //  physical.html — SUPABASE CONNECTED DATA LAYER
+        //  localStorage replace කළා — සියලු data Supabase ෙයනවා
+        // ════════════════════════════════════════════════════════════════
 
-        let students = JSON.parse(localStorage.getItem('phys_students')) || [];
-        let activeSession = JSON.parse(localStorage.getItem('phys_active_session')) || null;
-        
-        let rawBatches = JSON.parse(localStorage.getItem('phys_batches')) || ["2026 Revision", "2026 Theory", "2027 Theory"];
-        let batches = rawBatches.map(b => typeof b === 'string' ? { name: b, link: "" } : b);
-        localStorage.setItem('phys_batches', JSON.stringify(batches));
-        
+        // Global state — Supabase ෙකෙන් populate ෙවනවා
+        let students = [];
+        let activeSession = JSON.parse(localStorage.getItem('phys_active_session')) || null; // session is UI-only, keep local
+        let batches = [];
         let targetAssigningStudentId = null;
         let currentUser = null;
 
@@ -978,20 +1010,82 @@
         let currentMonthName = "";
         let previousMonthName = "";
 
+        // ── Auth functions reference (wired from module script via window._authFns) ──
+        // We use a proxy so async functions written before module load still work
+        const _authFns = new Proxy({}, {
+            get(_, key) {
+                return window._authFns ? window._authFns[key] : async () => null;
+            }
+        });
+
+        // ── Loading overlay ──
+        function setLoadingOverlay(show) {
+            let el = document.getElementById('_sbLoadingOverlay');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = '_sbLoadingOverlay';
+                el.style.cssText = 'position:fixed;inset:0;background:rgba(11,12,16,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.1rem;font-weight:600;letter-spacing:0.05em;font-family:Inter,sans-serif;';
+                el.innerHTML = '<span>⏳ Supabase සෙිටින්...</span>';
+                document.body.appendChild(el);
+            }
+            el.style.display = show ? 'flex' : 'none';
+        }
+
+        // ── Map Supabase row → local student object ──
+        function mapPhysStudent(row) {
+            return {
+                id: row.id,
+                code: row.code || '',
+                name: row.name || '',
+                address: row.address || '',
+                nic: row.nic || '',
+                batch: row.batch || '',
+                school: row.school || '',
+                center: row.center || '',
+                mobile: row.mobile || '',
+                whatsapp: row.whatsapp || '',
+                cardId: row.card_id || null,
+                ledger: {},         // populated from physical_payments
+                attendanceHistory: Array.isArray(row.attendance_history) ? row.attendance_history : [],
+                tutesHistory: (row.tutes_history && typeof row.tutes_history === 'object') ? row.tutes_history : {}
+            };
+        }
+
+        // ── Load all data from Supabase ──
+        async function loadAllFromSupabase() {
+            setLoadingOverlay(true);
+            try {
+                // Load batches
+                const sbBatches = await _authFns.getBatches('physical');
+                batches = sbBatches.map(b => ({ id: b.id, name: b.name, link: '' }));
+
+                // Load students
+                const sbStudents = await _authFns.getPhysicalStudents();
+                students = sbStudents.map(mapPhysStudent);
+
+                // Load payments for all students
+                await Promise.all(students.map(async (s) => {
+                    const payments = await _authFns.getPayments(s.id, 'physical');
+                    s.ledger = {};
+                    payments.forEach(p => {
+                        s.ledger[p.month] = p.status; // 'Paid', 'Not Paid', etc.
+                    });
+                }));
+
+            } catch(e) {
+                console.error('loadAllFromSupabase error:', e);
+            }
+            setLoadingOverlay(false);
+        }
+
         window.onload = function() {
-            // Setup default date context first to prevent empty rendering crash
+            // Default date context setup
             const dateField = document.getElementById('sessionDate');
             dateField.valueAsDate = new Date();
             calculateSessionMonths();
 
-            const savedUser = sessionStorage.getItem('phys_logged_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                launchAuthenticatedState();
-            } else {
-                document.getElementById('loginPage').style.display = 'flex';
-                document.getElementById('mainDashboard').style.display = 'none';
-            }
+            // Supabase session check module script eken handle karanne
+            // (initPageAuth call at bottom module script)
 
             document.addEventListener('click', function(e) {
                 const panel = document.getElementById('suggestionsPanel');
@@ -1002,21 +1096,14 @@
             });
         };
 
+        // handleLogin — module script eken Supabase auth handle karanne
+        // (meke function call venava — module ekenta delegate karanne)
         function handleLogin(e) {
             e.preventDefault();
+            // Supabase login — module script eken handle karanne (see bottom)
             const emailInput = document.getElementById('loginEmail').value.trim();
             const passwordInput = document.getElementById('loginPassword').value;
-
-            const account = accountsConfig.find(acc => acc.email.toLowerCase() === emailInput.toLowerCase() && acc.password === passwordInput);
-
-            if (account) {
-                currentUser = account;
-                sessionStorage.setItem('phys_logged_user', JSON.stringify(currentUser));
-                document.getElementById('loginForm').reset();
-                launchAuthenticatedState();
-            } else {
-                alert('Access Denied: Invalid Terminal Identity Node Credentials.');
-            }
+            window._supabaseLoginCall && window._supabaseLoginCall(emailInput, passwordInput);
         }
 
         function calculateSessionMonths() {
@@ -1038,17 +1125,12 @@
         function launchAuthenticatedState() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('mainDashboard').style.display = 'block';
-            document.getElementById('currentUserName').innerText = `${currentUser.name} [${currentUser.role}]`;
 
-            if (currentUser.role === 'STAFF') {
-                document.getElementById('enrollmentPanel').style.display = 'none';
-                document.getElementById('sessionLauncherPanel').style.display = 'none';
-                document.querySelector('.workspace-grid').style.gridTemplateColumns = '1fr';
-            } else {
-                document.getElementById('enrollmentPanel').style.display = 'block';
-                document.getElementById('sessionLauncherPanel').style.display = 'block';
-                document.querySelector('.workspace-grid').style.gridTemplateColumns = '1.1fr 0.9fr';
-            }
+            // Role-based UI handled in module script (Supabase user_metadata.role)
+            // Default: show all panels (ADMIN mode)
+            document.getElementById('enrollmentPanel').style.display = 'block';
+            document.getElementById('sessionLauncherPanel').style.display = 'block';
+            document.querySelector('.workspace-grid').style.gridTemplateColumns = '1.1fr 0.9fr';
 
             document.getElementById('sessionStartTime').value = "08:00";
             document.getElementById('sessionEndTime').value = "12:30";
@@ -1102,28 +1184,54 @@
         function renderBatchList() {
             const container = document.getElementById('batchListContainer');
             container.innerHTML = '';
-            
+            if (batches.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:#6b7280; padding:16px; font-size:0.85rem;">Batches නැත. නව batch add කරන්න.</div>`;
+                return;
+            }
             batches.forEach((b, index) => {
+                const stuCount = students.filter(s => s.batch === b.name).length;
                 const div = document.createElement('div');
-                div.style.display = 'flex';
-                div.style.justifyContent = 'space-between';
-                div.style.alignItems = 'center';
-                div.style.padding = '10px 14px';
-                div.style.background = 'rgba(255,255,255,0.02)';
-                div.style.borderRadius = '6px';
-                div.style.fontSize = '0.88rem';
+                div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid rgba(255,255,255,0.06); gap:8px;';
                 div.innerHTML = `
-                    <div style="display: flex; flex-direction: column; gap: 2px; max-width: 80%;">
-                        <span style="font-weight: 500; color: #fff;">${b.name}</span>
-                        <span style="font-size: 0.75rem; color: var(--text-secondary); word-break: break-all;">${b.link ? b.link : 'No link mapped'}</span>
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        <div style="width:7px; height:7px; border-radius:50%; background:var(--brand-primary); flex-shrink:0;"></div>
+                        <div style="min-width:0;">
+                            <div style="font-weight:600; color:#f3f4f6; font-size:0.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${b.name}</div>
+                            <div style="font-size:0.7rem; color:#6b7280; margin-top:1px;">${stuCount} student${stuCount !== 1 ? 's' : ''}${b.link ? ' · <a href="' + b.link + '" target="_blank" style="color:#6366f1; font-size:0.68rem;">WA Link</a>' : ''}</div>
+                        </div>
                     </div>
-                    <i class="fa-solid fa-trash-can" onclick="deleteBatch(${index})" style="color: var(--danger); cursor: pointer; font-size: 0.85rem;" title="Purge Batch Option"></i>
+                    <div style="display:flex; gap:5px; flex-shrink:0;">
+                        <button onclick="renameBatchPhys(${index})" style="background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.25); padding:5px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">✏️ Rename</button>
+                        <button onclick="deleteBatch(${index})" style="background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.22); padding:5px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">🗑 Delete</button>
+                    </div>
                 `;
                 container.appendChild(div);
             });
         }
 
-        function addNewBatch() {
+        async function renameBatchPhys(index) {
+            const oldName = batches[index].name;
+            const newName = prompt(`"${oldName}" batch rename කරන්න:`, oldName);
+            if (!newName || newName.trim() === oldName) return;
+            const trimmed = newName.trim();
+            if (batches.some((b, i) => i !== index && b.name.toLowerCase() === trimmed.toLowerCase())) {
+                alert('⚠️ මෙම batch නම දැනටමත් පවතී!');
+                return;
+            }
+            setLoadingOverlay(true);
+            const batchId = batches[index].id;
+            await _authFns.renameBatch(batchId, trimmed);
+            const studentsInBatch = students.filter(s => s.batch === oldName);
+            await Promise.all(studentsInBatch.map(s => _authFns.updatePhysicalStudent(s.id, { batch: trimmed })));
+            students.forEach(s => { if (s.batch === oldName) s.batch = trimmed; });
+            batches[index].name = trimmed;
+            setLoadingOverlay(false);
+            renderBatchList();
+            renderBatchOptions();
+            renderRegistryTable();
+        }
+
+        async function addNewBatch() {
             const nameInput = document.getElementById('newBatchInput');
             const linkInput = document.getElementById('newBatchLinkInput');
             const nameValue = nameInput.value.trim();
@@ -1135,8 +1243,12 @@
                 return;
             }
             
-            batches.push({ name: nameValue, link: linkValue });
-            localStorage.setItem('phys_batches', JSON.stringify(batches));
+            setLoadingOverlay(true);
+            const created = await _authFns.addBatch(nameValue, 'physical');
+            if (created) {
+                batches.push({ id: created.id, name: created.name, link: linkValue });
+            }
+            setLoadingOverlay(false);
             nameInput.value = '';
             linkInput.value = '';
             
@@ -1145,11 +1257,23 @@
             renderRegistryTable();
         }
 
-        function deleteBatch(index) {
-            if (confirm(`Are you sure you want to decouple "${batches[index].name}" drop-down metadata? Student object data won't be modified.`)) {
+        async function deleteBatch(index) {
+            const batchName = batches[index].name;
+            const stuCount = students.filter(s => s.batch === batchName).length;
+            const msg = stuCount > 0
+                ? `⚠️ "${batchName}" delete කළොත් ${stuCount} student${stuCount > 1 ? 's' : ''} ද delete වේ!\n\nDelete කරන්නද?`
+                : `"${batchName}" batch delete කරන්නද?`;
+            if (confirm(msg)) {
+                setLoadingOverlay(true);
+                if (stuCount > 0) {
+                    const studentsInBatch = students.filter(s => s.batch === batchName);
+                    await Promise.all(studentsInBatch.map(s => _authFns.deletePhysicalStudent(s.id)));
+                    students = students.filter(s => s.batch !== batchName);
+                }
+                const batchId = batches[index].id;
+                await _authFns.deleteBatch(batchId);
                 batches.splice(index, 1);
-                localStorage.setItem('phys_batches', JSON.stringify(batches));
-                
+                setLoadingOverlay(false);
                 renderBatchList();
                 renderBatchOptions();
                 renderRegistryTable();
@@ -1157,13 +1281,11 @@
         }
 
         function handleLogout() {
-            sessionStorage.removeItem('phys_logged_user');
-            currentUser = null;
-            document.getElementById('mainDashboard').style.display = 'none';
-            document.getElementById('loginPage').style.display = 'flex';
+            // Supabase signOut — module script eken handle karanne
+            window._supabaseLogoutCall && window._supabaseLogoutCall();
         }
 
-        function registerStudent(e) {
+        async function registerStudent(e) {
             e.preventDefault();
             const editId = document.getElementById('editStudentId').value;
             
@@ -1186,29 +1308,29 @@
                 return;
             }
 
+            setLoadingOverlay(true);
             let isNewRegistration = false;
 
             if (editId) {
                 const index = students.findIndex(s => s.id === editId);
                 if (index !== -1) {
-                    students[index] = { ...students[index], ...studentData };
+                    const updated = await _authFns.updatePhysicalStudent(editId, studentData);
+                    if (updated) {
+                        students[index] = { ...students[index], ...studentData };
+                    }
                     alert('Student profile matrix tracking logs committed successfully.');
                 }
             } else {
-                const newStudent = {
-                    id: 'STU-' + Date.now(),
-                    ...studentData,
-                    cardId: null,
-                    ledger: {}, 
-                    attendanceHistory: [],
-                    tutesHistory: {}
-                };
-                students.push(newStudent);
-                isNewRegistration = true;
-                alert('New student footprint recorded safely inside core server.');
+                const created = await _authFns.addPhysicalStudent(studentData);
+                if (created) {
+                    const newStudent = mapPhysStudent(created);
+                    students.push(newStudent);
+                    isNewRegistration = true;
+                    alert('New student footprint recorded safely inside core server.');
+                }
             }
 
-            localStorage.setItem('phys_students', JSON.stringify(students));
+            setLoadingOverlay(false);
             
             if (isNewRegistration) {
                 sendStudentMessage(students[students.length - 1].id);
@@ -1241,10 +1363,12 @@
             document.getElementById('stuCode').focus();
         }
 
-        function deleteStudent(id) {
+        async function deleteStudent(id) {
             if (confirm('Are you absolutely certain you want to purge this record block? Data memory loss is non-reversible.')) {
+                setLoadingOverlay(true);
+                await _authFns.deletePhysicalStudent(id);
                 students = students.filter(s => s.id !== id);
-                localStorage.setItem('phys_students', JSON.stringify(students));
+                setLoadingOverlay(false);
                 renderRegistryTable();
                 alert('Profile wiped cleaner from all directories.');
                 if(document.getElementById('editStudentId').value === id) {
@@ -1384,7 +1508,7 @@
             });
         }
 
-        function toggleLedgerStatus(studentId, monthName) {
+        async function toggleLedgerStatus(studentId, monthName) {
             const student = students.find(s => s.id === studentId);
             if(!student) return;
             if(!student.ledger) student.ledger = {};
@@ -1393,8 +1517,62 @@
             const newStatus = currentStatus === 'Paid' ? 'Not Paid' : 'Paid';
             
             student.ledger[monthName] = newStatus;
-            localStorage.setItem('phys_students', JSON.stringify(students));
+            // Save to Supabase
+            await _authFns.updatePayment(studentId, 'physical', monthName, newStatus);
             renderRegistryTable();
+
+            if (newStatus === 'Paid') {
+                openPaymentMsgModal(student, monthName);
+            }
+        }
+
+        function openPaymentMsgModal(student, monthName) {
+            document.getElementById('paymentMsgStudentName').innerText = student.name;
+            document.getElementById('paymentMsgMonth').innerText = monthName;
+            document.getElementById('paymentMsgModal').classList.add('show');
+
+            // Store references for use when send is confirmed
+            document.getElementById('paymentMsgModal')._student = student;
+            document.getElementById('paymentMsgModal')._monthName = monthName;
+        }
+
+        function confirmSendPaymentMsg() {
+            const modal = document.getElementById('paymentMsgModal');
+            const student = modal._student;
+            const monthName = modal._monthName;
+            modal.classList.remove('show');
+            sendPaymentConfirmationMessage(student, monthName);
+        }
+
+        function cancelPaymentMsg() {
+            document.getElementById('paymentMsgModal').classList.remove('show');
+        }
+
+        function sendPaymentConfirmationMessage(student, monthName) {
+            try {
+                let cleanWA = student.whatsapp.replace(/\D/g, '');
+                if (cleanWA.startsWith('0')) cleanWA = '94' + cleanWA.substring(1);
+
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('si-LK', { year: 'numeric', month: 'long', day: 'numeric' });
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const msgText = `💸 *PAYMENT RECEIPT NOTIFICATION* 💸\n\n` +
+                                `ආයුබෝවන් *${student.name}*,\n\n` +
+                                `ඔබ විසින් සිදුකරන ලද පන්ති ගාස්තු ගෙවීම සාර්ථකව පද්ධතියට ඇතුළත් කර ගන්නා ලදී. ✅\n\n` +
+                                `📌 *ගෙවීම් විස්තර:*\n` +
+                                `• Student Code: *${student.code}*\n` +
+                                `• Student Name: *${student.name}*\n` +
+                                `• Batch: *${student.batch}*\n` +
+                                `• Valid Month: *${monthName}*\n` +
+                                `• Status: ✅ Paid (ගෙවා ඇත)\n` +
+                                `• Date: ${dateStr}\n` +
+                                `• Time: ${timeStr}\n\n` +
+                                `ස්තූතියි,\n` +
+                                `*කාර්යාලයීය කළමනාකාරීත්වය*`;
+
+                window.open(`https://wa.me/${cleanWA}?text=${encodeURIComponent(msgText)}`, '_blank');
+            } catch(e) { console.log('WA message error:', e); }
         }
 
         function openHistoryModal(studentId, studentName) {
@@ -1519,7 +1697,8 @@
             const targetStudent = students.find(s => s.id === targetAssigningStudentId);
             if(targetStudent) {
                 targetStudent.cardId = scannedCardId;
-                localStorage.setItem('phys_students', JSON.stringify(students));
+                // Save card_id to Supabase
+                _authFns.updatePhysicalStudent(targetStudent.id, { card_id: scannedCardId });
                 renderRegistryTable();
                 closeAssignModal();
                 alert(`Successfully authenticated and mapped Token key to ${targetStudent.name}`);
@@ -1753,7 +1932,11 @@
                 }
             }
 
-            localStorage.setItem('phys_students', JSON.stringify(students));
+            // Save tutes_history and attendance_history to Supabase
+            _authFns.updatePhysicalStudent(student.id, {
+                tutes_history: student.tutesHistory,
+                attendance_history: student.attendanceHistory
+            });
             
             // Refresh Live Logs to include current transaction
             populateLiveHistory(student);
@@ -1766,14 +1949,15 @@
             tinyMsg.innerText = `Route: ${student.batch} | Center: ${student.center || 'N/A'}`;
         }
 
-        function instantGatePayment(studentId, monthName, matchToken) {
+        async function instantGatePayment(studentId, monthName, matchToken) {
             const student = students.find(s => s.id === studentId);
             if(!student) return;
             
             if(!student.ledger) student.ledger = {};
             student.ledger[monthName] = 'Paid';
             
-            localStorage.setItem('phys_students', JSON.stringify(students));
+            // Save to Supabase
+            await _authFns.updatePayment(studentId, 'physical', monthName, 'Paid');
             renderRegistryTable();
             processGateScan(matchToken);
 
@@ -1908,6 +2092,231 @@
             const todayStr = new Date().toISOString().split('T')[0];
             XLSX.writeFile(wb, `LB_Enterprise_Students_${todayStr}.xlsx`);
         }
+
+        // ══ LOGIN HISTORY FUNCTIONS ══
+        const LOGIN_HISTORY_KEY_PHYS = 'loginHistory_physical';
+
+        function saveLoginHistory(name, email) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-LK', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const timeStr = now.toLocaleTimeString('en-LK', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            const entry = { name: name, email: email, date: dateStr, time: timeStr, timestamp: now.getTime() };
+            const history = JSON.parse(localStorage.getItem(LOGIN_HISTORY_KEY_PHYS) || '[]');
+            history.unshift(entry);
+            if (history.length > 100) history.pop();
+            localStorage.setItem(LOGIN_HISTORY_KEY_PHYS, JSON.stringify(history));
+        }
+
+        async function showLoginHistory() {
+            const modal = document.getElementById('loginHistoryModal');
+            const tbody = document.getElementById('loginHistoryBody');
+            const countBadge = document.getElementById('loginHistoryCount');
+
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#9ca3af; padding:20px;">⏳ Loading...</td></tr>';
+            countBadge.textContent = 'Loading...';
+            modal.style.display = 'flex';
+
+            try {
+                const sb = window._supabase;
+                if (!sb) throw new Error('Supabase not ready');
+                const { data: history, error } = await sb
+                    .from('login_history')
+                    .select('*')
+                    .order('login_time', { ascending: false })
+                    .limit(100);
+
+                if (error) throw error;
+
+                tbody.innerHTML = '';
+                countBadge.textContent = (history ? history.length : 0) + ' Records';
+
+                if (!history || history.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#9ca3af; padding:20px;">Login records නැත.</td></tr>';
+                } else {
+                    history.forEach((entry, idx) => {
+                        const d = new Date(entry.login_time);
+                        const dateStr = d.toLocaleDateString('si-LK', { year:'numeric', month:'2-digit', day:'2-digit' });
+                        const timeStr = d.toLocaleTimeString('si-LK', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="padding:10px 12px; color:#a78bfa; font-weight:600;">${entry.email}</td>
+                            <td style="padding:10px 12px; color:#9ca3af; font-size:0.82rem;">${entry.email}</td>
+                            <td style="padding:10px 12px; color:#9ca3af;">${dateStr}</td>
+                            <td style="padding:10px 12px; color:#10b981; font-family:monospace;">${timeStr}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch(e) {
+                console.error('Login history load error:', e);
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#ef4444; padding:20px;">⚠️ Load failed: ' + e.message + '</td></tr>';
+            }
+        }
+
+        function closeLoginHistory() {
+            document.getElementById('loginHistoryModal').style.display = 'none';
+        }
+
+        async function clearLoginHistory() {
+            if (confirm('⚠️ Login history සියල්ල මකන්නද?')) {
+                try {
+                    const sb = window._supabase;
+                    if (sb) {
+                        const { data: { user } } = await sb.auth.getUser();
+                        if (user) {
+                            await sb.from('login_history').delete().eq('user_id', user.id);
+                        }
+                    }
+                } catch(e) { console.warn('Clear history error:', e); }
+                await showLoginHistory();
+            }
+        }
     </script>
+    <script type="module">
+  import {
+    supabase,
+    initPageAuth, supabaseLogin, handleLogout,
+    getPhysicalStudents, addPhysicalStudent, updatePhysicalStudent, deletePhysicalStudent,
+    getBatches, addBatch, renameBatch, deleteBatch,
+    updatePayment, getPayments
+  } from './auth.js';
+
+  // ── Wire auth functions to global ──────────────────────────────
+  window._authFns = {
+    getPhysicalStudents, addPhysicalStudent, updatePhysicalStudent, deletePhysicalStudent,
+    getBatches, addBatch, renameBatch, deleteBatch,
+    updatePayment, getPayments
+  };
+
+  // ── Expose supabase client globally for login history ────────
+  window._supabase = supabase;
+
+  // ── Page load: Supabase session check ──────────────────────────
+  initPageAuth({
+    loginEl: 'loginPage',
+    mainEl:  'mainDashboard',
+    onSuccess: async (user) => {
+      const role = user.user_metadata?.role || 'physical';
+      // If user is 'online' role, redirect to online.html
+      if (role === 'online') {
+        window.location.href = './online.html';
+        return;
+      }
+      const userNameEl = document.getElementById('currentUserName');
+      if (userNameEl) {
+        userNameEl.textContent = `${user.email} [${role.toUpperCase()}]`;
+      }
+      if (role === 'STAFF') {
+        const enrollmentPanel = document.getElementById('enrollmentPanel');
+        const sessionPanel = document.getElementById('sessionLauncherPanel');
+        if (enrollmentPanel) enrollmentPanel.style.display = 'none';
+        if (sessionPanel) sessionPanel.style.display = 'none';
+        const grid = document.querySelector('.workspace-grid');
+        if (grid) grid.style.gridTemplateColumns = '1fr';
+      }
+      // Load all data from Supabase, then launch app
+      await loadAllFromSupabase();
+      launchAuthenticatedState && launchAuthenticatedState();
+    }
+  });
+
+  // ── Bind login form via global bridge ──────────────────────────
+  window._supabaseLoginCall = async function(email, password) {
+    const user = await supabaseLogin(email, password, {
+      loginEl: 'loginPage',
+      mainEl:  'mainDashboard',
+      errorEl: 'loginError',
+      btnEl:   'loginBtn',
+      onSuccess: async (u) => {
+        const role = u.user_metadata?.role || 'physical';
+        // If online role, redirect to online.html
+        if (role === 'online') {
+          window.location.href = './online.html';
+          return;
+        }
+        const userNameEl = document.getElementById('currentUserName');
+        if (userNameEl) {
+          userNameEl.textContent = `${u.email} [${role.toUpperCase()}]`;
+          if (role === 'STAFF') {
+            const ep = document.getElementById('enrollmentPanel');
+            const sp = document.getElementById('sessionLauncherPanel');
+            if (ep) ep.style.display = 'none';
+            if (sp) sp.style.display = 'none';
+          }
+        }
+        await loadAllFromSupabase();
+        launchAuthenticatedState && launchAuthenticatedState();
+        const form = document.getElementById('loginForm');
+        if (form) form.reset();
+      }
+    });
+    if (!user) {
+      // Error already shown by supabaseLogin via errorEl
+    }
+  };
+
+  // ── Logout bridge ───────────────────────────────────────────────
+  window._supabaseLogoutCall = async function() {
+    await handleLogout({ loginEl: 'loginPage', mainEl: 'mainDashboard' });
+  };
+
+  // ── Direct logout-btn if exists ─────────────────────────────────
+  const lBtn = document.getElementById('logout-btn');
+  if (lBtn) lBtn.addEventListener('click', () => window._supabaseLogoutCall());
+</script>
+
+<!-- ══ LOGIN HISTORY MODAL ══ -->
+<div id="loginHistoryModal" style="
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.8); z-index:99999;
+    justify-content:center; align-items:center; padding:20px;
+">
+    <div style="
+        background:linear-gradient(135deg, #111318 0%, #1a1b26 100%);
+        border:1px solid rgba(99,102,241,0.4);
+        border-radius:18px;
+        width:min(700px, 95vw);
+        max-height:80vh;
+        display:flex; flex-direction:column;
+        box-shadow:0 25px 80px rgba(99,102,241,0.2);
+    ">
+        <div style="padding:22px 26px 16px; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h3 style="margin:0; font-size:1.15rem; font-weight:700; color:#a78bfa;">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Login History
+                </h3>
+                <span id="loginHistoryCount" style="font-size:0.78rem; color:#6b7280; margin-top:3px; display:block;">0 Records</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button onclick="clearLoginHistory()" style="
+                    background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3);
+                    padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">
+                    🗑 Clear All
+                </button>
+                <button onclick="closeLoginHistory()" style="
+                    background:rgba(255,255,255,0.07); color:#9ca3af; border:1px solid rgba(255,255,255,0.1);
+                    padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">
+                    ✕ Close
+                </button>
+            </div>
+        </div>
+        <div style="overflow-y:auto; padding:14px 26px 22px;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.86rem;">
+                <thead>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+                        <th style="padding:9px 12px; text-align:left; color:#6b7280; font-weight:600; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em;">👤 Name</th>
+                        <th style="padding:9px 12px; text-align:left; color:#6b7280; font-weight:600; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em;">📧 Email</th>
+                        <th style="padding:9px 12px; text-align:left; color:#6b7280; font-weight:600; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em;">📅 Date</th>
+                        <th style="padding:9px 12px; text-align:left; color:#6b7280; font-weight:600; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em;">🕐 Time</th>
+                    </tr>
+                </thead>
+                <tbody id="loginHistoryBody">
+                    <tr><td colspan="4" style="text-align:center; color:#6b7280; padding:20px;">No records</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

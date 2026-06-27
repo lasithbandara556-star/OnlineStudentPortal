@@ -256,7 +256,7 @@
       background: #07052c;
       position: relative;
       z-index: 5;
-      padding: 90px 0 100px;
+      padding: 90px 0 110px;
     }
     .features-section::before {
       content: '';
@@ -264,6 +264,16 @@
       top: 0; left: 0; right: 0;
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    }
+
+    /* ambient purple glow behind section */
+    .features-section::after {
+      content: '';
+      position: absolute;
+      top: -120px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
     }
 
     .section-eyebrow {
@@ -282,18 +292,83 @@
       color: var(--text);
     }
 
-    /* ─── FEATURE CARDS ───────────────────────────── */
+    /* ─── LIVE STATUS BAR ─────────────────────────── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(167,139,250,0.12);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 48px;
+    }
+    .status-dot-live {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 10px #4ade80;
+      animation: livePulse 2s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes livePulse {
+      0%,100% { box-shadow: 0 0 6px #4ade80; }
+      50%      { box-shadow: 0 0 16px #4ade80, 0 0 30px rgba(74,222,128,0.3); }
+    }
+    .status-label {
+      font-size: 0.78rem;
+      color: #4ade80;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .status-divider {
+      width: 1px; height: 16px;
+      background: rgba(167,139,250,0.2);
+    }
+    .status-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .status-stat strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .status-time {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ─── FEATURE CARDS v2 ────────────────────────── */
     .feat-card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 36px 28px;
-      backdrop-filter: blur(10px);
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(167,139,250,0.13);
+      border-radius: 22px;
+      padding: 32px 26px 26px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform 0.35s cubic-bezier(.2,.8,.4,1), box-shadow 0.35s, border-color 0.3s;
       height: 100%;
       position: relative;
       overflow: hidden;
+      /* scroll reveal: start invisible */
+      opacity: 0;
+      transform: translateY(32px);
     }
+    .feat-card.revealed {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(.2,.8,.4,1),
+                  box-shadow 0.35s, border-color 0.3s;
+    }
+
+    /* top gradient line */
     .feat-card::before {
       content: '';
       position: absolute;
@@ -302,41 +377,241 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
-    .feat-card.purple::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
-    .feat-card.blue::before   { background: linear-gradient(90deg, var(--blue), var(--purple-light)); }
-    .feat-card.teal::before   { background: linear-gradient(90deg, #14b8a6, var(--blue)); }
+    .feat-card.purple::before { background: linear-gradient(90deg, #7c3aed, #2563eb); }
+    .feat-card.blue::before   { background: linear-gradient(90deg, #2563eb, #c4b5fd); }
+    .feat-card.teal::before   { background: linear-gradient(90deg, #14b8a6, #2563eb); }
+    .feat-card.amber::before  { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+
+    /* inner glow on hover */
+    .feat-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .feat-card.purple::after { background: radial-gradient(ellipse at top left, rgba(124,58,237,0.1) 0%, transparent 65%); }
+    .feat-card.blue::after   { background: radial-gradient(ellipse at top left, rgba(37,99,235,0.1) 0%, transparent 65%); }
+    .feat-card.teal::after   { background: radial-gradient(ellipse at top left, rgba(20,184,166,0.1) 0%, transparent 65%); }
+    .feat-card.amber::after  { background: radial-gradient(ellipse at top left, rgba(245,158,11,0.1) 0%, transparent 65%); }
 
     .feat-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      border-color: rgba(167,139,250,0.35);
+      transform: translateY(-7px) !important;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(167,139,250,0.25);
+      border-color: rgba(167,139,250,0.3);
     }
     .feat-card:hover::before { opacity: 1; }
+    .feat-card:hover::after  { opacity: 1; }
 
+    /* card header row */
+    .feat-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
     .feat-icon {
-      width: 52px; height: 52px;
+      width: 50px; height: 50px;
       border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 22px;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
     }
-    .feat-icon.purple { background: rgba(109,40,217,0.18); color: var(--purple-light); }
-    .feat-icon.blue   { background: rgba(37,99,235,0.18);  color: var(--blue-light); }
-    .feat-icon.teal   { background: rgba(20,184,166,0.18); color: #5eead4; }
+    .feat-icon.purple { background: rgba(109,40,217,0.2); color: var(--purple-light); box-shadow: 0 0 20px rgba(124,58,237,0.2); }
+    .feat-icon.blue   { background: rgba(37,99,235,0.2);  color: var(--blue-light);   box-shadow: 0 0 20px rgba(37,99,235,0.2); }
+    .feat-icon.teal   { background: rgba(20,184,166,0.2); color: #5eead4;             box-shadow: 0 0 20px rgba(20,184,166,0.2); }
+    .feat-icon.amber  { background: rgba(245,158,11,0.2); color: #fcd34d;             box-shadow: 0 0 20px rgba(245,158,11,0.2); }
+
+    /* live data chip */
+    .feat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .feat-chip.green  { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+    .feat-chip.orange { background: rgba(251,146,60,0.12); color: #fb923c; border: 1px solid rgba(251,146,60,0.25); }
+    .feat-chip.blue   { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.25); }
+    .feat-chip.purple { background: rgba(196,181,253,0.12);color: #c4b5fd; border: 1px solid rgba(196,181,253,0.25);}
+    .feat-chip-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
     .feat-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      position: relative; z-index: 1;
     }
     .feat-desc {
-      font-size: 0.875rem;
+      font-size: 0.845rem;
       color: var(--muted);
       line-height: 1.65;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      position: relative; z-index: 1;
     }
+
+    /* ─── LIVE MINI STATS inside card ────────────── */
+    .feat-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+      position: relative; z-index: 1;
+    }
+    .feat-stat-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .feat-stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .feat-stat-num.purple { color: var(--purple-light); }
+    .feat-stat-num.blue   { color: var(--blue-light); }
+    .feat-stat-num.green  { color: #4ade80; }
+    .feat-stat-num.amber  { color: #fcd34d; }
+    .feat-stat-lbl {
+      font-size: 0.67rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── CARD ACTION BUTTONS ─────────────────────── */
+    .feat-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .feat-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .feat-btn:active { transform: scale(0.96); }
+    .feat-btn.primary {
+      background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+    }
+    .feat-btn.primary:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 6px 22px rgba(124,58,237,0.45);
+      color: #fff;
+    }
+    .feat-btn.ghost {
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .feat-btn.ghost:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--text);
+      border-color: rgba(167,139,250,0.3);
+    }
+    .feat-btn.teal {
+      background: rgba(20,184,166,0.15);
+      color: #5eead4;
+      border: 1px solid rgba(20,184,166,0.25);
+    }
+    .feat-btn.teal:hover {
+      background: rgba(20,184,166,0.25);
+    }
+    .feat-btn.amber {
+      background: rgba(245,158,11,0.15);
+      color: #fcd34d;
+      border: 1px solid rgba(245,158,11,0.25);
+    }
+    .feat-btn.amber:hover {
+      background: rgba(245,158,11,0.25);
+    }
+
+    /* ─── DIVIDER inside card ─────────────────────── */
+    .feat-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 18px 0;
+    }
+
+    /* ─── BOTTOM ROW: quick summary strip ────────── */
+    .quick-summary {
+      margin-top: 48px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(167,139,250,0.12);
+      border-radius: 16px;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .qs-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .qs-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .qs-icon.p { background: rgba(124,58,237,0.18); color: var(--purple-light); }
+    .qs-icon.b { background: rgba(37,99,235,0.18);  color: var(--blue-light); }
+    .qs-icon.g { background: rgba(74,222,128,0.18); color: #4ade80; }
+    .qs-icon.a { background: rgba(245,158,11,0.18); color: #fcd34d; }
+    .qs-info-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .qs-info-lbl {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .qs-divider {
+      width: 1px; height: 36px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* ─── SCROLL REVEAL DELAYS ────────────────────── */
+    .reveal-delay-1 { transition-delay: 0.05s !important; }
+    .reveal-delay-2 { transition-delay: 0.15s !important; }
+    .reveal-delay-3 { transition-delay: 0.25s !important; }
+    .reveal-delay-4 { transition-delay: 0.35s !important; }
+
+    /* feat-link kept for compat */
     .feat-link {
       font-size: 0.82rem;
       font-weight: 600;
@@ -472,6 +747,184 @@
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════
+     ADMIN PIN LOCK SCREEN
+     Default PIN: 2580  (change ADMIN_PIN below)
+═══════════════════════════════════════════ -->
+<style>
+  #lock-overlay {
+    position: fixed; inset: 0; z-index: 999999;
+    background: #030209;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+  }
+  #lock-overlay .lo-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+  }
+  #lock-overlay .lo-orb1 { width:420px; height:420px; background:#5b21b6; top:-120px; left:-100px; opacity:.28; }
+  #lock-overlay .lo-orb2 { width:320px; height:320px; background:#1d4ed8; bottom:-80px; right:-80px; opacity:.22; }
+  .lock-card {
+    position: relative; z-index: 2;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(167,139,250,0.22);
+    border-radius: 28px;
+    padding: 44px 40px 36px;
+    width: 340px;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(124,58,237,0.1);
+    animation: lockIn .45s cubic-bezier(.2,.8,.4,1) both;
+  }
+  @keyframes lockIn {
+    from { opacity:0; transform: scale(.9) translateY(24px); }
+    to   { opacity:1; transform: scale(1) translateY(0); }
+  }
+  .lock-logo {
+    width: 68px; height: 68px; border-radius: 20px;
+    background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.7rem; color: #fff;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 32px rgba(124,58,237,.5);
+  }
+  .lock-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: #f1f5f9; margin-bottom: 4px;
+  }
+  .lock-sub { font-size: .8rem; color: #64748b; margin-bottom: 28px; letter-spacing:.02em; }
+  .pin-dots { display: flex; justify-content: center; gap: 14px; margin-bottom: 26px; }
+  .pin-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid rgba(167,139,250,.4); background: transparent;
+    transition: background .2s, border-color .2s, transform .15s;
+  }
+  .pin-dot.filled {
+    background: #7c3aed; border-color: #7c3aed;
+    transform: scale(1.15); box-shadow: 0 0 10px rgba(124,58,237,.6);
+  }
+  .pin-dot.error { background: #ef4444; border-color: #ef4444; animation: shake .35s ease; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)}
+    40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
+  }
+  .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .np-btn {
+    height: 56px; border-radius: 14px;
+    border: 1px solid rgba(167,139,250,.15);
+    background: rgba(255,255,255,.04);
+    color: #f1f5f9;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem; font-weight: 600;
+    cursor: pointer !important;
+    transition: background .15s, transform .12s, border-color .15s;
+    user-select: none;
+  }
+  .np-btn:hover { background: rgba(124,58,237,.18); border-color: rgba(124,58,237,.4); }
+  .np-btn:active { transform: scale(.93); background: rgba(124,58,237,.28); }
+  .np-btn.del { color: #94a3b8; font-size: 1.05rem; }
+  .np-btn.zero { grid-column: 2; }
+  .lock-err { font-size: .78rem; color: #ef4444; min-height: 20px; margin-top: 6px; font-weight: 500; }
+  .lock-hint { font-size: .68rem; color: #334155; margin-top: 18px; letter-spacing: .04em; }
+  #lock-overlay.unlocking { animation: flashUnlock .5s ease forwards; }
+  @keyframes flashUnlock { 0%{opacity:1} 60%{opacity:.3} 100%{opacity:0;pointer-events:none} }
+</style>
+
+<div id="lock-overlay">
+  <div class="lo-orb lo-orb1"></div>
+  <div class="lo-orb lo-orb2"></div>
+  <div class="lock-card">
+    <div class="lock-logo"><i class="fa-solid fa-shield-halved"></i></div>
+    <div class="lock-title">Admin Access</div>
+    <div class="lock-sub">ArtofAccounting.lk &nbsp;·&nbsp; Private Dashboard</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="numpad">
+      <button class="np-btn" onclick="pinInput('1')">1</button>
+      <button class="np-btn" onclick="pinInput('2')">2</button>
+      <button class="np-btn" onclick="pinInput('3')">3</button>
+      <button class="np-btn" onclick="pinInput('4')">4</button>
+      <button class="np-btn" onclick="pinInput('5')">5</button>
+      <button class="np-btn" onclick="pinInput('6')">6</button>
+      <button class="np-btn" onclick="pinInput('7')">7</button>
+      <button class="np-btn" onclick="pinInput('8')">8</button>
+      <button class="np-btn" onclick="pinInput('9')">9</button>
+      <button class="np-btn del" onclick="pinDelete()"><i class="fa-solid fa-delete-left"></i></button>
+      <button class="np-btn zero" onclick="pinInput('0')">0</button>
+    </div>
+    <div class="lock-err" id="lock-err"></div>
+    <div class="lock-hint">🔒 Private &nbsp;·&nbsp; Admin Only</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const ADMIN_PIN   = '2580';   /* ← PIN change කරන්න මෙතැනින් */
+  const SESSION_KEY = 'aoa_admin_auth';
+
+  if (sessionStorage.getItem(SESSION_KEY) === 'ok') {
+    document.getElementById('lock-overlay').style.display = 'none';
+    return;
+  }
+
+  let current = '';
+
+  function updateDots() {
+    for (let i = 0; i < 4; i++) {
+      document.getElementById('d' + i).classList.toggle('filled', i < current.length);
+      document.getElementById('d' + i).classList.remove('error');
+    }
+    document.getElementById('lock-err').textContent = '';
+  }
+
+  window.pinInput = function (digit) {
+    if (current.length >= 4) return;
+    current += digit;
+    updateDots();
+    if (current.length === 4) setTimeout(checkPin, 140);
+  };
+
+  window.pinDelete = function () {
+    current = current.slice(0, -1);
+    updateDots();
+  };
+
+  function checkPin() {
+    if (current === ADMIN_PIN) {
+      sessionStorage.setItem(SESSION_KEY, 'ok');
+      const ov = document.getElementById('lock-overlay');
+      ov.classList.add('unlocking');
+      setTimeout(() => ov.remove(), 500);
+    } else {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById('d' + i).classList.remove('filled');
+        document.getElementById('d' + i).classList.add('error');
+      }
+      document.getElementById('lock-err').textContent = 'Incorrect PIN. Try again.';
+      setTimeout(() => {
+        for (let i = 0; i < 4; i++)
+          document.getElementById('d' + i).classList.remove('error');
+        current = '';
+        updateDots();
+      }, 750);
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key >= '0' && e.key <= '9') pinInput(e.key);
+    else if (e.key === 'Backspace') pinDelete();
+  });
+})();
+</script>
+
 <!-- BACKGROUND MUSIC -->
 <audio id="bgMusic" src="theme.mp3" loop preload="auto"></audio>
 <button id="musicToggleBtn" onclick="toggleBgMusic()" style="position:fixed; bottom:20px; right:20px; z-index:9999; width:50px; height:50px; border-radius:50%; border:none; background:var(--purple-light, #7c3aed); color:#fff; font-size:18px; box-shadow:0 4px 12px rgba(0,0,0,0.4); cursor:pointer;">
@@ -532,7 +985,7 @@
           <a class="nav-link active" href="index.html"><i class="fa-solid fa-house me-1"></i>මුල් පිටුව</a>
         </li>
         <li class="nav-item">
-          
+          <a class="nav-link" href="#timetable-section" onclick="document.getElementById('timetable-section').scrollIntoView({behavior:'smooth'});return false;"><i class="fa-solid fa-calendar-days me-1"></i>Time Table</a>
         </li>
       </ul>
     </div>
@@ -564,7 +1017,7 @@
           </h1>
 
           <p class="hero-sub">
-            ටියුෂන් පන්ති කළමනාකරණ පද්ධතිය.
+            Tution Management System for <strong>ArtofAccounting.lk</strong> - Track Students, Fees, and Classes with easy.
           </p>
 
           <div class="d-flex flex-wrap gap-3">
@@ -604,47 +1057,1002 @@
 <!-- FEATURES -->
 <section class="features-section">
   <div class="container">
-    <div class="mb-5">
-      <p class="section-eyebrow">Quick Access — පද්ධති පහසුකම්</p>
-      <h2 class="section-title">ඔබට අවශ්‍ය සියල්ල<br>එකම තැනකින්</h2>
+
+    <!-- Section header -->
+    <div class="mb-4">
+      <p class="section-eyebrow">⚡ Quick Access — පද්ධති පහසුකම්</p>
+      <h2 class="section-title">ඔබට අවශ්‍ය සියල්ල<br><span style="background:linear-gradient(90deg,var(--purple-light),var(--blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">එකම තැනකින්</span></h2>
     </div>
 
+    <!-- Live status bar -->
+    <div class="status-bar">
+      <div class="status-dot-live"></div>
+      <span class="status-label">System Online</span>
+      <div class="status-divider"></div>
+      <div class="status-stat"><i class="fa-solid fa-users fa-xs"></i> Online: <strong id="sb-online">—</strong></div>
+      <div class="status-stat"><i class="fa-solid fa-building fa-xs"></i> Physical: <strong id="sb-physical">—</strong></div>
+      <div class="status-stat"><i class="fa-solid fa-circle-exclamation fa-xs" style="color:#fb923c"></i> Pending: <strong id="sb-pending" style="color:#fb923c">—</strong></div>
+      <div class="status-divider"></div>
+      <div class="status-stat"><i class="fa-solid fa-calendar-check fa-xs" style="color:#4ade80"></i> Month: <strong id="sb-month">—</strong></div>
+      <span class="status-time" id="sb-time">—</span>
+    </div>
+
+    <!-- Cards row -->
     <div class="row g-4">
-      <div class="col-md-4">
-        <div class="feat-card purple">
-          <div class="feat-icon purple"><i class="fa-solid fa-user-plus"></i></div>
-          <h3 class="feat-title">ළමයින් ඇතුළත් කිරීම</h3>
-          <p class="feat-desc">නව සිසුන් පද්ධතියට එකතු කිරීම සහ පවතින සිසුන්ගේ තොරතුරු යාවත්කාලීන කිරීම.</p>
-          <a href="system.html" class="feat-link">
-            ඇතුළු වන්න <i class="fa-solid fa-arrow-right"></i>
-          </a>
+
+      <!-- CARD 1: Online Management -->
+      <div class="col-md-6 col-xl-3">
+        <div class="feat-card purple reveal-delay-1">
+          <div class="feat-header">
+            <div class="feat-icon purple"><i class="fa-solid fa-laptop"></i></div>
+            <span class="feat-chip green"><span class="feat-chip-dot"></span>Active</span>
+          </div>
+          <h3 class="feat-title">Online Students</h3>
+          <p class="feat-desc">Online batch student records, fee status, tute issuing, and web access management.</p>
+          <div class="feat-stats">
+            <div class="feat-stat-box">
+              <div class="feat-stat-num purple" id="c1-total">—</div>
+              <div class="feat-stat-lbl">Students</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num green" id="c1-paid">—</div>
+              <div class="feat-stat-lbl">Paid</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num amber" id="c1-pending">—</div>
+              <div class="feat-stat-lbl">Pending</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num blue" id="c1-batches">—</div>
+              <div class="feat-stat-lbl">Batches</div>
+            </div>
+          </div>
+          <hr class="feat-divider">
+          <div class="feat-actions">
+            <a href="online.html" class="feat-btn primary"><i class="fa-solid fa-arrow-right-to-bracket"></i> Open</a>
+            <a href="online.html" class="feat-btn ghost"><i class="fa-solid fa-file-invoice-dollar"></i> Fees</a>
+          </div>
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="feat-card blue">
-          <div class="feat-icon blue"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-          <h3 class="feat-title">ගාස්තු සහ පන්ති වාර්තා</h3>
-          <p class="feat-desc">මාසික Fees, Tute බෙදාහැරීම් සහ Website Access කළමනාකරණය.</p>
-          <a href="system.html" class="feat-link">
-            පරීක්ෂා කරන්න <i class="fa-solid fa-arrow-right"></i>
-          </a>
+      <!-- CARD 2: Physical Management -->
+      <div class="col-md-6 col-xl-3">
+        <div class="feat-card blue reveal-delay-2">
+          <div class="feat-header">
+            <div class="feat-icon blue"><i class="fa-solid fa-building"></i></div>
+            <span class="feat-chip blue"><span class="feat-chip-dot"></span>Physical</span>
+          </div>
+          <h3 class="feat-title">Physical Students</h3>
+          <p class="feat-desc">In-class student ledger, attendance, monthly fee collection, and exam records.</p>
+          <div class="feat-stats">
+            <div class="feat-stat-box">
+              <div class="feat-stat-num blue" id="c2-total">—</div>
+              <div class="feat-stat-lbl">Students</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num green" id="c2-paid">—</div>
+              <div class="feat-stat-lbl">Paid</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num amber" id="c2-pending">—</div>
+              <div class="feat-stat-lbl">Pending</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num purple" id="c2-batches">—</div>
+              <div class="feat-stat-lbl">Batches</div>
+            </div>
+          </div>
+          <hr class="feat-divider">
+          <div class="feat-actions">
+            <a href="physical.html" class="feat-btn primary"><i class="fa-solid fa-arrow-right-to-bracket"></i> Open</a>
+            <a href="physical.html" class="feat-btn ghost"><i class="fa-solid fa-clipboard-list"></i> Records</a>
+          </div>
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="feat-card teal">
-          <div class="feat-icon teal"><i class="fa-solid fa-database"></i></div>
-          <h3 class="feat-title">Backup & Excel Reports</h3>
-          <p class="feat-desc">සිසුන්ගේ සියලු දත්ත Excel හෝ CSV ගොනුවක් ලෙස ආරක්ෂිතව download කරගැනීම.</p>
-          <a href="system.html" class="feat-link">
-            Backup ගන්න <i class="fa-solid fa-arrow-right"></i>
-          </a>
+      <!-- CARD 3: Backup & Reports -->
+      <div class="col-md-6 col-xl-3">
+        <div class="feat-card teal reveal-delay-3">
+          <div class="feat-header">
+            <div class="feat-icon teal"><i class="fa-solid fa-database"></i></div>
+            <span class="feat-chip purple"><span class="feat-chip-dot"></span>Export</span>
+          </div>
+          <h3 class="feat-title">Backup & Reports</h3>
+          <p class="feat-desc">Export all student data to Excel or CSV. Batch-wise breakdown for safe backup.</p>
+          <div class="feat-stats">
+            <div class="feat-stat-box">
+              <div class="feat-stat-num green" id="c3-total">—</div>
+              <div class="feat-stat-lbl">Total Students</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num blue" id="c3-revenue">—</div>
+              <div class="feat-stat-lbl">This Month</div>
+            </div>
+          </div>
+          <hr class="feat-divider">
+          <div class="feat-actions">
+            <a href="online.html" class="feat-btn teal"><i class="fa-solid fa-file-excel"></i> Online Excel</a>
+            <a href="physical.html" class="feat-btn ghost"><i class="fa-solid fa-file-csv"></i> Physical CSV</a>
+          </div>
         </div>
       </div>
+
+      <!-- CARD 4: WhatsApp Quick Send -->
+      <div class="col-md-6 col-xl-3">
+        <div class="feat-card amber reveal-delay-4">
+          <div class="feat-header">
+            <div class="feat-icon amber"><i class="fa-brands fa-whatsapp"></i></div>
+            <span class="feat-chip orange"><span class="feat-chip-dot"></span>Alerts</span>
+          </div>
+          <h3 class="feat-title">WhatsApp Alerts</h3>
+          <p class="feat-desc">Quickly see how many students need payment reminders this month and send bulk alerts.</p>
+          <div class="feat-stats">
+            <div class="feat-stat-box">
+              <div class="feat-stat-num amber" id="c4-remind">—</div>
+              <div class="feat-stat-lbl">Need Reminder</div>
+            </div>
+            <div class="feat-stat-box">
+              <div class="feat-stat-num green" id="c4-done">—</div>
+              <div class="feat-stat-lbl">All Paid</div>
+            </div>
+          </div>
+          <hr class="feat-divider">
+          <div class="feat-actions">
+            <a href="online.html" class="feat-btn amber"><i class="fa-brands fa-whatsapp"></i> Online Alerts</a>
+            <a href="physical.html" class="feat-btn ghost"><i class="fa-brands fa-whatsapp"></i> Physical</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+
+    <!-- Quick summary strip -->
+    <div class="quick-summary">
+      <div class="qs-item">
+        <div class="qs-icon p"><i class="fa-solid fa-users"></i></div>
+        <div>
+          <div class="qs-info-num" id="qs-total">—</div>
+          <div class="qs-info-lbl">Total Students</div>
+        </div>
+      </div>
+      <div class="qs-divider"></div>
+      <div class="qs-item">
+        <div class="qs-icon g"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+          <div class="qs-info-num" id="qs-paid">—</div>
+          <div class="qs-info-lbl">Paid This Month</div>
+        </div>
+      </div>
+      <div class="qs-divider"></div>
+      <div class="qs-item">
+        <div class="qs-icon a"><i class="fa-solid fa-coins"></i></div>
+        <div>
+          <div class="qs-info-num" id="qs-revenue">—</div>
+          <div class="qs-info-lbl">Total Revenue</div>
+        </div>
+      </div>
+      <div class="qs-divider"></div>
+      <div class="qs-item">
+        <div class="qs-icon b"><i class="fa-solid fa-layer-group"></i></div>
+        <div>
+          <div class="qs-info-num" id="qs-batches">—</div>
+          <div class="qs-info-lbl">Active Batches</div>
+        </div>
+      </div>
+      <div class="qs-divider d-none d-md-block"></div>
+      <a href="online.html" class="feat-btn primary d-none d-md-inline-flex">
+        <i class="fa-solid fa-gauge-high"></i> Open Dashboard
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
     </div>
+
   </div>
 </section>
+
+<!-- ══════════════════════════════════════════
+     TIME TABLE SECTION
+═══════════════════════════════════════════ -->
+<section class="features-section" id="timetable-section" style="padding:70px 0 90px; background:#06042a;">
+  <div class="container">
+
+    <div class="mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <p class="section-eyebrow">📅 Class Schedule — පන්ති කාලසටහන</p>
+        <h2 class="section-title">Time Table &amp; <span style="background:linear-gradient(90deg,var(--purple-light),var(--blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Reminders</span></h2>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="feat-btn primary" onclick="openReminderModal()">
+          <i class="fa-solid fa-bell"></i> Set Reminder
+        </button>
+        <button class="feat-btn ghost" onclick="checkTodayClasses()">
+          <i class="fa-solid fa-calendar-day"></i> Today's Classes
+        </button>
+      </div>
+    </div>
+
+    <!-- Today's classes highlight bar -->
+    <div id="today-bar" style="display:none; background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.25); border-radius:14px; padding:14px 20px; margin-bottom:24px;">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div style="width:9px;height:9px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80; flex-shrink:0;"></div>
+        <span style="font-weight:700;color:#4ade80;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;">Today's Classes</span>
+        <div id="today-classes-list" style="display:flex;gap:8px;flex-wrap:wrap;margin-left:4px;"></div>
+      </div>
+    </div>
+
+    <!-- Timetable grid — 3 institutes -->
+    <div class="row g-4">
+
+      <!-- UNIQUE - Matale -->
+      <div class="col-lg-4">
+        <div class="feat-card purple revealed" style="opacity:1;transform:none;">
+          <div class="feat-header">
+            <div class="feat-icon purple"><i class="fa-solid fa-school"></i></div>
+            <span class="feat-chip purple"><span class="feat-chip-dot"></span>Matale</span>
+          </div>
+          <h3 class="feat-title" style="font-size:1.1rem;">Unique — Matale</h3>
+          <hr class="feat-divider" style="margin:12px 0;">
+          <div id="tt-unique" class="tt-schedule"></div>
+        </div>
+      </div>
+
+      <!-- SESIP - Rambukkana -->
+      <div class="col-lg-4">
+        <div class="feat-card blue revealed" style="opacity:1;transform:none;">
+          <div class="feat-header">
+            <div class="feat-icon blue"><i class="fa-solid fa-building-columns"></i></div>
+            <span class="feat-chip blue"><span class="feat-chip-dot"></span>Rambukkana</span>
+          </div>
+          <h3 class="feat-title" style="font-size:1.1rem;">Sesip — Rambukkana</h3>
+          <hr class="feat-divider" style="margin:12px 0;">
+          <div id="tt-sesip" class="tt-schedule"></div>
+        </div>
+      </div>
+
+      <!-- Science Center - Kegalle -->
+      <div class="col-lg-4">
+        <div class="feat-card teal revealed" style="opacity:1;transform:none;">
+          <div class="feat-header">
+            <div class="feat-icon teal"><i class="fa-solid fa-flask"></i></div>
+            <span class="feat-chip green"><span class="feat-chip-dot"></span>Kegalle</span>
+          </div>
+          <h3 class="feat-title" style="font-size:1.1rem;">Science Center — Kegalle</h3>
+          <hr class="feat-divider" style="margin:12px 0;">
+          <div id="tt-kegalle" class="tt-schedule"></div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+
+    <!-- Weekly overview mini-calendar -->
+    <div class="quick-summary" style="margin-top:32px; flex-direction:column; align-items:stretch; gap:0; padding:0; overflow:hidden;">
+      <div style="padding:18px 24px 14px; border-bottom:1px solid rgba(255,255,255,0.06);">
+        <span style="font-size:.72rem;font-weight:700;color:var(--purple-light);letter-spacing:.12em;text-transform:uppercase;">⚡ Weekly Overview</span>
+      </div>
+      <div id="weekly-grid" style="display:grid; grid-template-columns:repeat(7,1fr); padding:16px 12px 18px; gap:8px;"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ REMINDER MODAL ══ -->
+<style>
+  /* ─── Timetable styles ─── */
+  .tt-row {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:9px 10px; border-radius:11px; margin-bottom:6px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    transition:background .18s, border-color .18s;
+  }
+  .tt-row:hover { background:rgba(255,255,255,0.06); border-color:rgba(167,139,250,.2); }
+  .tt-row.today-row { background:rgba(74,222,128,0.07); border-color:rgba(74,222,128,.22); }
+  .tt-day-badge {
+    min-width:62px; padding:3px 8px; border-radius:7px;
+    font-size:.68rem; font-weight:700; letter-spacing:.05em;
+    text-align:center; flex-shrink:0; margin-top:1px;
+  }
+  .tt-day-badge.monday    { background:rgba(196,181,253,.15); color:#c4b5fd; }
+  .tt-day-badge.tuesday   { background:rgba(96,165,250,.15);  color:#60a5fa; }
+  .tt-day-badge.wednesday { background:rgba(94,234,212,.15);  color:#5eead4; }
+  .tt-day-badge.thursday  { background:rgba(251,191,36,.15);  color:#fbbf24; }
+  .tt-day-badge.friday    { background:rgba(251,113,133,.15); color:#fb7185; }
+  .tt-day-badge.saturday  { background:rgba(167,139,250,.15); color:#a78bfa; }
+  .tt-day-badge.sunday    { background:rgba(74,222,128,.15);  color:#4ade80; }
+  .tt-row.today-row .tt-day-badge { box-shadow:0 0 8px rgba(74,222,128,.4); }
+  .tt-info { flex:1; min-width:0; }
+  .tt-class-type { font-size:.72rem; font-weight:700; color:var(--muted); letter-spacing:.04em; text-transform:uppercase; margin-bottom:2px; }
+  .tt-batch { font-size:.82rem; font-weight:600; color:var(--text); line-height:1.3; }
+  .tt-time { font-size:.72rem; color:var(--muted); margin-top:2px; font-variant-numeric:tabular-nums; }
+  .tt-today-dot { width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;flex-shrink:0;margin-top:5px; }
+
+  /* ─── Weekly grid ─── */
+  .wk-col { text-align:center; }
+  .wk-day-lbl { font-size:.62rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px; }
+  .wk-dot-wrap { display:flex;flex-direction:column;gap:4px;align-items:center; }
+  .wk-dot {
+    width:28px;height:28px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.6rem;font-weight:700;
+    border:1px solid rgba(255,255,255,0.07);
+    color:var(--muted); cursor:default;
+    transition:background .2s, border-color .2s;
+    text-align:center; line-height:1.2; padding:2px;
+  }
+  .wk-dot.has-class { background:rgba(124,58,237,.18); border-color:rgba(124,58,237,.4); color:var(--purple-light); }
+  .wk-dot.today-col { background:rgba(74,222,128,.15); border-color:rgba(74,222,128,.4); color:#4ade80 !important; }
+  .wk-dot:hover.has-class { background:rgba(124,58,237,.32); }
+
+  /* ─── Reminder Modal ─── */
+  #reminder-overlay {
+    position:fixed;inset:0;z-index:999990;
+    background:rgba(3,2,9,.82);
+    backdrop-filter:blur(12px);
+    display:none;align-items:center;justify-content:center;
+    padding:20px;
+  }
+  #reminder-overlay.show { display:flex; }
+  .reminder-modal {
+    background:rgba(8,6,40,.98);
+    border:1px solid rgba(167,139,250,.25);
+    border-radius:24px;
+    padding:36px 32px 28px;
+    width:100%;max-width:460px;
+    box-shadow:0 32px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(124,58,237,.12);
+    animation:modalIn .3s cubic-bezier(.2,.8,.4,1) both;
+    max-height:90vh; overflow-y:auto;
+  }
+  @keyframes modalIn {
+    from{opacity:0;transform:scale(.92) translateY(20px);}
+    to  {opacity:1;transform:scale(1) translateY(0);}
+  }
+  .rm-header { display:flex;align-items:center;gap:12px;margin-bottom:22px; }
+  .rm-icon {
+    width:46px;height:46px;border-radius:13px;flex-shrink:0;
+    background:linear-gradient(135deg,var(--purple) 0%,var(--blue) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.15rem;color:#fff;
+    box-shadow:0 0 22px rgba(124,58,237,.5);
+  }
+  .rm-title { font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text); }
+  .rm-sub   { font-size:.75rem;color:var(--muted); }
+  .rm-close { margin-left:auto;background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer!important;transition:color .15s;padding:4px; }
+  .rm-close:hover { color:#e879f9; }
+
+  .rm-section-lbl { font-size:.72rem;font-weight:700;color:var(--purple-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;margin-top:18px; }
+
+  .rm-class-list { display:flex;flex-direction:column;gap:6px; }
+  .rm-class-item {
+    display:flex;align-items:center;gap:10px;padding:9px 12px;
+    border-radius:11px;border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.03);cursor:pointer!important;
+    transition:background .15s,border-color .15s;user-select:none;
+  }
+  .rm-class-item:hover { background:rgba(124,58,237,.1);border-color:rgba(196,181,253,.3); }
+  .rm-class-item.selected { background:rgba(124,58,237,.18);border-color:rgba(196,181,253,.5); }
+  .rm-class-check { width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(167,139,250,.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:transparent;transition:.15s; }
+  .rm-class-item.selected .rm-class-check { background:var(--purple);border-color:var(--purple);color:#fff; }
+  .rm-class-lbl { font-size:.82rem;font-weight:600;color:var(--text);flex:1; }
+  .rm-class-time { font-size:.7rem;color:var(--muted); }
+
+  .rm-advance-wrap { display:flex;gap:8px;flex-wrap:wrap;margin-top:6px; }
+  .rm-adv-btn {
+    padding:6px 14px;border-radius:8px;border:1px solid rgba(167,139,250,.2);
+    background:rgba(255,255,255,.04);color:var(--muted);
+    font-size:.78rem;font-weight:600;cursor:pointer!important;
+    transition:.15s;
+  }
+  .rm-adv-btn.sel { background:rgba(124,58,237,.2);border-color:rgba(196,181,253,.5);color:var(--purple-light); }
+  .rm-adv-btn:hover { border-color:rgba(196,181,253,.4);color:var(--text); }
+
+  .rm-msg-input {
+    width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(167,139,250,.2);
+    border-radius:10px;color:var(--text);font-size:.85rem;padding:10px 14px;
+    font-family:'Inter',sans-serif;resize:none;outline:none;transition:border-color .2s;
+  }
+  .rm-msg-input:focus { border-color:rgba(196,181,253,.55); }
+
+  .rm-actions { display:flex;gap:10px;margin-top:22px; }
+  .rm-save-btn {
+    flex:1;padding:12px;border-radius:11px;border:none;
+    background:linear-gradient(135deg,var(--purple) 0%,var(--blue) 100%);
+    color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;
+    cursor:pointer!important;
+    box-shadow:0 4px 18px rgba(124,58,237,.4);
+    transition:filter .2s,box-shadow .2s;
+  }
+  .rm-save-btn:hover { filter:brightness(1.15);box-shadow:0 6px 24px rgba(124,58,237,.6); }
+  .rm-cancel-btn {
+    padding:12px 20px;border-radius:11px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer!important;transition:.15s;
+  }
+  .rm-cancel-btn:hover { border-color:rgba(167,139,250,.35);color:var(--text); }
+
+  .rm-saved-list { display:flex;flex-direction:column;gap:6px; }
+  .rm-saved-item {
+    display:flex;align-items:center;gap:10px;padding:9px 12px;
+    border-radius:10px;border:1px solid rgba(167,139,250,.12);
+    background:rgba(255,255,255,.025);
+  }
+  .rm-saved-icon { color:var(--purple-light);font-size:.85rem;flex-shrink:0; }
+  .rm-saved-text { flex:1;font-size:.8rem;color:var(--text); }
+  .rm-saved-del { background:none;border:none;color:#94a3b8;cursor:pointer!important;font-size:.75rem;padding:2px 6px;border-radius:5px;transition:.15s; }
+  .rm-saved-del:hover { color:#fb7185;background:rgba(239,68,68,.1); }
+</style>
+
+<div id="reminder-overlay">
+  <div class="reminder-modal">
+    <div class="rm-header">
+      <div class="rm-icon"><i class="fa-solid fa-bell"></i></div>
+      <div>
+        <div class="rm-title">Class Reminder සකස් කරන්න</div>
+        <div class="rm-sub">Browser notification සහ custom alert</div>
+      </div>
+      <button class="rm-close" onclick="closeReminderModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="rm-section-lbl">📚 පන්තිය තෝරන්න</div>
+    <div class="rm-class-list" id="rm-class-list"></div>
+
+    <div class="rm-section-lbl">⏰ කී ශේ කලින් notify කරන්නද?</div>
+    <div class="rm-advance-wrap" id="rm-adv-wrap">
+      <button class="rm-adv-btn" data-min="30">30 min කලින්</button>
+      <button class="rm-adv-btn sel" data-min="60">1 hour කලින්</button>
+      <button class="rm-adv-btn" data-min="120">2 hours කලින්</button>
+      <button class="rm-adv-btn" data-min="1440">1 day කලින්</button>
+    </div>
+
+    <div class="rm-section-lbl">💬 Custom Message (optional)</div>
+    <textarea class="rm-msg-input" id="rm-msg-input" rows="2" placeholder="e.g. Unique Matale class today! Don't forget your notes."></textarea>
+
+    <div class="rm-actions">
+      <button class="rm-cancel-btn" onclick="closeReminderModal()">Cancel</button>
+      <button class="rm-save-btn" onclick="saveReminder()"><i class="fa-solid fa-bell me-2"></i>Save Reminder</button>
+    </div>
+
+    <div id="rm-saved-section" style="display:none;">
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,0.07);margin:20px 0 14px;">
+      <div class="rm-section-lbl">🔔 Saved Reminders</div>
+      <div class="rm-saved-list" id="rm-saved-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Today class alert toast -->
+<div id="class-toast" style="position:fixed;bottom:150px;left:50%;transform:translateX(-50%) translateY(20px);z-index:99995;background:rgba(8,6,40,.97);border:1px solid rgba(74,222,128,.4);border-radius:16px;padding:14px 22px;display:none;align-items:center;gap:12px;min-width:280px;max-width:360px;box-shadow:0 16px 48px rgba(0,0,0,.6);transition:transform .3s, opacity .3s; opacity:0;">
+  <div style="width:36px;height:36px;border-radius:10px;background:rgba(74,222,128,.15);display:flex;align-items:center;justify-content:center;color:#4ade80;flex-shrink:0;"><i class="fa-solid fa-bell"></i></div>
+  <div style="flex:1;">
+    <div style="font-weight:700;color:var(--text);font-size:.85rem;" id="toast-title">Class Alert!</div>
+    <div style="font-size:.75rem;color:var(--muted);margin-top:2px;" id="toast-body"></div>
+  </div>
+  <button onclick="closeToast()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.8rem;"><i class="fa-solid fa-xmark"></i></button>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   TIMETABLE + REMINDER ENGINE
+══════════════════════════════════════ */
+(function() {
+
+  // ── TIMETABLE DATA ──
+  const TIMETABLE = {
+    unique: [
+      { day:'Monday',    type:'Revision Class', batch:'2026 Batch', start:'08:00', end:'17:00' },
+      { day:'Sunday',    type:'Theory Class',   batch:'2027 Batch', start:'10:30', end:'16:30' },
+      { day:'Sunday',    type:'Theory Class',   batch:'2028 Batch', start:'08:00', end:'10:00' },
+    ],
+    sesip: [
+      { day:'Friday',    type:'Revision Class', batch:'2026 Batch', start:'08:00', end:'17:00' },
+      { day:'Wednesday', type:'Theory Class',   batch:'2027 Batch', start:'14:30', end:'18:30' },
+      { day:'Saturday',  type:'Theory Class',   batch:'2028 Batch', start:'15:00', end:'17:00' },
+    ],
+    kegalle: [
+      { day:'Tuesday',   type:'Revision Class', batch:'2026 Batch', start:'08:00', end:'17:00' },
+      { day:'Saturday',  type:'Theory Class',   batch:'2027 Batch', start:'10:30', end:'14:00' },
+      { day:'Saturday',  type:'Theory Class',   batch:'2028 Batch', start:'08:00', end:'10:00' },
+      { day:'Thursday',  type:'Special Paper Class', batch:'All',   start:'08:00', end:'16:00' },
+    ],
+  };
+
+  const DAYS_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const todayDayName = DAYS_EN[new Date().getDay()];
+
+  function dayClass(day) { return day.toLowerCase(); }
+
+  function fmt12(t) {
+    const [h, m] = t.split(':').map(Number);
+    const ap = h >= 12 ? 'PM' : 'AM';
+    return ((h % 12) || 12) + ':' + String(m).padStart(2,'0') + ' ' + ap;
+  }
+
+  // ── RENDER TIMETABLE CARDS ──
+  function renderTT(containerId, rows) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = rows.map(r => {
+      const isToday = r.day === todayDayName;
+      return `<div class="tt-row${isToday ? ' today-row' : ''}">
+        <span class="tt-day-badge ${dayClass(r.day)}">${r.day.slice(0,3).toUpperCase()}</span>
+        <div class="tt-info">
+          <div class="tt-class-type">${r.type}</div>
+          <div class="tt-batch">${r.batch}</div>
+          <div class="tt-time"><i class="fa-regular fa-clock fa-xs" style="margin-right:4px;"></i>${fmt12(r.start)} → ${fmt12(r.end)}</div>
+        </div>
+        ${isToday ? '<div class="tt-today-dot"></div>' : ''}
+      </div>`;
+    }).join('');
+  }
+
+  renderTT('tt-unique',  TIMETABLE.unique);
+  renderTT('tt-sesip',   TIMETABLE.sesip);
+  renderTT('tt-kegalle', TIMETABLE.kegalle);
+
+  // ── TODAY'S CLASSES BAR ──
+  function buildTodayBar() {
+    const all = [
+      ...TIMETABLE.unique.map(r=>({...r,place:'Unique — Matale'})),
+      ...TIMETABLE.sesip.map(r=>({...r,place:'Sesip — Rambukkana'})),
+      ...TIMETABLE.kegalle.map(r=>({...r,place:'Science Center — Kegalle'})),
+    ].filter(r => r.day === todayDayName);
+
+    const bar = document.getElementById('today-bar');
+    const list = document.getElementById('today-classes-list');
+    if (all.length === 0) { bar.style.display='none'; return; }
+    bar.style.display='flex';
+    list.innerHTML = all.map(r =>
+      `<span style="background:rgba(124,58,237,.2);border:1px solid rgba(196,181,253,.3);border-radius:8px;padding:3px 10px;font-size:.75rem;font-weight:600;color:var(--purple-light);">
+        ${r.place} · ${r.batch} · ${fmt12(r.start)}
+      </span>`
+    ).join('');
+  }
+  buildTodayBar();
+
+  // ── WEEKLY GRID ──
+  function buildWeeklyGrid() {
+    const grid = document.getElementById('weekly-grid');
+    if (!grid) return;
+    const allClasses = [
+      ...TIMETABLE.unique.map(r=>({...r,place:'Unique'})),
+      ...TIMETABLE.sesip.map(r=>({...r,place:'Sesip'})),
+      ...TIMETABLE.kegalle.map(r=>({...r,place:'Kegalle'})),
+    ];
+    grid.innerHTML = DAYS_EN.map((day, di) => {
+      const isToday = day === todayDayName;
+      const classes = allClasses.filter(r => r.day === day);
+      const dots = classes.length
+        ? classes.map(c =>
+            `<div class="wk-dot has-class${isToday ? ' today-col' : ''}" title="${c.place}: ${c.batch} ${fmt12(c.start)}">${c.place.slice(0,3)}</div>`
+          ).join('')
+        : `<div class="wk-dot${isToday ? ' today-col' : ''}">—</div>`;
+      return `<div class="wk-col">
+        <div class="wk-day-lbl${isToday ? '" style="color:#4ade80' : ''}">${DAYS_SHORT[di]}</div>
+        <div class="wk-dot-wrap">${dots}</div>
+      </div>`;
+    }).join('');
+  }
+  buildWeeklyGrid();
+
+  // ── CHECK TODAY'S CLASSES BUTTON ──
+  window.checkTodayClasses = function() {
+    const all = [
+      ...TIMETABLE.unique.map(r=>({...r,place:'Unique — Matale'})),
+      ...TIMETABLE.sesip.map(r=>({...r,place:'Sesip — Rambukkana'})),
+      ...TIMETABLE.kegalle.map(r=>({...r,place:'Science Center — Kegalle'})),
+    ].filter(r => r.day === todayDayName);
+
+    if (all.length === 0) {
+      showToast('No Classes Today! 🎉', 'Today (' + todayDayName + ') classes නැත. Rest day!');
+    } else {
+      const msg = all.map(r => r.place + ' · ' + r.batch + ' · ' + fmt12(r.start)).join(' | ');
+      showToast('Today — ' + todayDayName, msg);
+    }
+  };
+
+  // ── TOAST ──
+  function showToast(title, body) {
+    const toast = document.getElementById('class-toast');
+    document.getElementById('toast-title').textContent = title;
+    document.getElementById('toast-body').textContent  = body;
+    toast.style.display='flex';
+    setTimeout(() => { toast.style.opacity='1'; toast.style.transform='translateX(-50%) translateY(0)'; }, 10);
+    setTimeout(closeToast, 5000);
+  }
+  window.closeToast = function() {
+    const toast = document.getElementById('class-toast');
+    toast.style.opacity='0';
+    toast.style.transform='translateX(-50%) translateY(20px)';
+    setTimeout(() => { toast.style.display='none'; }, 320);
+  };
+
+  // ── REMINDER MODAL ──
+  const ALL_CLASSES = [
+    ...TIMETABLE.unique.map(r=>({...r,place:'Unique — Matale',key:'unique'})),
+    ...TIMETABLE.sesip.map(r=>({...r,place:'Sesip — Rambukkana',key:'sesip'})),
+    ...TIMETABLE.kegalle.map(r=>({...r,place:'Science Center — Kegalle',key:'keg'})),
+  ];
+  let selectedAdvMin = 60;
+
+  window.openReminderModal = function() {
+    document.getElementById('reminder-overlay').classList.add('show');
+    buildReminderClassList();
+    buildSavedList();
+    requestNotifPerm();
+  };
+  window.closeReminderModal = function() {
+    document.getElementById('reminder-overlay').classList.remove('show');
+  };
+  document.getElementById('reminder-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeReminderModal();
+  });
+
+  function buildReminderClassList() {
+    const el = document.getElementById('rm-class-list');
+    el.innerHTML = ALL_CLASSES.map((c,i) =>
+      `<div class="rm-class-item" data-idx="${i}" onclick="toggleRmClass(this)">
+        <div class="rm-class-check"><i class="fa-solid fa-check" style="display:none;"></i></div>
+        <span class="rm-class-lbl">${c.place} · ${c.batch}</span>
+        <span class="rm-class-time">${c.day} · ${fmt12(c.start)}</span>
+      </div>`
+    ).join('');
+  }
+
+  window.toggleRmClass = function(el) {
+    el.classList.toggle('selected');
+    const chk = el.querySelector('.rm-class-check i');
+    chk.style.display = el.classList.contains('selected') ? 'block' : 'none';
+  };
+
+  // Advance buttons
+  document.getElementById('rm-adv-wrap').addEventListener('click', function(e) {
+    const btn = e.target.closest('.rm-adv-btn');
+    if (!btn) return;
+    document.querySelectorAll('.rm-adv-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    selectedAdvMin = parseInt(btn.dataset.min);
+  });
+
+  function requestNotifPerm() {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }
+
+  // ── SAVE REMINDER ──
+  window.saveReminder = function() {
+    const selected = [...document.querySelectorAll('.rm-class-item.selected')];
+    if (!selected.length) {
+      showToast('⚠️ Select a class', 'First, at least one class select කරන්න!');
+      return;
+    }
+    const msg = document.getElementById('rm-msg-input').value.trim();
+    const reminders = JSON.parse(localStorage.getItem('aoa_reminders') || '[]');
+
+    selected.forEach(el => {
+      const idx = parseInt(el.dataset.idx);
+      const cls = ALL_CLASSES[idx];
+      const id = 'rm_' + Date.now() + '_' + idx;
+      reminders.push({
+        id, place: cls.place, batch: cls.batch, day: cls.day,
+        start: cls.start, advMin: selectedAdvMin, msg,
+        created: new Date().toISOString()
+      });
+    });
+    localStorage.setItem('aoa_reminders', JSON.stringify(reminders));
+
+    showToast('✅ Reminders Saved!', selected.length + ' class reminder(s) set. Next class day කලින් notify කරනවා.');
+    // Clear selections
+    document.querySelectorAll('.rm-class-item.selected').forEach(el => {
+      el.classList.remove('selected');
+      el.querySelector('.rm-class-check i').style.display = 'none';
+    });
+    buildSavedList();
+    scheduleAllReminders();
+  };
+
+  // ── SAVED LIST ──
+  function buildSavedList() {
+    const sec  = document.getElementById('rm-saved-section');
+    const list = document.getElementById('rm-saved-list');
+    const reminders = JSON.parse(localStorage.getItem('aoa_reminders') || '[]');
+    if (!reminders.length) { sec.style.display='none'; return; }
+    sec.style.display='block';
+    list.innerHTML = reminders.map(r =>
+      `<div class="rm-saved-item">
+        <i class="fa-solid fa-bell rm-saved-icon"></i>
+        <span class="rm-saved-text">${r.place} · ${r.batch} · ${r.day} ${fmt12(r.start)} · ${r.advMin >= 60 ? (r.advMin/60)+'hr' : r.advMin+'min'} before</span>
+        <button class="rm-saved-del" onclick="deleteReminder('${r.id}')"><i class="fa-solid fa-trash-can"></i></button>
+      </div>`
+    ).join('');
+  }
+
+  window.deleteReminder = function(id) {
+    let reminders = JSON.parse(localStorage.getItem('aoa_reminders') || '[]');
+    reminders = reminders.filter(r => r.id !== id);
+    localStorage.setItem('aoa_reminders', JSON.stringify(reminders));
+    buildSavedList();
+  };
+
+  // ── SCHEDULE NOTIFICATIONS ──
+  function scheduleAllReminders() {
+    const reminders = JSON.parse(localStorage.getItem('aoa_reminders') || '[]');
+    const dayIdx = DAYS_EN.indexOf(todayDayName);
+    const now = new Date();
+
+    reminders.forEach(r => {
+      const rDayIdx = DAYS_EN.indexOf(r.day);
+      let daysUntil = (rDayIdx - dayIdx + 7) % 7;
+      const [rH, rM] = r.start.split(':').map(Number);
+      const classTime = new Date(now);
+      classTime.setDate(classTime.getDate() + daysUntil);
+      classTime.setHours(rH, rM, 0, 0);
+
+      const notifTime = new Date(classTime.getTime() - r.advMin * 60000);
+      const msUntil = notifTime - now;
+
+      if (msUntil > 0 && msUntil < 86400000 * 2) { // within 2 days
+        setTimeout(() => {
+          const body = r.msg || (r.place + ' · ' + r.batch + ' starts at ' + fmt12(r.start));
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('📚 ArtofAccounting Class Reminder', { body, icon: '📖' });
+          }
+          showToast('🔔 Class Reminder!', body);
+        }, msUntil);
+      }
+    });
+  }
+
+  // Run on page load
+  scheduleAllReminders();
+
+  // Check reminders every minute (for any that fire while page is open)
+  setInterval(scheduleAllReminders, 60000);
+
+})();
+</script>
+
+<!-- ══ QUICK ACCESS PANEL ══ -->
+<style>
+  #qa-fab {
+    position: fixed;
+    bottom: 80px; right: 20px;
+    z-index: 9998;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+    color: #fff;
+    font-size: 1.1rem;
+    box-shadow: 0 0 28px rgba(124,58,237,0.55), 0 6px 20px rgba(0,0,0,0.45);
+    cursor: pointer !important;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.25s cubic-bezier(.2,.8,.4,1), box-shadow 0.25s;
+    overflow: hidden;
+  }
+  #qa-fab::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    border-radius: 50%;
+  }
+  #qa-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 44px rgba(124,58,237,0.75), 0 10px 28px rgba(0,0,0,0.5);
+  }
+  #qa-fab.open { transform: rotate(45deg) scale(1.08); }
+
+  #qa-fab-label {
+    position: fixed;
+    bottom: 93px; right: 80px;
+    z-index: 9997;
+    background: rgba(20,10,50,0.92);
+    border: 1px solid rgba(167,139,250,0.3);
+    backdrop-filter: blur(12px);
+    color: var(--purple-light);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap;
+  }
+  #qa-fab-label.show { opacity: 1; transform: translateX(0); }
+
+  #qa-panel {
+    position: fixed;
+    bottom: 144px; right: 20px;
+    z-index: 9996;
+    width: 240px;
+    background: rgba(8,6,40,0.97);
+    border: 1px solid rgba(167,139,250,0.22);
+    border-radius: 18px;
+    padding: 14px 12px 10px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.15);
+    transform: scale(0.88) translateY(16px);
+    transform-origin: bottom right;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.28s cubic-bezier(.2,.8,.4,1), opacity 0.22s ease;
+  }
+  #qa-panel.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+
+  .qa-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 4px 10px;
+    border-bottom: 1px solid rgba(167,139,250,0.12);
+    margin-bottom: 8px;
+  }
+  .qa-header-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #4ade80; box-shadow: 0 0 8px #4ade80;
+    animation: livePulse 2s infinite; flex-shrink: 0;
+  }
+  .qa-header-title {
+    font-size: 0.7rem; font-weight: 700;
+    color: var(--purple-light); letter-spacing: 0.1em;
+    text-transform: uppercase; flex: 1;
+  }
+  .qa-close {
+    background: none; border: none;
+    color: var(--muted); font-size: 0.8rem;
+    cursor: pointer !important; padding: 0; line-height: 1;
+    transition: color 0.15s;
+  }
+  .qa-close:hover { color: #e879f9; }
+
+  .qa-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px;
+    border-radius: 11px;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.18s;
+    cursor: pointer !important;
+    margin-bottom: 2px;
+  }
+  .qa-link:hover { background: rgba(255,255,255,0.06); transform: translateX(3px); }
+  .qa-link-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; flex-shrink: 0;
+  }
+  .qa-link-icon.purple { background: rgba(124,58,237,0.22); color: var(--purple-light); }
+  .qa-link-icon.blue   { background: rgba(37,99,235,0.22);  color: var(--blue-light); }
+  .qa-link-icon.amber  { background: rgba(245,158,11,0.22); color: #fcd34d; }
+  .qa-link-icon.green  { background: rgba(74,222,128,0.22); color: #4ade80; }
+  .qa-link-name { font-size: 0.82rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+  .qa-link-sub  { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
+  .qa-link-arrow { color: var(--muted); font-size: 0.65rem; transition: transform 0.18s, color 0.18s; }
+  .qa-link:hover .qa-link-arrow { transform: translateX(3px); color: var(--purple-light); }
+
+  .qa-sep { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 6px 0; }
+
+  .qa-scroll-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; border-radius: 9px;
+    text-decoration: none; cursor: pointer !important;
+    transition: background 0.18s, transform 0.18s;
+  }
+  .qa-scroll-link:hover { background: rgba(255,255,255,0.05); transform: translateX(3px); }
+  .qa-scroll-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--purple); flex-shrink: 0;
+  }
+  .qa-scroll-lbl {
+    font-size: 0.75rem; color: var(--muted); font-weight: 500;
+    transition: color 0.15s;
+  }
+  .qa-scroll-link:hover .qa-scroll-lbl { color: var(--purple-light); }
+</style>
+
+<button id="qa-fab" onclick="toggleQA()">
+  <i class="fa-solid fa-bolt" id="qa-fab-icon"></i>
+</button>
+<div id="qa-fab-label">Quick Access</div>
+
+<div id="qa-panel">
+  <div class="qa-header">
+    <div class="qa-header-dot"></div>
+    <span class="qa-header-title">⚡ Quick Access</span>
+    <button class="qa-close" onclick="toggleQA()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <a href="online.html" class="qa-link">
+    <div class="qa-link-icon purple"><i class="fa-solid fa-laptop"></i></div>
+    <div style="flex:1">
+      <div class="qa-link-name">Online Management</div>
+      <div class="qa-link-sub">Students · Fees · Batches</div>
+    </div>
+    <i class="fa-solid fa-chevron-right qa-link-arrow"></i>
+  </a>
+
+  <a href="physical.html" class="qa-link">
+    <div class="qa-link-icon blue"><i class="fa-solid fa-building"></i></div>
+    <div style="flex:1">
+      <div class="qa-link-name">Physical Management</div>
+      <div class="qa-link-sub">In-class · Attendance</div>
+    </div>
+    <i class="fa-solid fa-chevron-right qa-link-arrow"></i>
+  </a>
+
+  <hr class="qa-sep">
+
+  <a href="#" onclick="qaScrollTo('.hero-body'); return false;" class="qa-scroll-link">
+    <div class="qa-scroll-dot"></div>
+    <span class="qa-scroll-lbl"><i class="fa-solid fa-house fa-xs" style="margin-right:5px"></i>ඉහළට යන්න (Top)</span>
+  </a>
+  <a href="#" onclick="qaScrollTo('.features-section'); return false;" class="qa-scroll-link">
+    <div class="qa-scroll-dot" style="background:var(--blue)"></div>
+    <span class="qa-scroll-lbl"><i class="fa-solid fa-gauge-high fa-xs" style="margin-right:5px"></i>Dashboard Stats</span>
+  </a>
+
+  <hr class="qa-sep">
+
+  <a href="online.html" class="qa-link">
+    <div class="qa-link-icon green"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+    <div style="flex:1">
+      <div class="qa-link-name">Fee Records</div>
+      <div class="qa-link-sub">Monthly payment status</div>
+    </div>
+    <i class="fa-solid fa-chevron-right qa-link-arrow"></i>
+  </a>
+
+  <a href="online.html" class="qa-link">
+    <div class="qa-link-icon amber"><i class="fa-brands fa-whatsapp"></i></div>
+    <div style="flex:1">
+      <div class="qa-link-name">WhatsApp Alerts</div>
+      <div class="qa-link-sub">Pending reminders</div>
+    </div>
+    <i class="fa-solid fa-chevron-right qa-link-arrow"></i>
+  </a>
+</div>
+
+<script>
+(function() {
+  const fab   = document.getElementById('qa-fab');
+  const panel = document.getElementById('qa-panel');
+  const icon  = document.getElementById('qa-fab-icon');
+  const label = document.getElementById('qa-fab-label');
+  let isOpen  = false;
+
+  window.toggleQA = function() {
+    isOpen = !isOpen;
+    panel.classList.toggle('open', isOpen);
+    fab.classList.toggle('open', isOpen);
+    icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bolt';
+  };
+
+  document.addEventListener('click', function(e) {
+    if (isOpen && !panel.contains(e.target) && !fab.contains(e.target)) {
+      isOpen = false;
+      panel.classList.remove('open');
+      fab.classList.remove('open');
+      icon.className = 'fa-solid fa-bolt';
+    }
+  });
+
+  window.qaScrollTo = function(sel) {
+    const el = document.querySelector(sel);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    isOpen = false;
+    panel.classList.remove('open');
+    fab.classList.remove('open');
+    icon.className = 'fa-solid fa-bolt';
+  };
+
+  setTimeout(() => {
+    label.classList.add('show');
+    setTimeout(() => label.classList.remove('show'), 2400);
+  }, 1400);
+})();
+</script>
 
 <!-- FOOTER -->
 <footer>
@@ -655,6 +2063,188 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ══ QUICK ACCESS LIVE DATA ENGINE ══ -->
+<script>
+(function () {
+
+  /* ── helpers ── */
+  const $ = id => document.getElementById(id);
+  const fmt = n => n === null || n === undefined ? '—' : n;
+
+  /* current month key (same format as tracker: YYYY-MM) */
+  const now  = new Date();
+  const mKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2,'0');
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthLabel = monthNames[now.getMonth()] + ' ' + now.getFullYear();
+
+  /* ── read online tracker data ── */
+  function getOnlineStats() {
+    try {
+      const students = JSON.parse(localStorage.getItem('tracker_students') || '[]');
+      if (!students.length) return null;
+
+      const total   = students.length;
+      const paid    = students.filter(s => s.monthlyData?.[mKey]?.isPaid).length;
+      const pending = total - paid;
+      const batches = [...new Set(students.map(s => s.batch).filter(Boolean))].length;
+      const revenue = students.reduce((acc, s) =>
+        acc + (s.monthlyData?.[mKey]?.isPaid ? (s.monthlyFee || 0) : 0), 0);
+      return { total, paid, pending, batches, revenue };
+    } catch { return null; }
+  }
+
+  /* ── read physical tracker data ── */
+  function getPhysicalStats() {
+    try {
+      /* physical tracker might use a different key — try common ones */
+      const keys = ['physical_students', 'tracker_physical', 'physicalStudents'];
+      let students = null;
+      for (const k of keys) {
+        const raw = localStorage.getItem(k);
+        if (raw) { students = JSON.parse(raw); break; }
+      }
+      if (!students || !students.length) return null;
+
+      const total   = students.length;
+      const paid    = students.filter(s => s.monthlyData?.[mKey]?.isPaid).length;
+      const pending = total - paid;
+      const batches = [...new Set(students.map(s => s.batch).filter(Boolean))].length;
+      const revenue = students.reduce((acc, s) =>
+        acc + (s.monthlyData?.[mKey]?.isPaid ? (s.monthlyFee || 0) : 0), 0);
+      return { total, paid, pending, batches, revenue };
+    } catch { return null; }
+  }
+
+  /* ── render ── */
+  function render() {
+    const on  = getOnlineStats();
+    const phy = getPhysicalStats();
+
+    /* status bar */
+    $('sb-online').textContent   = on  ? on.total  : '—';
+    $('sb-physical').textContent = phy ? phy.total : '—';
+    const totalPending = (on?.pending || 0) + (phy?.pending || 0);
+    $('sb-pending').textContent  = (on || phy) ? totalPending : '—';
+    $('sb-month').textContent    = monthLabel;
+
+    /* Card 1: Online */
+    if (on) {
+      $('c1-total').textContent   = on.total;
+      $('c1-paid').textContent    = on.paid;
+      $('c1-pending').textContent = on.pending;
+      $('c1-batches').textContent = on.batches;
+    }
+
+    /* Card 2: Physical */
+    if (phy) {
+      $('c2-total').textContent   = phy.total;
+      $('c2-paid').textContent    = phy.paid;
+      $('c2-pending').textContent = phy.pending;
+      $('c2-batches').textContent = phy.batches;
+    }
+
+    /* Card 3: Reports */
+    const combinedTotal = (on?.total || 0) + (phy?.total || 0);
+    const combinedRev   = (on?.revenue || 0) + (phy?.revenue || 0);
+    $('c3-total').textContent   = (on || phy) ? combinedTotal : '—';
+    $('c3-revenue').textContent = (on || phy)
+      ? 'Rs.' + combinedRev.toLocaleString()
+      : '—';
+
+    /* Card 4: WhatsApp */
+    $('c4-remind').textContent = (on || phy) ? totalPending : '—';
+    const totalPaid = (on?.paid || 0) + (phy?.paid || 0);
+    $('c4-done').textContent   = (on || phy) ? totalPaid : '—';
+
+    /* Quick summary strip */
+    $('qs-total').textContent   = (on || phy) ? combinedTotal : '—';
+    $('qs-paid').textContent    = (on || phy) ? totalPaid     : '—';
+    $('qs-revenue').textContent = (on || phy)
+      ? 'Rs.' + combinedRev.toLocaleString()
+      : '—';
+    const totalBatches = (on?.batches || 0) + (phy?.batches || 0);
+    $('qs-batches').textContent = (on || phy) ? totalBatches : '—';
+  }
+
+  /* ── live clock ── */
+  function tick() {
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    const s = String(d.getSeconds()).padStart(2,'0');
+    const el = $('sb-time');
+    if (el) el.textContent = 'Updated ' + h + ':' + m + ':' + s;
+  }
+  tick();
+  setInterval(tick, 1000);
+  render();
+  /* re-render every 10s in case tracker is open in another tab */
+  setInterval(render, 10000);
+
+  /* ── Scroll reveal for feat-cards ── */
+  const cards = document.querySelectorAll('.feat-card');
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    cards.forEach(c => io.observe(c));
+  } else {
+    /* fallback: reveal immediately */
+    cards.forEach(c => c.classList.add('revealed'));
+  }
+
+  /* ── Counter animation for stats (runs once on reveal) ── */
+  function animateCount(el, target) {
+    if (!el || isNaN(target)) return;
+    let start = 0;
+    const dur  = 900;
+    const step = ts => {
+      if (!start) start = ts;
+      const pct  = Math.min((ts - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - pct, 3);
+      el.textContent = Math.round(ease * target);
+      if (pct < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* trigger count-up when each card becomes visible */
+  const countTargets = [
+    { id:'c1-total',   src: () => getOnlineStats()?.total },
+    { id:'c1-paid',    src: () => getOnlineStats()?.paid },
+    { id:'c1-pending', src: () => getOnlineStats()?.pending },
+    { id:'c1-batches', src: () => getOnlineStats()?.batches },
+    { id:'c2-total',   src: () => getPhysicalStats()?.total },
+    { id:'c2-paid',    src: () => getPhysicalStats()?.paid },
+    { id:'c2-pending', src: () => getPhysicalStats()?.pending },
+    { id:'c2-batches', src: () => getPhysicalStats()?.batches },
+  ];
+
+  const ioCounts = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        countTargets.forEach(({ id, src }) => {
+          const el = $(id);
+          const val = src();
+          if (el && typeof val === 'number') animateCount(el, val);
+        });
+        ioCounts.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+
+  const statsSection = document.querySelector('.features-section');
+  if (statsSection) ioCounts.observe(statsSection);
+
+})();
+</script>
 
 <script>
 (function () {
@@ -757,6 +2347,18 @@
     setTimeout(() => p.remove(), dur + 50);
   }
 })();
+
+</script>
+
+<script type="module">
+  import { handleLogin } from './auth.js'; // ඔයාගේ js එකේ නම දාන්න
+
+  // Login බොත්තම ක්ලික් කළාම ක්‍රියාත්මක වීමට
+  document.getElementById('login-btn').addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    handleLogin(email, password);
+  });
 </script>
 
 </body>

@@ -64,9 +64,9 @@
             background: linear-gradient(135deg, rgba(24, 32, 51, 0.85) 0%, rgba(35, 46, 74, 0.75) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 60px 50px;
+            padding: 50px 40px;
             border-radius: 25px;
-            width: 420px;
+            width: min(420px, 92vw);
             text-align: center;
             border: 1px solid rgba(91, 156, 246, 0.4);
             box-shadow: 
@@ -75,6 +75,16 @@
             position: relative;
             z-index: 1;
             animation: slideIn 0.6s ease-out;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 36px 24px;
+                border-radius: 18px;
+            }
+            .login-box h3 {
+                font-size: 1.6rem !important;
+            }
         }
 
         @keyframes slideIn {
@@ -498,6 +508,8 @@
         .pro-badge.paid    { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
         .pro-badge.pending { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
         .pro-badge.active  { background: rgba(34,211,238,0.15); color: #22d3ee; border: 1px solid rgba(34,211,238,0.2); }
+        .pro-badge.halfpaid{ background: rgba(251,191,36,0.15);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+        .pro-badge.free    { background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
         .pro-badge.noaccess{ background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
         .pro-badge.count   { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); font-size:13px; padding:4px 12px; }
 
@@ -557,6 +569,116 @@
 
         .search-bar { background: rgba(23, 29, 46, 0.65); backdrop-filter: blur(12px); border: 1px solid rgba(91,156,246,0.15); border-radius: 12px; padding: 14px 18px; }
         .field-label { font-size: 10px; color: #7a93b8; text-transform: uppercase; margin-bottom: 4px; }
+
+        /* ══ MOBILE RESPONSIVE ══ */
+        @media (max-width: 768px) {
+
+            /* Container padding tighten */
+            .container-fluid.px-4 { padding-left: 12px !important; padding-right: 12px !important; }
+            .container-fluid.py-4 { padding-top: 12px !important; padding-bottom: 12px !important; }
+
+            /* Master Header */
+            .master-header {
+                padding: 18px 16px;
+                border-radius: 12px;
+            }
+            .master-header .d-flex {
+                flex-direction: column !important;
+                gap: 12px;
+            }
+            .master-header h2 {
+                font-size: 1.1rem !important;
+            }
+            .master-header p {
+                font-size: 0.78rem !important;
+            }
+            .master-header .d-flex.gap-2.align-items-center {
+                flex-direction: row !important;
+                justify-content: space-between;
+            }
+
+            /* Month bar */
+            .month-bar { padding: 12px 14px; }
+
+            /* Student Add Form */
+            #addStudentForm .row.g-2.mb-2 .col-md-2 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+            #addStudentForm .row.g-2.align-items-end .col-md-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            #addStudentForm .row.g-2.align-items-end .col-md-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            #addStudentForm .d-flex.gap-2 {
+                flex-wrap: wrap !important;
+            }
+            #addStudentForm .d-flex.gap-2 button {
+                flex: 1 1 calc(50% - 4px);
+                min-width: 100px;
+            }
+
+            /* Pro card padding */
+            .pro-card { padding: 14px 14px; }
+
+            /* Batch accordion table: horizontal scroll */
+            .batch-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .pro-table { min-width: 700px; }
+
+            /* Action buttons in table: stack compactly */
+            .d-flex.gap-1.flex-wrap { flex-wrap: wrap !important; gap: 4px !important; }
+            .btn-wa-action { font-size: 10px; padding: 4px 7px; }
+
+            /* Stats row */
+            .row.g-3.mb-4 .col-md-4 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            /* Ledger table scroll */
+            .pro-card .ledger-table { min-width: 500px; }
+            .pro-card div[style*="overflow-x:auto"],
+            .pro-card div[style*="overflow-x: auto"] { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+            /* Tute zone height */
+            .tute-zone { max-height: 80px; }
+
+            /* Search bar */
+            .search-bar .col-md-6 { flex: 0 0 100%; max-width: 100%; }
+
+            /* Logout btn */
+            .logout-btn { font-size: 11px !important; padding: 6px 12px !important; }
+
+            /* Section heading font */
+            .section-heading { font-size: 14px; }
+
+            /* Tute form */
+            #addTuteForm .row.g-2.mb-2 .col-6 { flex: 0 0 100%; max-width: 100%; }
+
+            /* Batch header */
+            .batch-header { padding: 12px 14px; }
+            .batch-header .batch-name { font-size: 13px; }
+
+            /* Stat card */
+            .stat-value { font-size: 22px; }
+
+            /* Dropout table */
+            #dropoutAlertTableBody tr td { font-size: 12px; padding: 7px 10px; }
+
+            /* All-time history table */
+            #allTimeHistoryTableBody tr td { font-size: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            /* Even tighter on phones */
+            .master-header h2 { font-size: 0.95rem !important; }
+            .pro-table { min-width: 640px; }
+            .btn-wa-action { font-size: 9.5px; padding: 3px 6px; }
+            #addStudentForm .d-flex.gap-2 button { flex: 1 1 100%; }
+        }
     </style>
 </head>
 <body>
@@ -578,18 +700,12 @@
             <div class="login-error" id="loginError"></div>
         </form>
         <div class="login-demo-info">
-            <p>Demo Account:</p>
-            <div class="login-demo-creds">
-                <code>Email: admin@test.com</code>
-                <code>Password: 123456</code>
-            </div>
+            <p style="color:#6b7a9e; font-size:0.82rem; text-align:center;">🔐 Supabase Auth — Authorized Users Only</p>
         </div>
     </div>
 </div>
 
 <div id="mainContent">
-
-<canvas id="pointerTrail" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; width: 100vw; height: 100vh;"></canvas>
 
 <div class="bg-animations">
     <div class="blob blob-1"></div>
@@ -600,13 +716,14 @@
 <div class="container-fluid px-4 py-4">
 
     <div class="master-header mb-4">
-        <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
             <div>
                 <h2>Prabath Ariyasinghe - ArtofAccounting.lk</h2>
-                <p>පෞද්ගලික කළමනාකරණ පද්ධතිය - බුදු සරණයි ! දෙවි පිහිටයි</p>
+                
             </div>
-            <div class="d-flex gap-2 align-items-center">
+            <div class="d-flex gap-2 align-items-center flex-shrink-0">
                 <span class="pro-badge count" id="tableMonthBadge">2026-06</span>
+                <button class="logout-btn" onclick="showLoginHistory()" style="background:linear-gradient(135deg,#a78bfa,#6366f1);">🕓 Login History</button>
                 <button class="logout-btn" onclick="handleLogout()">🔓 Log Out</button>
             </div>
         </div>
@@ -614,23 +731,20 @@
     
     <div class="month-bar mb-4">
         <div class="row g-3 align-items-center">
-            <div class="col-md-5">
+            <div class="col-12 col-md-5">
                 <div class="field-label" style="color:#a78bfa;">Active Month</div>
                 <select id="currentMonthSelect" class="form-select" onchange="switchMonth()">
-                    <option value="2026-05">2026 මැයි (May)</option>
-                    <option value="2026-06" selected>2026 ජූනි (June)</option>
-                    <option value="2026-07">2026 ජූලි (July)</option>
-                    <option value="2026-08">2026 අගෝස්තු (August)</option>
+                    <!-- Populated dynamically by JS -->
                 </select>
             </div>
-            <div class="col-md-7 text-end" style="color:var(--text-muted); font-size:12px;">
+            <div class="col-12 col-md-7 text-md-end" style="color:var(--text-muted); font-size:12px;">
                 * ප්‍රධාන ලේඛනයේ සහ දැනුම්දීම්වල දත්ත තෝරාගත් මාසය අනුව වෙනස් වේ.
             </div>
         </div>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-lg-8">
+        <div class="col-12 col-lg-8">
             <div class="pro-card accent-green h-100">
                 <div class="card-title green" id="formActionTitle">නව ශිෂ්‍යයෙකු ඇතුළත් කිරීම</div>
                 <form id="addStudentForm" onsubmit="handleFormSubmit(event)">
@@ -658,27 +772,32 @@
                             <input type="text" id="whatsappNumber" class="form-control" placeholder="07XXXXXXXX" required />
                         </div>
                         <div class="col-md-2 col-6">
-                            <div class="field-label">Batch</div>
-                            <input type="text" id="batch" class="form-control" placeholder="Online 27" required />
+                            <div class="field-label" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>Batch</span>
+                                <span onclick="openBatchManager()" style="color:var(--accent-purple); cursor:pointer; font-size:0.72rem; font-weight:600;">⚙ Manage</span>
+                            </div>
+                            <select id="batch" class="form-control" required style="background:var(--bg-input); color:var(--text-primary); border:1px solid var(--border-medium);">
+                                <option value="">-- Batch --</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row g-2 align-items-end">
-                        <div class="col-md-3 col-6">
+                        <div class="col-12 col-md-3">
                             <div class="field-label">ගාස්තුව (Rs.)</div>
                             <input type="number" id="monthlyFee" class="form-control" value="3000" required />
                         </div>
-                        <div class="col-md-6 col-6 d-flex gap-2">
-                            <button type="submit" class="btn-pro green w-100" id="submitFormBtn">Add Student</button>
-                            <button type="button" class="btn-pro ghost d-none" id="cancelEditBtn" onclick="resetFormState()">Cancel</button>
-                            <button type="button" class="btn-pro ghost" onclick="exportToCSV()">Export CSV</button>
-                            <button type="button" class="btn-pro ghost" onclick="exportToExcelByBatch()">Export Excel (Batch wise)</button>
+                        <div class="col-12 col-md-6 d-flex gap-2 flex-wrap">
+                            <button type="submit" class="btn-pro green" id="submitFormBtn" style="flex:1 1 140px;">Add Student</button>
+                            <button type="button" class="btn-pro ghost d-none" id="cancelEditBtn" onclick="resetFormState()" style="flex:1 1 100px;">Cancel</button>
+                            <button type="button" class="btn-pro ghost" onclick="exportToCSV()" style="flex:1 1 100px;">Export CSV</button>
+                            <button type="button" class="btn-pro ghost" onclick="exportToExcelByBatch()" style="flex:1 1 140px;">Export Excel</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4">
             <div class="pro-card accent-amber mb-3">
                 <div class="card-title amber">නව නිබන්ධනයක් (Tute) එකතු කිරීම</div>
                 <form id="addTuteForm" onsubmit="handleAddTute(event)">
@@ -691,10 +810,7 @@
                         </div>
                         <div class="col-6">
                             <select id="tuteMonthAssign" class="form-select" required>
-                                <option value="2026-05">May 2026</option>
-                                <option value="2026-06" selected>June 2026</option>
-                                <option value="2026-07">July 2026</option>
-                                <option value="2026-08">August 2026</option>
+                                <!-- Populated dynamically -->
                             </select>
                         </div>
                     </div>
@@ -711,13 +827,16 @@
 
     <div class="search-bar mb-4">
         <div class="row g-3 align-items-center">
-            <div class="col-md-6">
+            <div class="col-12 col-md-6">
                 <input type="text" id="searchInput" class="form-control" placeholder="සෙවීම (නම, කේතය හෝ ලිපිනය)..." onkeyup="renderAll()" />
             </div>
-            <div class="col-md-6">
+            <div class="col-12 col-md-4">
                 <select id="batchFilter" class="form-select" onchange="renderAll()">
                     <option value="All">All Batches</option>
                 </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <button onclick="openBatchManager()" class="btn-pro" style="width:100%; background:linear-gradient(135deg,#a78bfa,#6366f1); color:#fff; border:none; padding:10px; border-radius:10px; font-weight:600; font-size:0.85rem; cursor:pointer;">⚙ Batches</button>
             </div>
         </div>
     </div>
@@ -726,19 +845,19 @@
     <div id="batchAccordionContainer" class="mb-4"></div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <div class="stat-card">
                 <div class="stat-label">මුළු සිසුන් ගණන</div>
                 <div class="stat-value blue" id="totalStudents">0</div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <div class="stat-card">
                 <div class="stat-label"><span id="summaryPaidMonthLabel">June</span> - ගෙවූ සිසුන්</div>
                 <div class="stat-value green" id="paidStudents">0</div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <div class="stat-card">
                 <div class="stat-label"><span id="summaryIncomeMonthLabel">June</span> - මුළු ආදායම</div>
                 <div class="stat-value amber" id="totalIncome">Rs. 0.00</div>
@@ -748,8 +867,8 @@
 
     <div class="pro-card accent-purple mb-4">
         <div class="card-title purple">All-Time Payment History Ledger</div>
-        <div style="max-height:220px; overflow-y:auto;">
-            <table class="ledger-table">
+        <div style="max-height:220px; overflow-y:auto; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+            <table class="ledger-table" style="min-width:460px;">
                 <thead>
                     <tr>
                         <th>මාසය</th>
@@ -769,8 +888,8 @@
             <span class="pro-badge" style="background:rgba(239,68,68,0.15);color:#f87171;" id="alertCountBadge">0 Students</span>
         </div>
         <p style="color:var(--text-muted);font-size:12px;">පෙර මාසයේ පන්ති ගාස්තු ගෙවා, වත්මන් මාසයේ තවමත් ගෙවා නොමැති සිසුන් ලැයිස්තුව.</p>
-        <div style="overflow-x:auto;">
-            <table class="ledger-table">
+        <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+            <table class="ledger-table" style="min-width:420px;">
                 <thead>
                     <tr>
                         <th>Batch</th>
@@ -791,27 +910,270 @@
 <div id="toast-container"></div>
 
 <script>
-const initialStudents = [
-    { id: 1, studentCode: "ACC-O27-01", studentName: "කසුන් පෙරේරා", address: "කොළඹ", mobileNumber: "0771234567", whatsappNumber: "0771234567", batch: "Online 27", monthlyFee: 3000, hasWebAccess: true, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: true, tutes: {} } } },
-    { id: 2, studentCode: "ACC-O27-02", studentName: "නමාලි ප්‍රනාන්දු", address: "මීගමුව", mobileNumber: "0719876543", whatsappNumber: "0719876543", batch: "Online 27", monthlyFee: 3000, hasWebAccess: false, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: false, tutes: {} } } },
-    { id: 3, studentCode: "ACC-O27-03", studentName: "චතුරංග ජයසිංහ", address: "කුරුණෑගල", mobileNumber: "0723456789", whatsappNumber: "0723456789", batch: "Online 27", monthlyFee: 3000, hasWebAccess: false, monthlyData: { "2026-05": { isPaid: false, tutes: {} }, "2026-06": { isPaid: true, tutes: {} } } },
-    { id: 4, studentCode: "ACC-O27-04", studentName: "ඉනෝකා කුමාරි", address: "අනුරාධපුරය", mobileNumber: "0712223334", whatsappNumber: "0712223334", batch: "Online 27", monthlyFee: 3000, hasWebAccess: true, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: false, tutes: {} } } },
-    { id: 5, studentCode: "ACC-O27-05", studentName: "ළහිරු මධුශංඛ", address: "ගම්පහ", mobileNumber: "0785556667", whatsappNumber: "0785556667", batch: "Online 27", monthlyFee: 3000, hasWebAccess: true, monthlyData: { "2026-06": { isPaid: true, tutes: {} } } },
-    { id: 23, studentCode: "ACC-O28-01", studentName: "දසුන් සිල්වා", address: "ගාල්ල", mobileNumber: "0765432109", whatsappNumber: "0765432109", batch: "Online 28", monthlyFee: 3500, hasWebAccess: true, monthlyData: { "2026-05": { isPaid: true, tutes: {} }, "2026-06": { isPaid: true, tutes: {} } } }
-];
+// ════════════════════════════════════════════════════════════════
+//  online.html — SUPABASE CONNECTED DATA LAYER
+//  localStorage replace කළා — සියලු data Supabase ෙයනවා
+// ════════════════════════════════════════════════════════════════
 
-const initialTutes = [
-    { id: 1, name: "Theory Tute 01 - හවුල් ව්‍යාපාර", batch: "Online 27", month: "2026-06" },
-    { id: 2, name: "Revision Tute 01", batch: "Online 28", month: "2026-06" }
-];
-
-let students = JSON.parse(localStorage.getItem('tracker_students')) || initialStudents;
-let tutes = JSON.parse(localStorage.getItem('tracker_tutes')) || initialTutes;
+// Global state — Supabase ෙකෙන් populate ෙවනවා
+let students = [];
+let tutes    = [];  // tutes: { id, name, batch, month } — stored in online_students.tutes_history JSONB
+let batches  = [];  // { id (supabase uuid), name }
 let currentMonth = "2026-06";
 
+// ── Supabase module reference (set by module script via window._authFns) ──
+let _sb = null;
+const _authFns = new Proxy({}, {
+    get(_, key) {
+        return window._authFns ? window._authFns[key] : async () => null;
+    }
+});
+
+// ── Loading state helper ──
+function setLoadingOverlay(show) {
+    let el = document.getElementById('_sbLoadingOverlay');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = '_sbLoadingOverlay';
+        el.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,20,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;color:#22d3ee;font-size:1.1rem;font-weight:600;letter-spacing:0.05em;';
+        el.innerHTML = '<span>⏳ Supabase සෙිටින්...</span>';
+        document.body.appendChild(el);
+    }
+    el.style.display = show ? 'flex' : 'none';
+}
+
+// ── Map Supabase row → local student object ──
+function mapSupabaseStudent(row) {
+    return {
+        id: row.id,
+        studentCode: row.code || '',
+        studentName: row.name || '',
+        address: row.address || '',
+        mobileNumber: row.mobile || '',
+        whatsappNumber: row.whatsapp || '',
+        batch: row.batch || '',
+        monthlyFee: 3000, // fee locally tracked (not in schema) — store in notes as JSON or default
+        hasWebAccess: false, // store in notes field as JSON flags if needed
+        monthlyData: {}, // populated from payments
+        // raw for updates
+        _raw: row
+    };
+}
+
+// ── Load all data from Supabase ──
+async function loadAllFromSupabase() {
+    setLoadingOverlay(true);
+    try {
+        // Load batches
+        const sbBatches = await _authFns.getBatches('online');
+        batches = sbBatches.map(b => ({ id: b.id, name: b.name }));
+
+        // Load students
+        const sbStudents = await _authFns.getOnlineStudents();
+        students = sbStudents.map(row => {
+            const s = mapSupabaseStudent(row);
+            // Parse extra fields stored in notes JSON
+            try {
+                const meta = JSON.parse(row.notes || '{}');
+                s.monthlyFee   = meta.fee  || 3000;
+                s.hasWebAccess = meta.web  || false;
+            } catch(e) {}
+            // Parse tutes from tutes_history JSONB: { "TuteName": "2026-06" }
+            // We rebuild our local tutes array from all students
+            if (row.tutes_history) {
+                Object.entries(row.tutes_history).forEach(([tuteName, dateStr]) => {
+                    const month = dateStr ? dateStr.substring(0, 7) : currentMonth;
+                    if (!tutes.find(t => t.name === tuteName && t.batch === s.batch && t.month === month)) {
+                        tutes.push({ id: tuteName + '_' + s.batch + '_' + month, name: tuteName, batch: s.batch, month });
+                    }
+                });
+            }
+            return s;
+        });
+
+        // Load payments for all students
+        await Promise.all(students.map(async (s) => {
+            const payments = await _authFns.getPayments(s.id, 'online');
+            s.monthlyData = {};
+            payments.forEach(p => {
+                s.monthlyData[p.month] = {
+                    isPaid: p.status === 'Paid' || p.status === 'Half Paid' || p.status === 'Free Card',
+                    payStatus: p.status || 'Not Paid',
+                    tutes: {}
+                };
+            });
+            // Populate tutes in monthlyData from tutes_history JSONB
+            // tutes_history: { "TuteName": "2026-01-15 10:30" } — date string has month prefix
+            const tutesHistory = s._raw?.tutes_history || {};
+            Object.entries(tutesHistory).forEach(([tuteName, dateStr]) => {
+                const month = typeof dateStr === 'string' ? dateStr.substring(0, 7) : currentMonth;
+                if (!s.monthlyData[month]) {
+                    s.monthlyData[month] = { isPaid: false, payStatus: 'Not Paid', tutes: {} };
+                }
+                // Find tute id from local tutes array
+                const tuteObj = tutes.find(t => t.name === tuteName && t.batch === s.batch);
+                if (tuteObj) {
+                    s.monthlyData[month].tutes[tuteObj.id] = true;
+                }
+            });
+        }));
+
+    } catch(e) {
+        console.error('loadAllFromSupabase error:', e);
+    }
+    setLoadingOverlay(false);
+}
+
+// ── Save helpers ──
+async function saveStudentToSupabase(s) {
+    const meta = JSON.stringify({ fee: s.monthlyFee, web: s.hasWebAccess });
+    const payload = {
+        code: s.studentCode,
+        name: s.studentName,
+        address: s.address,
+        mobile: s.mobileNumber,
+        whatsapp: s.whatsappNumber,
+        batch: s.batch,
+        notes: meta
+    };
+    if (s.id && typeof s.id === 'string' && s.id.includes('-')) {
+        // existing — update
+        return await _authFns.updateOnlineStudent(s.id, payload);
+    } else {
+        return await _authFns.addOnlineStudent(payload);
+    }
+}
+
+async function savePaymentToSupabase(studentId, month, isPaid) {
+    const status = isPaid ? 'Paid' : 'Not Paid';
+    return await _authFns.updatePayment(studentId, 'online', month, status);
+}
+
+async function saveTutesHistoryToSupabase(studentId, tutesHistory) {
+    return await _authFns.updateOnlineStudent(studentId, { tutes_history: tutesHistory });
+}
+
+// ── Batch manager (Supabase) ──
+function saveBatchesToStorage() {
+    // No-op — batches are Supabase-only now
+}
+
+function openBatchManager() {
+    renderBatchManagerList();
+    document.getElementById('batchManagerModal').style.display = 'flex';
+}
+
+function closeBatchManager() {
+    document.getElementById('batchManagerModal').style.display = 'none';
+    document.getElementById('newBatchNameInput').value = '';
+    renderAll();
+}
+
+function renderBatchManagerList() {
+    const container = document.getElementById('batchManagerList');
+    container.innerHTML = '';
+    if (batches.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px 0; font-size:0.85rem;">Batches නැත. නව batch එකක් add කරන්න.</div>`;
+        return;
+    }
+    batches.forEach((b, idx) => {
+        const studentCount = students.filter(s => s.batch === b.name).length;
+        const div = document.createElement('div');
+        div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:rgba(255,255,255,0.04); border-radius:10px; border:1px solid rgba(255,255,255,0.07); gap:10px;';
+        div.innerHTML = `
+            <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                <div style="width:8px; height:8px; border-radius:50%; background:linear-gradient(135deg,#a78bfa,#22d3ee); flex-shrink:0;"></div>
+                <div style="min-width:0;">
+                    <div id="batchLabel_${idx}" style="font-weight:600; color:#eef2ff; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${b.name}</div>
+                    <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">${studentCount} student${studentCount !== 1 ? 's' : ''}</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:6px; flex-shrink:0;">
+                <button onclick="renameBatch(${idx})" style="background:rgba(91,156,246,0.15); color:#5b9cf6; border:1px solid rgba(91,156,246,0.3); padding:5px 10px; border-radius:7px; font-size:0.75rem; font-weight:600; cursor:pointer;">✏️ Rename</button>
+                <button onclick="deleteBatchOnline(${idx})" style="background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.25); padding:5px 10px; border-radius:7px; font-size:0.75rem; font-weight:600; cursor:pointer;">🗑 Delete</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+async function addNewBatchOnline() {
+    const input = document.getElementById('newBatchNameInput');
+    const name = input.value.trim();
+    if (!name) return;
+    if (batches.some(b => b.name.toLowerCase() === name.toLowerCase())) {
+        alert('⚠️ මෙම batch නම දැනටමත් පවතී!');
+        return;
+    }
+    setLoadingOverlay(true);
+    const created = await _authFns.addBatch(name, 'online');
+    if (created) {
+        batches.push({ id: created.id, name: created.name });
+    }
+    setLoadingOverlay(false);
+    input.value = '';
+    renderBatchManagerList();
+}
+
+async function renameBatch(idx) {
+    const oldName = batches[idx].name;
+    const newName = prompt(`"${oldName}" batch rename කරන්න:`, oldName);
+    if (!newName || newName.trim() === oldName) return;
+    const trimmed = newName.trim();
+    if (batches.some((b, i) => i !== idx && b.name.toLowerCase() === trimmed.toLowerCase())) {
+        alert('⚠️ මෙම නම දැනටමත් පවතී!');
+        return;
+    }
+    setLoadingOverlay(true);
+    // Rename batch in Supabase
+    const batchId = batches[idx].id;
+    await _authFns.renameBatch(batchId, trimmed);
+    // Update all students' batch field in Supabase
+    const studentsInBatch = students.filter(s => s.batch === oldName);
+    await Promise.all(studentsInBatch.map(s => _authFns.updateOnlineStudent(s.id, { batch: trimmed })));
+    // Update tutes locally
+    tutes.forEach(t => { if (t.batch === oldName) t.batch = trimmed; });
+    batches[idx].name = trimmed;
+    students.forEach(s => { if (s.batch === oldName) s.batch = trimmed; });
+    setLoadingOverlay(false);
+    renderBatchManagerList();
+}
+
+async function deleteBatchOnline(idx) {
+    const batchName = batches[idx].name;
+    const studentCount = students.filter(s => s.batch === batchName).length;
+    const msg = studentCount > 0 
+        ? `⚠️ "${batchName}" batch delete කළොත් ${studentCount} student${studentCount > 1 ? 's' : ''} ද delete වේ!\n\nDelete කරන්නද?`
+        : `"${batchName}" batch delete කරන්නද?`;
+    if (!confirm(msg)) return;
+    setLoadingOverlay(true);
+    if (studentCount > 0) {
+        const studentsInBatch = students.filter(s => s.batch === batchName);
+        await Promise.all(studentsInBatch.map(s => _authFns.deleteOnlineStudent(s.id)));
+        students = students.filter(s => s.batch !== batchName);
+        tutes = tutes.filter(t => t.batch !== batchName);
+    }
+    const batchId = batches[idx].id;
+    await _authFns.deleteBatch(batchId);
+    batches.splice(idx, 1);
+    setLoadingOverlay(false);
+    renderBatchManagerList();
+}
+
+function quickRenameBatch(batchName) {
+    const idx = batches.findIndex(b => b.name === batchName);
+    if (idx === -1) return;
+    renameBatch(idx);
+}
+
+function quickDeleteBatch(batchName) {
+    const idx = batches.findIndex(b => b.name === batchName);
+    if (idx === -1) return;
+    deleteBatchOnline(idx);
+}
+
 function saveToStorage() {
-    localStorage.setItem('tracker_students', JSON.stringify(students));
-    localStorage.setItem('tracker_tutes', JSON.stringify(tutes));
+    // No-op — all saves go to Supabase now
 }
 
 function showNotification(studentName) {
@@ -834,47 +1196,63 @@ function switchMonth() {
     renderAll();
 }
 
-function handleFormSubmit(e) {
+async function handleFormSubmit(e) {
     e.preventDefault();
     const editId = document.getElementById('editStudentId').value;
     const codeInput = document.getElementById('studentCode').value.trim();
 
-    const isCodeDuplicate = students.some(s => s.studentCode.toLowerCase() === codeInput.toLowerCase() && s.id.toString() !== editId);
+    const isCodeDuplicate = students.some(s => s.studentCode.toLowerCase() === codeInput.toLowerCase() && s.id !== editId);
     if (isCodeDuplicate) {
         alert("මෙම Student Code එක දැනටමත් භාවිතයේ පවතී!");
         return;
     }
 
+    setLoadingOverlay(true);
+
     if (editId) {
-        const studentIndex = students.findIndex(s => s.id.toString() === editId);
+        const studentIndex = students.findIndex(s => s.id === editId);
         if (studentIndex !== -1) {
-            students[studentIndex].studentCode = codeInput;
-            students[studentIndex].studentName = document.getElementById('studentName').value;
-            students[studentIndex].address = document.getElementById('address').value;
-            students[studentIndex].mobileNumber = document.getElementById('mobileNumber').value;
+            students[studentIndex].studentCode    = codeInput;
+            students[studentIndex].studentName    = document.getElementById('studentName').value;
+            students[studentIndex].address        = document.getElementById('address').value;
+            students[studentIndex].mobileNumber   = document.getElementById('mobileNumber').value;
             students[studentIndex].whatsappNumber = document.getElementById('whatsappNumber').value;
-            students[studentIndex].batch = document.getElementById('batch').value;
-            students[studentIndex].monthlyFee = parseFloat(document.getElementById('monthlyFee').value);
+            students[studentIndex].batch          = document.getElementById('batch').value;
+            students[studentIndex].monthlyFee     = parseFloat(document.getElementById('monthlyFee').value);
+            const meta = JSON.stringify({ fee: students[studentIndex].monthlyFee, web: students[studentIndex].hasWebAccess });
+            await _authFns.updateOnlineStudent(editId, {
+                code: codeInput,
+                name: students[studentIndex].studentName,
+                address: students[studentIndex].address,
+                mobile: students[studentIndex].mobileNumber,
+                whatsapp: students[studentIndex].whatsappNumber,
+                batch: students[studentIndex].batch,
+                notes: meta
+            });
             alert("ශිෂ්‍ය විස්තර සාර්ථකව යාවත්කාලීන කරන ලදී!");
         }
     } else {
-        const newStudent = {
-            id: Date.now(),
-            studentCode: codeInput,
-            studentName: document.getElementById('studentName').value,
+        const fee = parseFloat(document.getElementById('monthlyFee').value);
+        const meta = JSON.stringify({ fee, web: false });
+        const created = await _authFns.addOnlineStudent({
+            code: codeInput,
+            name: document.getElementById('studentName').value,
             address: document.getElementById('address').value,
-            mobileNumber: document.getElementById('mobileNumber').value,
-            whatsappNumber: document.getElementById('whatsappNumber').value,
+            mobile: document.getElementById('mobileNumber').value,
+            whatsapp: document.getElementById('whatsappNumber').value,
             batch: document.getElementById('batch').value,
-            monthlyFee: parseFloat(document.getElementById('monthlyFee').value),
-            hasWebAccess: false,
-            monthlyData: {}
-        };
-        newStudent.monthlyData[currentMonth] = { isPaid: false, tutes: {} };
-        students.push(newStudent);
+            notes: meta
+        });
+        if (created) {
+            const newStudent = mapSupabaseStudent(created);
+            newStudent.monthlyFee   = fee;
+            newStudent.hasWebAccess = false;
+            newStudent.monthlyData  = {};
+            students.push(newStudent);
+        }
     }
 
-    saveToStorage();
+    setLoadingOverlay(false);
     resetFormState();
     renderAll();
 }
@@ -900,14 +1278,16 @@ function startEditStudent(id) {
     document.getElementById('addStudentForm').scrollIntoView({ behavior: 'smooth' });
 }
 
-function deleteStudent(id) {
+async function deleteStudent(id) {
     const student = students.find(s => s.id === id);
     if (!student) return;
     
     const confirmDelete = confirm(`${student.studentName} (${student.studentCode}) ඉවතට කරන්නද?`);
     if (confirmDelete) {
+        setLoadingOverlay(true);
+        await _authFns.deleteOnlineStudent(id);
         students = students.filter(s => s.id !== id);
-        saveToStorage();
+        setLoadingOverlay(false);
         showNotification(`${student.studentName} ඉවතට කරන ලදී.`);
         renderAll();
     }
@@ -922,7 +1302,7 @@ function resetFormState() {
     document.getElementById('cancelEditBtn').classList.add('d-none');
 }
 
-function handleAddTute(e) {
+async function handleAddTute(e) {
     e.preventDefault();
     const newTute = {
         id: Date.now(),
@@ -931,30 +1311,37 @@ function handleAddTute(e) {
         month: document.getElementById('tuteMonthAssign').value
     };
     tutes.push(newTute);
-    saveToStorage();
+    // Tutes are stored per-student in tutes_history JSONB — no separate table needed
+    // Just keep in local array for UI rendering; actual tute issue tracked per-student
     e.target.reset();
     renderAll();
 }
 
-function togglePayment(id) {
+async function togglePayment(id) {
     const student = students.find(s => s.id === id);
     if (student) {
         if (!student.monthlyData[currentMonth]) {
-            student.monthlyData[currentMonth] = { isPaid: false, tutes: {} };
+            student.monthlyData[currentMonth] = { isPaid: false, payStatus: 'Not Paid', tutes: {} };
         }
-        student.monthlyData[currentMonth].isPaid = !student.monthlyData[currentMonth].isPaid;
+        // Cycle: Not Paid → Paid → Half Paid → Free Card → Not Paid
+        const cycle = ['Not Paid', 'Paid', 'Half Paid', 'Free Card'];
+        const curStatus = student.monthlyData[currentMonth].payStatus || 'Not Paid';
+        const curIdx = cycle.indexOf(curStatus);
+        const newStatus = cycle[(curIdx + 1) % cycle.length];
+        student.monthlyData[currentMonth].payStatus = newStatus;
+        student.monthlyData[currentMonth].isPaid = (newStatus !== 'Not Paid');
         
-        // Notification Logic
-        if (student.monthlyData[currentMonth].isPaid) {
+        // Save to Supabase
+        await _authFns.updatePayment(id, 'online', currentMonth, newStatus);
+
+        if (newStatus !== 'Not Paid') {
             showNotification(student.studentName);
         }
-
-        saveToStorage();
         renderAll();
     }
 }
 
-function toggleTuteStatus(studentId, tuteId) {
+async function toggleTuteStatus(studentId, tuteId) {
     const student = students.find(s => s.id === studentId);
     if (student) {
         if (!student.monthlyData[currentMonth]) {
@@ -964,15 +1351,28 @@ function toggleTuteStatus(studentId, tuteId) {
             student.monthlyData[currentMonth].tutes = {};
         }
         student.monthlyData[currentMonth].tutes[tuteId] = !student.monthlyData[currentMonth].tutes[tuteId];
-        saveToStorage();
+        // Build full tutes_history from all months' tute data
+        const tutesHistory = {};
+        Object.entries(student.monthlyData).forEach(([month, md]) => {
+            if (md && md.tutes) {
+                Object.keys(md.tutes).forEach(tid => {
+                    if (md.tutes[tid]) {
+                        const tuteObj = tutes.find(t => t.id == tid);
+                        if (tuteObj) tutesHistory[tuteObj.name] = month;
+                    }
+                });
+            }
+        });
+        await saveTutesHistoryToSupabase(studentId, tutesHistory);
     }
 }
 
-function toggleWebAccess(id) {
+async function toggleWebAccess(id) {
     const student = students.find(s => s.id === id);
     if (student) {
         student.hasWebAccess = !student.hasWebAccess;
-        saveToStorage();
+        const meta = JSON.stringify({ fee: student.monthlyFee, web: student.hasWebAccess });
+        await _authFns.updateOnlineStudent(id, { notes: meta });
         renderAll();
     }
 }
@@ -1119,20 +1519,70 @@ function sendReceiptJpgViaWhatsApp(id) {
     }, 'image/png');
 }
 
+function getPayStatusClass(status) {
+    if (status === 'Paid') return 'paid';
+    if (status === 'Half Paid') return 'halfpaid';
+    if (status === 'Free Card') return 'free';
+    return 'pending';
+}
+
 function renderAll() {
     const search = document.getElementById('searchInput').value.toLowerCase();
     const filterBatch = document.getElementById('batchFilter').value;
-    const batches = [...new Set(students.map(s => s.batch))];
+    const allBatchNames = batches.map(b => b.name);
+
+    // Populate month selects dynamically
+    (function() {
+        const EN_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const SI_MONTHS = ['ජනවාරි','පෙබරවාරි','මාර්තු','අප්‍රේල්','මැයි','ජූනි','ජූලි','අගෝස්තු','සැප්තැම්බර්','ඔක්තෝබර්','නොවැම්බර්','දෙසැම්බර්'];
+        const now = new Date();
+
+        // Main month select
+        const monthSelect = document.getElementById('currentMonthSelect');
+        if (monthSelect && monthSelect.options.length === 0) {
+            for (let i = -6; i <= 3; i++) {
+                const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+                const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                const lbl = `${d.getFullYear()} ${SI_MONTHS[d.getMonth()]} (${EN_MONTHS[d.getMonth()]})`;
+                const opt = document.createElement('option');
+                opt.value = val; opt.textContent = lbl;
+                if (val === currentMonth) opt.selected = true;
+                monthSelect.appendChild(opt);
+            }
+        }
+        // Tute month select
+        const tuteMonthSelect = document.getElementById('tuteMonthAssign');
+        if (tuteMonthSelect && tuteMonthSelect.options.length === 0) {
+            for (let i = -6; i <= 3; i++) {
+                const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+                const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                const lbl = `${EN_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+                const opt = document.createElement('option');
+                opt.value = val; opt.textContent = lbl;
+                if (val === currentMonth) opt.selected = true;
+                tuteMonthSelect.appendChild(opt);
+            }
+        }
+    })();
     
+    // Update batch filter dropdown
     const batchFilterSelect = document.getElementById('batchFilter');
     const currentFilterVal = batchFilterSelect.value;
     batchFilterSelect.innerHTML = '<option value="All">All Batches</option>';
-    batches.forEach(b => { batchFilterSelect.innerHTML += `<option value="${b}">${b}</option>`; });
-    batchFilterSelect.value = currentFilterVal;
+    allBatchNames.forEach(b => { batchFilterSelect.innerHTML += `<option value="${b}">${b}</option>`; });
+    if (allBatchNames.includes(currentFilterVal)) batchFilterSelect.value = currentFilterVal;
 
+    // Update tute batch assign dropdown
     const tuteBatchAssign = document.getElementById('tuteBatchAssign');
     tuteBatchAssign.innerHTML = '';
-    batches.forEach(b => { tuteBatchAssign.innerHTML += `<option value="${b}">${b}</option>`; });
+    allBatchNames.forEach(b => { tuteBatchAssign.innerHTML += `<option value="${b}">${b}</option>`; });
+
+    // Update student form batch dropdown
+    const batchSelect = document.getElementById('batch');
+    const currentBatchVal = batchSelect.value;
+    batchSelect.innerHTML = '<option value="">-- Batch --</option>';
+    allBatchNames.forEach(b => { batchSelect.innerHTML += `<option value="${b}">${b}</option>`; });
+    if (allBatchNames.includes(currentBatchVal)) batchSelect.value = currentBatchVal;
 
     const filteredStudents = students.filter(s => {
         const matchesSearch = s.studentName.toLowerCase().includes(search) || 
@@ -1164,10 +1614,13 @@ function renderAll() {
             
             let tuteCheckboxes = "";
             currentTutes.forEach(t => {
-                const isTuteChecked = s.monthlyData[currentMonth]?.tutes?.[t.id] ? 'checked' : '';
+                // Check tutes_history: { "TuteName": "2026-01-15" } — issued in currentMonth
+                const tuteHistoryEntry = s._raw?.tutes_history?.[t.name];
+                const isIssuedInMonth = tuteHistoryEntry && tuteHistoryEntry.startsWith(currentMonth);
+                const isTuteChecked = (s.monthlyData[currentMonth]?.tutes?.[t.id] || isIssuedInMonth) ? 'checked' : '';
                 tuteCheckboxes += `
                     <div class="tute-item">
-                        <input type="checkbox" id="tute_${s.id}_${t.id}" ${isTuteChecked} onchange="toggleTuteStatus(${s.id}, ${t.id})" />
+                        <input type="checkbox" id="tute_${s.id}_${t.id}" ${isTuteChecked} onchange="toggleTuteStatus('${s.id}', '${t.id}')" />
                         <label for="tute_${s.id}_${t.id}">${t.name}</label>
                     </div>`;
             });
@@ -1179,23 +1632,23 @@ function renderAll() {
                     <td>${s.mobileNumber}</td>
                     <td>
                         <input type="checkbox" class="form-check-input" style="accent-color:var(--accent-green); width:18px; height:18px;" 
-                            ${isPaid ? 'checked' : ''} onchange="togglePayment(${s.id})" />
-                        <span class="pro-badge ${isPaid ? 'paid' : 'pending'} ms-1">${isPaid ? 'Paid' : 'Pending'}</span>
+                            ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.id}')" />
+                        <span class="pro-badge ${getPayStatusClass(s.monthlyData[currentMonth]?.payStatus)} ms-1">${s.monthlyData[currentMonth]?.payStatus||'Not Paid'}</span>
                     </td>
                     <td>
                         <input type="checkbox" class="form-check-input" style="accent-color:var(--accent-cyan); width:18px; height:18px;" 
-                            ${s.hasWebAccess ? 'checked' : ''} onchange="toggleWebAccess(${s.id})" />
+                            ${s.hasWebAccess ? 'checked' : ''} onchange="toggleWebAccess('${s.id}')" />
                         <span class="pro-badge ${s.hasWebAccess ? 'active' : 'noaccess'} ms-1">${s.hasWebAccess ? 'Active' : 'No Access'}</span>
                     </td>
                     <td><div class="tute-zone">${tuteCheckboxes || '<span class="student-sub-text">නැත</span>'}</div></td>
                     <td>
                         <div class="d-flex gap-1 flex-wrap">
-                            <button class="btn-wa-action wa-edit" onclick="startEditStudent(${s.id})">✏️ Edit</button>
-                            <button class="btn-wa-action wa-delete" onclick="deleteStudent(${s.id})">🗑️ Delete</button>
-                            <button class="btn-wa-action wa-pay" onclick="sendWhatsAppAlert(${s.id}, 'payment')">Pay Msg</button>
-                            <button class="btn-wa-action wa-web" onclick="sendWhatsAppAlert(${s.id}, 'access')">Web Msg</button>
-                            <button class="btn-wa-action wa-jpg" onclick="downloadReceiptJPG(${s.id})">JPG Rec</button>
-                            <button class="btn-wa-action wa-send-jpg" onclick="sendReceiptJpgViaWhatsApp(${s.id})">Send Image Rec</button>
+                            <button class="btn-wa-action wa-edit" onclick="startEditStudent('${s.id}')">✏️ Edit</button>
+                            <button class="btn-wa-action wa-delete" onclick="deleteStudent('${s.id}')">🗑️ Delete</button>
+                            <button class="btn-wa-action wa-pay" onclick="sendWhatsAppAlert('${s.id}', 'payment')">Pay Msg</button>
+                            <button class="btn-wa-action wa-web" onclick="sendWhatsAppAlert('${s.id}', 'access')">Web Msg</button>
+                            <button class="btn-wa-action wa-jpg" onclick="downloadReceiptJPG('${s.id}')">JPG Rec</button>
+                            <button class="btn-wa-action wa-send-jpg" onclick="sendReceiptJpgViaWhatsApp('${s.id}')">Send Image Rec</button>
                         </div>
                     </td>
                 </tr>`;
@@ -1203,9 +1656,13 @@ function renderAll() {
 
         container.innerHTML += `
             <div class="batch-block">
-                <div class="batch-header open" onclick="this.nextElementSibling.classList.toggle('open')">
-                    <span class="batch-name">Batch: ${batchName} (${batchStudents.length} Students)</span>
-                    <span class="chevron">▼</span>
+                <div class="batch-header open" style="cursor:default;">
+                    <span class="batch-name" onclick="this.closest('.batch-block').querySelector('.batch-body').classList.toggle('open')" style="cursor:pointer;">Batch: ${batchName} (${batchStudents.length} Students)</span>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <button onclick="quickRenameBatch('${batchName.replace(/'/g, "\\'")}')" style="background:rgba(91,156,246,0.15); color:#5b9cf6; border:1px solid rgba(91,156,246,0.3); padding:3px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer;">✏️</button>
+                        <button onclick="quickDeleteBatch('${batchName.replace(/'/g, "\\'")}')" style="background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.25); padding:3px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer;">🗑</button>
+                        <span class="chevron" onclick="this.closest('.batch-block').querySelector('.batch-body').classList.toggle('open')" style="cursor:pointer;">▼</span>
+                    </div>
                 </div>
                 <div class="batch-body open">
                     <table class="pro-table table mb-0">
@@ -1234,10 +1691,11 @@ function renderAll() {
     const tuteManageContainer = document.getElementById('tuteManageContainer');
     tuteManageContainer.innerHTML = "";
     tutes.forEach(t => {
+        const tuteIdEncoded = encodeURIComponent(t.id);
         tuteManageContainer.innerHTML += `
             <div class="tute-manage-item">
                 <span><strong>${t.name}</strong> <br> <small class="text-muted">${t.batch} | ${t.month}</small></span>
-                <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteTute(${t.id})">×</button>
+                <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteTute(decodeURIComponent('${tuteIdEncoded}'))">×</button>
             </div>`;
     });
 
@@ -1246,18 +1704,21 @@ function renderAll() {
 
 function deleteTute(id) {
     tutes = tutes.filter(t => t.id !== id);
-    saveToStorage();
+    // Tutes are managed locally for UI; tutes_history updated per-student on toggle
     renderAll();
 }
 
 function renderLedgers() {
     const historyTable = document.getElementById('allTimeHistoryTableBody');
     historyTable.innerHTML = "";
-    const months = ["2026-05", "2026-06", "2026-07", "2026-08"];
-    const batches = [...new Set(students.map(s => s.batch))];
+    // Collect all months from student data + always include currentMonth
+    const monthSet = new Set([currentMonth]);
+    students.forEach(s => { if (s.monthlyData) Object.keys(s.monthlyData).forEach(m => monthSet.add(m)); });
+    const months = Array.from(monthSet).sort();
+    const ledgerBatchNames = batches.map(b => b.name);
 
     months.forEach(m => {
-        batches.forEach(b => {
+        ledgerBatchNames.forEach(b => {
             const targetStudents = students.filter(s => s.batch === b);
             const paid = targetStudents.filter(s => s.monthlyData[m]?.isPaid).length;
             const rev = targetStudents.reduce((acc, s) => acc + (s.monthlyData[m]?.isPaid ? s.monthlyFee : 0), 0);
@@ -1276,7 +1737,10 @@ function renderLedgers() {
     const alertTable = document.getElementById('dropoutAlertTableBody');
     alertTable.innerHTML = "";
     let dropoutCount = 0;
-    const prevMonth = currentMonth === "2026-06" ? "2026-05" : null;
+    // Calculate previous month dynamically
+    const [curY, curM] = currentMonth.split('-').map(Number);
+    const prevDate = new Date(curY, curM - 2, 1);
+    const prevMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
     
     if (prevMonth) {
         students.forEach(s => {
@@ -1288,7 +1752,7 @@ function renderLedgers() {
                         <td><code>${s.studentCode}</code></td>
                         <td><strong>${s.studentName}</strong></td>
                         <td>${s.mobileNumber}</td>
-                        <td><button class="btn-wa-action wa-pay" onclick="sendWhatsAppAlert(${s.id}, 'payment')">Send Reminder</button></td>
+                        <td><button class="btn-wa-action wa-pay" onclick="sendWhatsAppAlert('${s.id}', 'payment')">Send Reminder</button></td>
                     </tr>`;
             }
         });
@@ -1415,121 +1879,305 @@ function exportToCSV() {
     link.click();
 }
 
-// ══ MOUSE POINTER TRAIL EFFECT LOGIC ══
-const trailCanvas = document.getElementById('pointerTrail');
-const trailCtx = trailCanvas.getContext('2d');
-let coords = { x: 0, y: 0 };
-let particles = [];
+// ══ MOUSE TRAIL — CONSOLE ONLY ══
+(function() {
+    const colors = ['#5b9cf6', '#22d3ee', '#a78bfa', '#f472b6', '#34d399', '#fbbf24'];
+    const icons  = ['✦', '★', '◆', '●', '✿', '❋', '⬡'];
+    let hue = 0;
 
-function resizeTrailCanvas() {
-    trailCanvas.width = window.innerWidth;
-    trailCanvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeTrailCanvas);
-resizeTrailCanvas();
+    window.addEventListener('mousemove', function(e) {
+        const x = e.clientX;
+        const y = e.clientY;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const icon  = icons[Math.floor(Math.random() * icons.length)];
+        console.log(
+            `%c${icon} Trail  x:${x}  y:${y}`,
+            `color: ${color}; font-size: 13px; font-weight: bold; text-shadow: 0 0 6px ${color};`
+        );
+        hue = (hue + 3) % 360;
+    });
 
-window.addEventListener('mousemove', function(e) {
-    coords.x = e.clientX;
-    coords.y = e.clientY;
-    particles.push(new TrailParticle(coords.x, coords.y));
-});
-
-class TrailParticle {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        const colors = ['#5b9cf6', '#22d3ee', '#a78bfa'];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-        this.size = Math.random() * 4 + 2;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
-        this.alpha = 1;
-        this.decay = Math.random() * 0.02 + 0.015;
-    }
-    update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.alpha -= this.decay;
-    }
-    draw() {
-        trailCtx.save();
-        trailCtx.globalAlpha = this.alpha;
-        trailCtx.shadowBlur = 10;
-        trailCtx.shadowColor = this.color;
-        trailCtx.fillStyle = this.color;
-        trailCtx.beginPath();
-        trailCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        trailCtx.fill();
-        trailCtx.restore();
-    }
-}
-
-function animateTrail() {
-    trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-    for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-        if (particles[i].alpha <= 0) {
-            particles.splice(i, 1);
-            i--;
-        }
-    }
-    requestAnimationFrame(animateTrail);
-}
+    console.log('%c✦ Mouse Trail Active — Console Mode', 'color: #22d3ee; font-size: 16px; font-weight: 900;');
+})();
 
 // ══ LOGIN SYSTEM FUNCTIONS ══
-const CORRECT_EMAIL = "admin@test.com";
-const CORRECT_PASSWORD = "123456";
-const LOGIN_SESSION_KEY = "isLoggedIn";
+// (Supabase Auth use karanna — hardcoded credentials remove කළා)
+const LOGIN_HISTORY_KEY = "loginHistory_online";
 
-function handleLogin(event) {
-    event.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const errorDiv = document.getElementById('loginError');
+// ══ LOGIN HISTORY FUNCTIONS ══
+function saveLoginHistory(email) {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('si-LK', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    const timeStr = now.toLocaleTimeString('si-LK', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    const entry = {
+        name: email,
+        date: dateStr,
+        time: timeStr,
+        timestamp: now.getTime()
+    };
+    const history = JSON.parse(localStorage.getItem(LOGIN_HISTORY_KEY) || '[]');
+    history.unshift(entry); // newest first
+    if (history.length > 100) history.pop(); // max 100 records
+    localStorage.setItem(LOGIN_HISTORY_KEY, JSON.stringify(history));
+}
 
-    // Clear previous error
-    errorDiv.style.display = 'none';
-    errorDiv.textContent = '';
+function getLoginHistory() {
+    return JSON.parse(localStorage.getItem(LOGIN_HISTORY_KEY) || '[]');
+}
 
-    if (email === CORRECT_EMAIL && password === CORRECT_PASSWORD) {
-        // Login successful
-        sessionStorage.setItem(LOGIN_SESSION_KEY, 'true');
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-        renderAll();
-        animateTrail();
-    } else {
-        // Login failed
-        errorDiv.style.display = 'block';
-        errorDiv.textContent = '❌ ඉ-තැපෙල හෝ රහස්‍ය පදය වැරදිය. නැවත උත්සාහ කරන්න.';
+async function showLoginHistory() {
+    const modal = document.getElementById('loginHistoryModal');
+    const tbody = document.getElementById('loginHistoryBody');
+    const countBadge = document.getElementById('loginHistoryCount');
+
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:20px;">⏳ Loading...</td></tr>';
+    countBadge.textContent = 'Loading...';
+    modal.style.display = 'flex';
+
+    try {
+        const sb = window._supabase;
+        if (!sb) throw new Error('Supabase not ready');
+        const { data: history, error } = await sb
+            .from('login_history')
+            .select('*')
+            .order('login_time', { ascending: false })
+            .limit(100);
+
+        if (error) throw error;
+
+        tbody.innerHTML = '';
+        countBadge.textContent = (history ? history.length : 0) + ' Records';
+
+        if (!history || history.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:20px;">Login records නැත.</td></tr>';
+        } else {
+            history.forEach((entry, idx) => {
+                const d = new Date(entry.login_time);
+                const dateStr = d.toLocaleDateString('si-LK', { year:'numeric', month:'2-digit', day:'2-digit' });
+                const timeStr = d.toLocaleTimeString('si-LK', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+                const tr = document.createElement('tr');
+                tr.style.animation = `fadeIn 0.3s ease ${idx * 0.03}s both`;
+                tr.innerHTML = `
+                    <td style="color:var(--accent-cyan); font-weight:600;">${entry.email}</td>
+                    <td style="color:var(--text-secondary);">${dateStr}</td>
+                    <td style="color:var(--accent-green); font-family:monospace;">${timeStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    } catch(e) {
+        console.error('Login history load error:', e);
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#f87171; padding:20px;">⚠️ Load failed: ' + e.message + '</td></tr>';
     }
 }
 
-function handleLogout() {
-    sessionStorage.removeItem(LOGIN_SESSION_KEY);
-    document.getElementById('loginForm').reset();
-    document.getElementById('loginOverlay').style.display = 'flex';
-    document.getElementById('mainContent').style.display = 'none';
+function closeLoginHistory() {
+    document.getElementById('loginHistoryModal').style.display = 'none';
 }
 
-function checkLoginStatus() {
-    const isLoggedIn = sessionStorage.getItem(LOGIN_SESSION_KEY) === 'true';
-    if (isLoggedIn) {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-    } else {
-        document.getElementById('loginOverlay').style.display = 'flex';
-        document.getElementById('mainContent').style.display = 'none';
+async function clearLoginHistory() {
+    if (confirm('⚠️ Login history සියල්ල මකන්නද?')) {
+        try {
+            const sb = window._supabase;
+            if (sb) {
+                const { data: { user } } = await sb.auth.getUser();
+                if (user) {
+                    await sb.from('login_history').delete().eq('user_id', user.id);
+                }
+            }
+        } catch(e) { console.warn('Clear history error:', e); }
+        await showLoginHistory();
     }
 }
 
-// Run Startup System
+// handleLogin, handleLogout, checkLoginStatus — module script eken handle karanna
+// (මේ functions module script eken override වේ)
+
+// Run Startup System — Supabase session check කරනකල් wait කරනවා
 window.onload = function() {
-    checkLoginStatus();
-    // renderAll and animateTrail are called from checkLoginStatus if user is logged in
+    // Supabase check module script eken karanne — renderAll ona nam module ekenta call karanna puluwan
+    // initPageAuth() call module script eken
 };
 
 </script>
+
+<script type="module">
+  import {
+    supabase,
+    initPageAuth, supabaseLogin, handleLogout,
+    getOnlineStudents, addOnlineStudent, updateOnlineStudent, deleteOnlineStudent,
+    getBatches, addBatch, renameBatch, deleteBatch,
+    updatePayment, getPayments
+  } from './auth.js';
+
+  // ── Wire auth functions to global ──────────────────────────────
+  window._authFns = {
+    getOnlineStudents, addOnlineStudent, updateOnlineStudent, deleteOnlineStudent,
+    getBatches, addBatch, renameBatch, deleteBatch,
+    updatePayment, getPayments
+  };
+
+  // ── Expose supabase client globally for login history ────────
+  window._supabase = supabase;
+
+  // ── Page load: Supabase session check ──────────────────────────
+  initPageAuth({
+    loginEl: 'loginOverlay',
+    mainEl:  'mainContent',
+    onSuccess: async (user) => {
+      const role = user.user_metadata?.role || 'online';
+      // If physical role, redirect to physical.html
+      if (role === 'physical') {
+        window.location.href = './physical.html';
+        return;
+      }
+      // Show user email
+      const badge = document.getElementById('user-email-badge');
+      if (badge) badge.textContent = user.email;
+      // Load all data from Supabase, then render
+      await loadAllFromSupabase();
+      renderAll();
+    }
+  });
+
+  // ── Login form submit ───────────────────────────────────────────
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email    = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const user = await supabaseLogin(email, password, {
+      loginEl:  'loginOverlay',
+      mainEl:   'mainContent',
+      errorEl:  'loginError',
+      btnEl:    'loginBtn',
+      onSuccess: async (u) => {
+        const role = u.user_metadata?.role || 'online';
+        if (role === 'physical') {
+          window.location.href = './physical.html';
+          return;
+        }
+        await loadAllFromSupabase();
+        renderAll();
+      }
+    });
+  });
+
+  // ── Expose handleLogout globally for onclick="handleLogout()" ─────────────
+  window.handleLogout = function() {
+    handleLogout({ loginEl: 'loginOverlay', mainEl: 'mainContent' });
+  };
+
+  // ── Logout button (also wire via event listener as backup) ───────────────
+  const _lb = document.getElementById('logout-btn');
+  if (_lb) _lb.addEventListener('click', window.handleLogout);
+</script>
+
+<!-- ══ BATCH MANAGER MODAL ══ -->
+<div id="batchManagerModal" style="
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.75); z-index:99998;
+    justify-content:center; align-items:center; padding:20px;
+">
+    <div style="
+        background:linear-gradient(135deg, rgba(24,32,51,0.98) 0%, rgba(35,46,74,0.96) 100%);
+        backdrop-filter:blur(20px);
+        border:1px solid rgba(167,139,250,0.35);
+        border-radius:22px;
+        width:min(580px, 95vw);
+        max-height:85vh;
+        display:flex; flex-direction:column;
+        box-shadow:0 30px 90px rgba(167,139,250,0.18);
+        animation:slideIn 0.4s ease-out;
+    ">
+        <!-- Header -->
+        <div style="padding:24px 28px 18px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h3 style="margin:0; font-size:1.2rem; font-weight:700; background:linear-gradient(135deg,#a78bfa,#22d3ee); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+                    ⚙ Batch Manager
+                </h3>
+                <p style="margin:4px 0 0; font-size:0.78rem; color:var(--text-muted);">Batches create, rename සහ delete කරන්න</p>
+            </div>
+            <button onclick="closeBatchManager()" style="background:rgba(255,255,255,0.07); color:#b8c4e0; border:1px solid rgba(255,255,255,0.12); padding:7px 13px; border-radius:8px; font-size:0.82rem; font-weight:600; cursor:pointer;">✕ Close</button>
+        </div>
+
+        <!-- Add New Batch -->
+        <div style="padding:20px 28px 16px; border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">✨ නව Batch එකක් Add කරන්න</div>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="newBatchNameInput" placeholder="Eg: Online 29, Revision 2027..."
+                    onkeydown="if(event.key==='Enter') addNewBatchOnline()"
+                    style="flex:1; background:rgba(14,18,30,0.9); border:1.5px solid rgba(167,139,250,0.3); color:#eef2ff; padding:11px 14px; border-radius:10px; font-size:0.88rem; outline:none; transition:border-color 0.2s;"
+                    onfocus="this.style.borderColor='#a78bfa'" onblur="this.style.borderColor='rgba(167,139,250,0.3)'" />
+                <button onclick="addNewBatchOnline()" style="background:linear-gradient(135deg,#a78bfa,#6366f1); color:#fff; border:none; padding:11px 20px; border-radius:10px; font-weight:700; font-size:0.85rem; cursor:pointer; white-space:nowrap; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">
+                    + Add
+                </button>
+            </div>
+        </div>
+
+        <!-- Batch List -->
+        <div style="flex:1; overflow-y:auto; padding:16px 28px 24px;">
+            <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px;">📋 Current Batches</div>
+            <div id="batchManagerList" style="display:flex; flex-direction:column; gap:8px;">
+                <div style="text-align:center; color:var(--text-muted); padding:20px; font-size:0.85rem;">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ LOGIN HISTORY MODAL ══ -->
+<div id="loginHistoryModal" style="
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.75); z-index:99999;
+    justify-content:center; align-items:center; padding:20px;
+">
+    <div style="
+        background:linear-gradient(135deg, rgba(24,32,51,0.97) 0%, rgba(35,46,74,0.95) 100%);
+        backdrop-filter:blur(20px);
+        border:1px solid rgba(167,139,250,0.4);
+        border-radius:20px;
+        width:min(640px, 95vw);
+        max-height:80vh;
+        display:flex; flex-direction:column;
+        box-shadow:0 25px 80px rgba(167,139,250,0.2);
+        animation:slideIn 0.4s ease-out;
+    ">
+        <div style="padding:24px 28px 18px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h3 style="margin:0; font-size:1.25rem; font-weight:700; background:linear-gradient(135deg,#a78bfa,#22d3ee); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+                    🕓 Login History
+                </h3>
+                <span id="loginHistoryCount" style="font-size:0.8rem; color:#6b7a9e; margin-top:4px; display:block;">0 Records</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button onclick="clearLoginHistory()" style="
+                    background:rgba(248,113,113,0.15); color:#f87171; border:1px solid rgba(248,113,113,0.3);
+                    padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer;">
+                    🗑 Clear All
+                </button>
+                <button onclick="closeLoginHistory()" style="
+                    background:rgba(255,255,255,0.08); color:#b8c4e0; border:1px solid rgba(255,255,255,0.12);
+                    padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer;">
+                    ✕ Close
+                </button>
+            </div>
+        </div>
+        <div style="overflow-y:auto; padding:16px 28px 24px;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+                <thead>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <th style="padding:10px 12px; text-align:left; color:#6b7a9e; font-weight:600; text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em;">👤 Name / Email</th>
+                        <th style="padding:10px 12px; text-align:left; color:#6b7a9e; font-weight:600; text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em;">📅 Date</th>
+                        <th style="padding:10px 12px; text-align:left; color:#6b7a9e; font-weight:600; text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em;">🕐 Time</th>
+                    </tr>
+                </thead>
+                <tbody id="loginHistoryBody">
+                    <tr><td colspan="3" style="text-align:center; color:#6b7a9e; padding:20px;">No records</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
