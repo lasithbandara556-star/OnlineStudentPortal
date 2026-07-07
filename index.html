@@ -171,6 +171,63 @@
       margin-bottom: 44px;
     }
 
+    /* ─── HERO BADGE BOX (description bubble) ──────── */
+    .hero-badge-box {
+      display: inline-block;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 18px 24px;
+      max-width: 480px;
+      font-size: 0.98rem;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .hero-badge-box strong { color: var(--text); }
+
+    /* ─── HERO PHOTO (full-bleed right) ─────────────── */
+    .hero-photo-wrap {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 38%;
+      max-width: 520px;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .hero-photo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      -webkit-mask-image: linear-gradient(to left, black 60%, transparent 98%);
+      mask-image: linear-gradient(to left, black 60%, transparent 98%);
+      opacity: 1;
+    }
+    .hero-photo-glow {
+      position: absolute;
+      right: 0;
+      top: 10%;
+      width: 70%;
+      height: 80%;
+      background: radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%);
+      opacity: 0.35;
+      filter: blur(60px);
+      z-index: -1;
+    }
+
+    @media (max-width: 767px) {
+      .hero-photo-wrap { display: none !important; }
+    }
+    @media (max-width: 1199px) and (min-width: 768px) {
+      .hero-photo-wrap { width: 32%; }
+    }
+
     /* ─── BUTTONS ─────────────────────────────────── */
     .btn-enter {
       display: inline-flex;
@@ -696,7 +753,7 @@
       background: #c4b5fd;
       box-shadow: 0 0 12px #c4b5fd, 0 0 24px #7c3aed;
       pointer-events: none;
-      z-index: 99999;
+      z-index: 9999999;
       transform: translate(-50%, -50%);
       transition: width 0.15s, height 0.15s, background 0.15s;
     }
@@ -708,7 +765,7 @@
       border-radius: 50%;
       border: 1.5px solid rgba(196,181,253,0.55);
       pointer-events: none;
-      z-index: 99998;
+      z-index: 9999998;
       transform: translate(-50%, -50%);
       transition: width 0.2s, height 0.2s, border-color 0.2s, background 0.2s;
     }
@@ -749,7 +806,7 @@
 
 <!-- ══════════════════════════════════════════
      ADMIN PIN LOCK SCREEN
-     Default PIN: 2580  (change ADMIN_PIN below)
+     Default PIN: 8888  (change ADMIN_PIN below)
 ═══════════════════════════════════════════ -->
 <style>
   #lock-overlay {
@@ -1011,16 +1068,16 @@
           </div>
 
           <h1 class="hero-title">
-            Online Student<br>
+            ArtofAccounting.lk<br>
             <span class="line-accent">Management</span><br>
             System
           </h1>
 
-          <p class="hero-sub">
-            Tution Management System for <strong>ArtofAccounting.lk</strong> - Track Students, Fees, and Classes with easy.
-          </p>
+          <div class="hero-badge-box">
+            Tution Management System for <strong>ArtofAccounting.lk</strong> — Track Students, Fees, and Classes with easy.
+          </div>
 
-          <div class="d-flex flex-wrap gap-3">
+          <div class="d-flex flex-wrap gap-3 mt-4">
             <a href="online.html" class="btn-enter">
               <i class="fa-solid fa-laptop"></i>
               Online Management
@@ -1050,6 +1107,12 @@
 
         </div>
       </div>
+    </div>
+
+    <!-- Boss photo, full-bleed right edge -->
+    <div class="hero-photo-wrap d-none d-md-block">
+      <div class="hero-photo-glow"></div>
+      <img src="boss.jpg" alt="Prabath Ariyasinghe" class="hero-photo-img">
     </div>
   </div>
 </div>

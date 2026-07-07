@@ -518,6 +518,7 @@
             transition: all 0.2s ease;
         }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        #centerModal { z-index: 150; }
         
         .modal-body {
             background: #0f1117;
@@ -697,6 +698,7 @@
                     <div class="badge-account">
                         <i class="fa-solid fa-circle-check"></i> <span id="currentUserName">Connecting Node...</span>
                     </div>
+                    <button class="btn-exit" onclick="openInstituteTuteModal()" style="background:linear-gradient(135deg,#f59e0b,#d97706); margin-right:6px;"><i class="fa-solid fa-book-open"></i> Institute Tutes</button>
                     <button class="btn-exit" onclick="showLoginHistory()" style="background:linear-gradient(135deg,#a78bfa,#6366f1); margin-right:6px;"><i class="fa-solid fa-clock-rotate-left"></i> Login History</button>
                     <button class="btn-exit" onclick="handleLogout()"><i class="fa-solid fa-power-off"></i> Disconnect</button>
                 </div>
@@ -740,12 +742,12 @@
                                 <input type="text" id="stuSchool" placeholder="Current School Name" required>
                             </div>
                             <div class="input-wrapper">
-                                <label>Institute Center</label>
+                                <label style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>Institute Center</span>
+                                    <span onclick="openCenterModal()" style="color: var(--brand-primary); cursor: pointer; font-size: 0.75rem;"><i class="fa-solid fa-sliders"></i> Adjust</span>
+                                </label>
                                 <select id="stuCenter" required>
-                    
-                                    <option value="Science Center - Kegalle">Science Center - Kegalle</option>
-                                    <option value="Unique - Matale">Unique - Matale</option>
-                                    <option value="Sesip - Rambukkana">Sesip - Rambukkana</option>
+                                    <option value="">Select Center</option>
                                 </select>
                             </div>
                             <div class="input-wrapper">
@@ -983,6 +985,83 @@
         </div>
     </div>
 
+    <!-- Dynamic Center Config Window Modal -->
+    <div class="modal-overlay" id="centerModal">
+        <div class="modal-body" style="max-width:560px; width:95vw;">
+            <h3 style="color:#fff; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-weight:600; font-size:1.1rem;">
+                <span><i class="fa-solid fa-building" style="color: var(--brand-primary);"></i> Center Manager</span>
+                <i class="fa-solid fa-xmark" onclick="closeCenterModal()" style="cursor: pointer; color: var(--text-secondary); font-size:1rem;"></i>
+            </h3>
+
+            <!-- Add New Center -->
+            <div style="background:rgba(99,102,241,0.06); border:1px solid rgba(99,102,241,0.2); border-radius:10px; padding:16px; margin-bottom:20px;">
+                <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">✨ නව Center Add කරන්න</div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <input type="text" id="newCenterInput" placeholder="Center නම (eg: Science Center - Kegalle)"
+                        onkeydown="if(event.key==='Enter') addNewCenter()"
+                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(99,102,241,0.3); color:#f3f4f6; padding:10px 14px; border-radius:8px; font-size:0.88rem; font-family:Inter,sans-serif; outline:none;">
+                    <button type="button" class="btn-primary" onclick="addNewCenter()" style="justify-content:center;"><i class="fa-solid fa-plus"></i> Add Center</button>
+                </div>
+            </div>
+
+            <!-- Center List -->
+            <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">📋 Current Centers</div>
+            <div id="centerListContainer" style="background: #0d0f18; padding: 10px; border-radius: 10px; max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--border-color);">
+            </div>
+
+            <button class="btn-secondary" style="margin: 20px auto 0 auto; display: block; padding: 10px 28px;" onclick="closeCenterModal()"><i class="fa-solid fa-check"></i> Done</button>
+        </div>
+    </div>
+
+    <!-- Institute Tute Tracker Modal (monthly, per-center) -->
+    <div class="modal-overlay" id="instituteTuteModal">
+        <div class="modal-body" style="max-width:600px; width:95vw;">
+            <h3 style="color:#fff; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-weight:600; font-size:1.1rem;">
+                <span><i class="fa-solid fa-book-open" style="color:#f59e0b;"></i> Institute Tute Tracker</span>
+                <i class="fa-solid fa-xmark" onclick="closeInstituteTuteModal()" style="cursor: pointer; color: var(--text-secondary); font-size:1rem;"></i>
+            </h3>
+
+            <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+                <div style="flex:1; min-width:160px;">
+                    <label style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>Center</span>
+                        <span onclick="openCenterModal()" style="color: var(--brand-primary); cursor: pointer; font-size: 0.68rem; text-transform:none; letter-spacing:0;"><i class="fa-solid fa-sliders"></i> Manage Centers</span>
+                    </label>
+                    <select id="ituCenterSelect" onchange="renderInstituteTuteList()" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(99,102,241,0.3); color:#f3f4f6; padding:10px 14px; border-radius:8px; font-size:0.88rem; font-family:Inter,sans-serif; outline:none;">
+                    </select>
+                </div>
+                <div style="flex:1; min-width:160px;">
+                    <label style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; display:block;">Month</label>
+                    <input type="month" id="ituMonthSelect" onchange="renderInstituteTuteList()" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(99,102,241,0.3); color:#f3f4f6; padding:9px 14px; border-radius:8px; font-size:0.88rem; font-family:Inter,sans-serif; outline:none;">
+                </div>
+            </div>
+
+            <!-- Add New Tute Entry -->
+            <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:10px; padding:16px; margin-bottom:20px;">
+                <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">✨ නව Tute Add කරන්න (Selected Center & Month)</div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="newTuteInput" placeholder="Tute නම (eg: June Tute 01)"
+                        onkeydown="if(event.key==='Enter') addInstituteTuteEntry()"
+                        style="flex:2; min-width:0; background:rgba(255,255,255,0.05); border:1px solid rgba(245,158,11,0.3); color:#f3f4f6; padding:10px 14px; border-radius:8px; font-size:0.88rem; font-family:Inter,sans-serif; outline:none;">
+                    <input type="number" id="newTuteQtyInput" placeholder="Qty" min="1" value="1"
+                        onkeydown="if(event.key==='Enter') addInstituteTuteEntry()"
+                        style="flex:1; min-width:0; background:rgba(255,255,255,0.05); border:1px solid rgba(245,158,11,0.3); color:#f3f4f6; padding:10px 14px; border-radius:8px; font-size:0.88rem; font-family:Inter,sans-serif; outline:none;">
+                    <button type="button" class="btn-primary" onclick="addInstituteTuteEntry()" style="background:linear-gradient(135deg,#f59e0b,#d97706); white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add</button>
+                </div>
+            </div>
+
+            <!-- Tute List -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em;">📚 Tutes — <span id="ituListLabel"></span></div>
+                <div style="font-size:0.78rem; font-weight:700; color:#fbbf24;">Total: <span id="ituTotalQty">0</span></div>
+            </div>
+            <div id="instituteTuteListContainer" style="background: #0d0f18; padding: 10px; border-radius: 10px; max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--border-color);">
+            </div>
+
+            <button class="btn-secondary" style="margin: 20px auto 0 auto; display: block; padding: 10px 28px;" onclick="closeInstituteTuteModal()"><i class="fa-solid fa-check"></i> Done</button>
+        </div>
+    </div>
+
     <footer class="app-branding-footer">
         <div class="chuty-svg-logo" style="width: 22px; height: 22px; padding: 2px; border-radius: 5px;">
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1003,6 +1082,8 @@
         let students = [];
         let activeSession = JSON.parse(localStorage.getItem('phys_active_session')) || null; // session is UI-only, keep local
         let batches = [];
+        let centers = [];
+        let instituteTutes = JSON.parse(localStorage.getItem('phys_institute_tutes') || '{}'); // { centerName: { 'YYYY-MM': ['tute name', ...] } }
         let targetAssigningStudentId = null;
         let currentUser = null;
 
@@ -1025,7 +1106,7 @@
                 el = document.createElement('div');
                 el.id = '_sbLoadingOverlay';
                 el.style.cssText = 'position:fixed;inset:0;background:rgba(11,12,16,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.1rem;font-weight:600;letter-spacing:0.05em;font-family:Inter,sans-serif;';
-                el.innerHTML = '<span>⏳ Supabase සෙිටින්...</span>';
+                el.innerHTML = '<span>⏳Database Loading...</span>';
                 document.body.appendChild(el);
             }
             el.style.display = show ? 'flex' : 'none';
@@ -1058,6 +1139,19 @@
                 // Load batches
                 const sbBatches = await _authFns.getBatches('physical');
                 batches = sbBatches.map(b => ({ id: b.id, name: b.name, link: '' }));
+
+                // Load centers (stored in the same `batches` table, type='center')
+                let sbCenters = await _authFns.getBatches('center');
+                if (sbCenters.length === 0) {
+                    // First run — seed the existing default centers
+                    const defaults = ['Science Center - Kegalle', 'Unique - Matale', 'Sesip - Rambukkana', 'Online'];
+                    sbCenters = [];
+                    for (const name of defaults) {
+                        const created = await _authFns.addBatch(name, 'center');
+                        if (created) sbCenters.push(created);
+                    }
+                }
+                centers = sbCenters.map(c => ({ id: c.id, name: c.name }));
 
                 // Load students
                 const sbStudents = await _authFns.getPhysicalStudents();
@@ -1137,6 +1231,7 @@
 
             calculateSessionMonths();
             renderBatchOptions();
+            renderCenterOptions();
 
             if (activeSession) {
                 updateSessionUI();
@@ -1179,6 +1274,304 @@
 
         function closeBatchModal() {
             document.getElementById('batchModal').classList.remove('show');
+        }
+
+        function renderCenterOptions() {
+            const stuCenterSelect = document.getElementById('stuCenter');
+            const currentSelected = stuCenterSelect.value;
+
+            stuCenterSelect.innerHTML = '<option value="">Select Center</option>';
+            centers.forEach(c => {
+                stuCenterSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+
+            const centerNames = centers.map(c => c.name);
+            if (centerNames.includes(currentSelected)) stuCenterSelect.value = currentSelected;
+        }
+
+        function openCenterModal() {
+            document.getElementById('centerModal').classList.add('show');
+            renderCenterList();
+        }
+
+        function closeCenterModal() {
+            document.getElementById('centerModal').classList.remove('show');
+            // If the Institute Tute Tracker is open behind this, refresh its center list
+            if (document.getElementById('instituteTuteModal').classList.contains('show')) {
+                const ituSelect = document.getElementById('ituCenterSelect');
+                const prevSelected = ituSelect.value;
+                ituSelect.innerHTML = '';
+                if (centers.length === 0) {
+                    ituSelect.innerHTML = '<option value="">No centers yet — add one first</option>';
+                } else {
+                    centers.forEach(c => {
+                        ituSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+                    });
+                }
+                const centerNames = centers.map(c => c.name);
+                if (centerNames.includes(prevSelected)) ituSelect.value = prevSelected;
+                renderInstituteTuteList();
+            }
+        }
+
+        function renderCenterList() {
+            const container = document.getElementById('centerListContainer');
+            container.innerHTML = '';
+            if (centers.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:#6b7280; padding:16px; font-size:0.85rem;">Centers නැත. නව center add කරන්න.</div>`;
+                return;
+            }
+            centers.forEach((c, index) => {
+                const stuCount = students.filter(s => s.center === c.name).length;
+                const div = document.createElement('div');
+                div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid rgba(255,255,255,0.06); gap:8px;';
+                div.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        <div style="width:7px; height:7px; border-radius:50%; background:var(--brand-primary); flex-shrink:0;"></div>
+                        <div style="min-width:0;">
+                            <div style="font-weight:600; color:#f3f4f6; font-size:0.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.name}</div>
+                            <div style="font-size:0.7rem; color:#6b7280; margin-top:1px;">${stuCount} student${stuCount !== 1 ? 's' : ''}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:5px; flex-shrink:0;">
+                        <button onclick="renameCenterPhys(${index})" style="background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.25); padding:5px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">✏️ Rename</button>
+                        <button onclick="deleteCenter(${index})" style="background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.22); padding:5px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">🗑 Delete</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function renameCenterPhys(index) {
+            const oldName = centers[index].name;
+            const newName = prompt(`"${oldName}" center rename කරන්න:`, oldName);
+            if (!newName || newName.trim() === oldName) return;
+            const trimmed = newName.trim();
+            if (centers.some((c, i) => i !== index && c.name.toLowerCase() === trimmed.toLowerCase())) {
+                alert('⚠️ මෙම center නම දැනටමත් පවතී!');
+                return;
+            }
+            setLoadingOverlay(true);
+            const centerId = centers[index].id;
+            await _authFns.renameBatch(centerId, trimmed);
+            const studentsInCenter = students.filter(s => s.center === oldName);
+            await Promise.all(studentsInCenter.map(s => _authFns.updatePhysicalStudent(s.id, { center: trimmed })));
+            students.forEach(s => { if (s.center === oldName) s.center = trimmed; });
+            centers[index].name = trimmed;
+            setLoadingOverlay(false);
+            renderCenterList();
+            renderCenterOptions();
+            renderRegistryTable();
+        }
+
+        async function addNewCenter() {
+            const nameInput = document.getElementById('newCenterInput');
+            const nameValue = nameInput.value.trim();
+
+            if (!nameValue) return;
+            if (centers.some(c => c.name.toLowerCase() === nameValue.toLowerCase())) {
+                alert('This center name already exists.');
+                return;
+            }
+
+            setLoadingOverlay(true);
+            const created = await _authFns.addBatch(nameValue, 'center');
+            if (created) {
+                centers.push({ id: created.id, name: created.name });
+            }
+            setLoadingOverlay(false);
+            nameInput.value = '';
+
+            renderCenterList();
+            renderCenterOptions();
+        }
+
+        async function deleteCenter(index) {
+            const centerName = centers[index].name;
+            const stuCount = students.filter(s => s.center === centerName).length;
+            const msg = stuCount > 0
+                ? `⚠️ "${centerName}" delete කළොත් මෙම center එකේ සිටින ${stuCount} student${stuCount > 1 ? 's' : ''}ගේ center field එක clear වේ (student records delete නොවේ).\n\nDelete කරන්නද?`
+                : `"${centerName}" center delete කරන්නද?`;
+            if (confirm(msg)) {
+                setLoadingOverlay(true);
+                if (stuCount > 0) {
+                    const studentsInCenter = students.filter(s => s.center === centerName);
+                    await Promise.all(studentsInCenter.map(s => _authFns.updatePhysicalStudent(s.id, { center: '' })));
+                    students.forEach(s => { if (s.center === centerName) s.center = ''; });
+                }
+                const centerId = centers[index].id;
+                await _authFns.deleteBatch(centerId);
+                centers.splice(index, 1);
+                setLoadingOverlay(false);
+                renderCenterList();
+                renderCenterOptions();
+                renderRegistryTable();
+            }
+        }
+
+        // ── Institute Tute Tracker (monthly, per-center) ──────────────────
+        // Stored in localStorage as: { centerName: { 'YYYY-MM': ['tute name', ...] } }
+        function saveInstituteTutes() {
+            localStorage.setItem('phys_institute_tutes', JSON.stringify(instituteTutes));
+        }
+
+        function currentYearMonth() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function openInstituteTuteModal() {
+            const centerSelect = document.getElementById('ituCenterSelect');
+            const monthInput = document.getElementById('ituMonthSelect');
+
+            centerSelect.innerHTML = '';
+            if (centers.length === 0) {
+                centerSelect.innerHTML = '<option value="">No centers yet — add one first</option>';
+            } else {
+                centers.forEach(c => {
+                    centerSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+                });
+            }
+
+            if (!monthInput.value) monthInput.value = currentYearMonth();
+
+            document.getElementById('instituteTuteModal').classList.add('show');
+            renderInstituteTuteList();
+        }
+
+        function closeInstituteTuteModal() {
+            document.getElementById('instituteTuteModal').classList.remove('show');
+        }
+
+        function renderInstituteTuteList() {
+            const centerSelect = document.getElementById('ituCenterSelect');
+            const monthInput = document.getElementById('ituMonthSelect');
+            const container = document.getElementById('instituteTuteListContainer');
+            const label = document.getElementById('ituListLabel');
+            const totalEl = document.getElementById('ituTotalQty');
+
+            const centerName = centerSelect.value;
+            const month = monthInput.value || currentYearMonth();
+            label.textContent = centerName ? `${centerName} · ${month}` : '—';
+
+            container.innerHTML = '';
+            if (!centerName) {
+                container.innerHTML = `<div style="text-align:center; color:#6b7280; padding:16px; font-size:0.85rem;">Center එකක් select කරන්න.</div>`;
+                totalEl.textContent = '0';
+                return;
+            }
+
+            const list = normalizeTuteList(centerName, month);
+            const totalQty = list.reduce((sum, t) => sum + (Number(t.qty) || 0), 0);
+            totalEl.textContent = totalQty;
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:#6b7280; padding:16px; font-size:0.85rem;">මේ මාසේට Tutes නැත. නව tute add කරන්න.</div>`;
+                return;
+            }
+
+            list.forEach((entry, index) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid rgba(255,255,255,0.06); gap:8px;';
+                div.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        <div style="width:7px; height:7px; border-radius:50%; background:#f59e0b; flex-shrink:0;"></div>
+                        <div style="font-weight:600; color:#f3f4f6; font-size:0.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${entry.name}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                        <span style="background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); padding:3px 10px; border-radius:6px; font-size:0.75rem; font-weight:700;">x${entry.qty}</span>
+                        <button onclick="editInstituteTuteEntry(${index})" style="background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.25); padding:5px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">✏️ Edit</button>
+                        <button onclick="deleteInstituteTuteEntry(${index})" style="background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.22); padding:5px 9px; border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;">🗑 Delete</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Converts old (string-array) or new ({name, qty}-array) storage into a normalized array,
+        // and writes the normalized version back into instituteTutes so it's saved going forward.
+        function normalizeTuteList(centerName, month) {
+            const raw = (instituteTutes[centerName] && instituteTutes[centerName][month]) || [];
+            const normalized = raw.map(item =>
+                (typeof item === 'string') ? { name: item, qty: 1 } : { name: item.name, qty: Number(item.qty) || 0 }
+            );
+            if (!instituteTutes[centerName]) instituteTutes[centerName] = {};
+            instituteTutes[centerName][month] = normalized;
+            return normalized;
+        }
+
+        function addInstituteTuteEntry() {
+            const centerSelect = document.getElementById('ituCenterSelect');
+            const monthInput = document.getElementById('ituMonthSelect');
+            const nameInput = document.getElementById('newTuteInput');
+            const qtyInput = document.getElementById('newTuteQtyInput');
+
+            const centerName = centerSelect.value;
+            const month = monthInput.value || currentYearMonth();
+            const tuteName = nameInput.value.trim();
+            const qty = parseInt(qtyInput.value, 10);
+
+            if (!centerName) { alert('⚠️ කලින් center එකක් select කරන්න.'); return; }
+            if (!tuteName) return;
+            if (!qty || qty < 1) { alert('⚠️ Valid quantity එකක් දාන්න.'); return; }
+
+            const list = normalizeTuteList(centerName, month);
+
+            const existing = list.find(t => t.name.toLowerCase() === tuteName.toLowerCase());
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                list.push({ name: tuteName, qty: qty });
+            }
+
+            saveInstituteTutes();
+            nameInput.value = '';
+            qtyInput.value = '1';
+            renderInstituteTuteList();
+        }
+
+        function editInstituteTuteEntry(index) {
+            const centerSelect = document.getElementById('ituCenterSelect');
+            const monthInput = document.getElementById('ituMonthSelect');
+            const centerName = centerSelect.value;
+            const month = monthInput.value || currentYearMonth();
+
+            const list = normalizeTuteList(centerName, month);
+            const entry = list[index];
+
+            const newName = prompt('Tute නම edit කරන්න:', entry.name);
+            if (newName === null) return;
+            const trimmedName = newName.trim();
+            if (!trimmedName) return;
+
+            if (list.some((t, i) => i !== index && t.name.toLowerCase() === trimmedName.toLowerCase())) {
+                alert('⚠️ මෙම tute නම දැනටමත් පවතී!');
+                return;
+            }
+
+            const newQtyRaw = prompt('Quantity edit කරන්න:', entry.qty);
+            if (newQtyRaw === null) return;
+            const newQty = parseInt(newQtyRaw, 10);
+            if (!newQty || newQty < 1) { alert('⚠️ Valid quantity එකක් දාන්න.'); return; }
+
+            entry.name = trimmedName;
+            entry.qty = newQty;
+            saveInstituteTutes();
+            renderInstituteTuteList();
+        }
+
+        function deleteInstituteTuteEntry(index) {
+            const centerSelect = document.getElementById('ituCenterSelect');
+            const monthInput = document.getElementById('ituMonthSelect');
+            const centerName = centerSelect.value;
+            const month = monthInput.value || currentYearMonth();
+
+            const list = normalizeTuteList(centerName, month);
+            if (!confirm(`"${list[index].name}" (x${list[index].qty}) delete කරන්නද?`)) return;
+
+            list.splice(index, 1);
+            saveInstituteTutes();
+            renderInstituteTuteList();
         }
 
         function renderBatchList() {

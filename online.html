@@ -28,7 +28,7 @@
             --border-medium: rgba(255,255,255,0.12);
         }
 
-        /* LOGIN OVERLAY - ENHANCED */
+        /* LOGIN OVERLAY - SIMPLE */
         #loginOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #0a0c14 0%, #0f1423 50%, #1a1530 100%);
@@ -37,26 +37,16 @@
             overflow: hidden;
         }
 
-        /* Animated background blobs for login */
-        #loginOverlay::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(91, 156, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(34, 211, 238, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(52, 211, 153, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 90% 20%, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
-            animation: blobShift 15s infinite ease-in-out;
-            z-index: -1;
-        }
-
-        @keyframes blobShift {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, 30px) scale(1.1); }
+        /* generic fadeIn keyframe (used by table rows elsewhere in the app) */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Login box styling */
@@ -74,7 +64,6 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             z-index: 1;
-            animation: slideIn 0.6s ease-out;
         }
 
         @media (max-width: 480px) {
@@ -87,37 +76,6 @@
             }
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Gradient border effect */
-        .login-box::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(135deg, #5b9cf6, #22d3ee, #34d399, #fbbf24, #a78bfa, #5b9cf6);
-            border-radius: 25px;
-            z-index: -1;
-            opacity: 0;
-            animation: gradientShift 4s infinite ease-in-out;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 0.3; }
-        }
-
         .login-box h3 {
             font-size: 2rem;
             font-weight: 700;
@@ -126,7 +84,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 12px;
-            animation: fadeIn 0.8s ease-out 0.2s both;
         }
 
         .login-box p {
@@ -134,28 +91,12 @@
             margin-bottom: 40px;
             font-size: 0.95rem;
             letter-spacing: 0.5px;
-            animation: fadeIn 0.8s ease-out 0.3s both;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .login-input-group {
             margin-bottom: 22px;
             text-align: left;
-            animation: fadeIn 0.8s ease-out forwards;
         }
-
-        .login-input-group:nth-child(1) { animation-delay: 0.4s; }
-        .login-input-group:nth-child(2) { animation-delay: 0.5s; }
 
         .login-input-group label {
             display: block;
@@ -212,37 +153,14 @@
             font-weight: 700;
             font-size: 15px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
             margin-top: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 0.8s ease-out 0.6s both;
-        }
-
-        #loginBtn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        #loginBtn:hover::before {
-            left: 100%;
         }
 
         #loginBtn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
-        }
-
-        #loginBtn:active {
-            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(34, 211, 238, 0.35);
         }
 
         /* Error message */
@@ -255,19 +173,6 @@
             background: linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(251, 113, 133, 0.1) 100%);
             border-left: 4px solid #f87171;
             border-radius: 8px;
-            animation: slideInError 0.3s ease-out;
-            backdrop-filter: blur(10px);
-        }
-
-        @keyframes slideInError {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         /* Demo credentials info */
@@ -275,7 +180,6 @@
             margin-top: 30px;
             padding-top: 25px;
             border-top: 1px solid rgba(91, 156, 246, 0.2);
-            animation: fadeIn 0.8s ease-out 0.7s both;
         }
 
         .login-demo-info p {
@@ -679,6 +583,19 @@
             .btn-wa-action { font-size: 9.5px; padding: 3px 6px; }
             #addStudentForm .d-flex.gap-2 button { flex: 1 1 100%; }
         }
+
+        /* ── Monthly Bill — Print Styles ──────────────────────────── */
+        @media print {
+            body * { visibility: hidden; }
+            #billPrintArea, #billPrintArea * { visibility: visible; }
+            #billPrintArea {
+                position: absolute; top: 0; left: 0;
+                width: 100% !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -701,6 +618,7 @@
         </form>
         <div class="login-demo-info">
             <p style="color:#6b7a9e; font-size:0.82rem; text-align:center;">🔐 Supabase Auth — Authorized Users Only</p>
+            <p style="color:#5a6b87; font-size:0.72rem; text-align:center; margin-top:8px; margin-bottom:0;">Developed by Lasith Bandara</p>
         </div>
     </div>
 </div>
@@ -723,6 +641,7 @@
             </div>
             <div class="d-flex gap-2 align-items-center flex-shrink-0">
                 <span class="pro-badge count" id="tableMonthBadge">2026-06</span>
+                <button class="logout-btn admin-only-revenue" id="monthlyBillBtn" style="display:none; background:linear-gradient(135deg,#34d399,#22d3ee);" onclick="openMonthlySummary()">🧾 Monthly Bill</button>
                 <button class="logout-btn" onclick="showLoginHistory()" style="background:linear-gradient(135deg,#a78bfa,#6366f1);">🕓 Login History</button>
                 <button class="logout-btn" onclick="handleLogout()">🔓 Log Out</button>
             </div>
@@ -785,6 +704,14 @@
                         <div class="col-12 col-md-3">
                             <div class="field-label">ගාස්තුව (Rs.)</div>
                             <input type="number" id="monthlyFee" class="form-control" value="3000" required />
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="field-label">Export Filter</div>
+                            <select id="exportPayFilter" class="form-select" style="background:var(--bg-input); color:var(--text-primary); border:1px solid var(--border-medium);">
+                                <option value="All">🗂 All Students</option>
+                                <option value="Paid">✅ Paid Only</option>
+                                <option value="Unpaid">⛔ Unpaid Only</option>
+                            </select>
                         </div>
                         <div class="col-12 col-md-6 d-flex gap-2 flex-wrap">
                             <button type="submit" class="btn-pro green" id="submitFormBtn" style="flex:1 1 140px;">Add Student</button>
@@ -851,13 +778,13 @@
                 <div class="stat-value blue" id="totalStudents">0</div>
             </div>
         </div>
-        <div class="col-6 col-md-4">
+        <div class="col-6 col-md-4 admin-only-revenue" id="adminPaidStudentsCol" style="display:none;">
             <div class="stat-card">
                 <div class="stat-label"><span id="summaryPaidMonthLabel">June</span> - ගෙවූ සිසුන්</div>
                 <div class="stat-value green" id="paidStudents">0</div>
             </div>
         </div>
-        <div class="col-6 col-md-4">
+        <div class="col-6 col-md-4 admin-only-revenue" id="adminIncomeCol" style="display:none;">
             <div class="stat-card">
                 <div class="stat-label"><span id="summaryIncomeMonthLabel">June</span> - මුළු ආදායම</div>
                 <div class="stat-value amber" id="totalIncome">Rs. 0.00</div>
@@ -865,7 +792,7 @@
         </div>
     </div>
 
-    <div class="pro-card accent-purple mb-4">
+    <div class="pro-card accent-purple mb-4 admin-only-revenue" id="adminLedgerCard" style="display:none;">
         <div class="card-title purple">All-Time Payment History Ledger</div>
         <div style="max-height:220px; overflow-y:auto; overflow-x:auto; -webkit-overflow-scrolling:touch;">
             <table class="ledger-table" style="min-width:460px;">
@@ -905,6 +832,10 @@
     </div>
 </div>
 
+<div style="text-align:center; padding:22px 10px 6px; color:var(--text-muted); font-size:0.8rem; letter-spacing:0.03em;">
+    Developed by <span style="font-weight:700; background:linear-gradient(135deg,#22d3ee,#5b9cf6,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Lasith Bandara</span>
+</div>
+
 </div>
 
 <div id="toast-container"></div>
@@ -919,7 +850,17 @@
 let students = [];
 let tutes    = [];  // tutes: { id, name, batch, month } — stored in online_students.tutes_history JSONB
 let batches  = [];  // { id (supabase uuid), name }
-let currentMonth = "2026-06";
+
+// ── Auto-detect the real "current month" (YYYY-MM) from the device's date ──
+// සැබෑ දින දර්ශනයෙන් වත්මන් මාසය auto-ව detect කරගැනීම — අලුත් මාසයක් වූ විට
+// manual‌ව මාසය මාරු කරන්නේ නැතුව ම, app එක auto‌ව ඒ මාසයට switch වෙනවා.
+// පරණ මාසවල data monthlyData object එකේ history එකක් විදිහට ආරක්ෂිතව තියෙනවා,
+// ඕනෑම වෙලාවක Active Month dropdown එකෙන් ආපහු බලාගන්න පුළුවන්.
+function getRealCurrentMonth() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+let currentMonth = getRealCurrentMonth();
 
 // ── Supabase module reference (set by module script via window._authFns) ──
 let _sb = null;
@@ -936,7 +877,7 @@ function setLoadingOverlay(show) {
         el = document.createElement('div');
         el.id = '_sbLoadingOverlay';
         el.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,20,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;color:#22d3ee;font-size:1.1rem;font-weight:600;letter-spacing:0.05em;';
-        el.innerHTML = '<span>⏳ Supabase සෙිටින්...</span>';
+        el.innerHTML = '<span>⏳Database Loading...</span>';
         document.body.appendChild(el);
     }
     el.style.display = show ? 'flex' : 'none';
@@ -1683,6 +1624,12 @@ function renderAll() {
             </div>`;
     });
 
+    // Keep the header badge + summary labels synced with currentMonth on every render
+    // (covers first load, not just manual dropdown switches)
+    document.getElementById('tableMonthBadge').innerText = currentMonth;
+    document.getElementById('summaryPaidMonthLabel').innerText = currentMonth;
+    document.getElementById('summaryIncomeMonthLabel').innerText = currentMonth;
+
     document.getElementById('totalStudents').innerText = students.length;
     document.getElementById('paidStudents').innerText = students.filter(s => s.monthlyData[currentMonth]?.isPaid).length;
     const revenue = students.reduce((acc, s) => acc + (s.monthlyData[currentMonth]?.isPaid ? s.monthlyFee : 0), 0);
@@ -1767,9 +1714,18 @@ function exportToExcelByBatch() {
         return;
     }
 
-    // Collect all months across all students' monthlyData (sorted)
+    // Apply the Paid/Unpaid export filter (based on currentMonth's status)
+    const filterMode = getExportPayFilter();
+    const filteredStudents = applyExportPayFilter(students, filterMode);
+
+    if (filteredStudents.length === 0) {
+        alert(`"${filterMode}" filter එකට ගැලපෙන සිසුන් කිසිවෙක් ${currentMonth} මාසයේ නැත!`);
+        return;
+    }
+
+    // Collect all months across the filtered students' monthlyData (sorted)
     let allMonths = [];
-    students.forEach(s => {
+    filteredStudents.forEach(s => {
         if (s.monthlyData) {
             Object.keys(s.monthlyData).forEach(m => {
                 if (!allMonths.includes(m)) allMonths.push(m);
@@ -1781,7 +1737,7 @@ function exportToExcelByBatch() {
 
     // Group students by batch
     let batchGroups = {};
-    students.forEach(s => {
+    filteredStudents.forEach(s => {
         const b = s.batch || "Unassigned";
         if (!batchGroups[b]) batchGroups[b] = [];
         batchGroups[b].push(s);
@@ -1864,18 +1820,45 @@ function exportToExcelByBatch() {
     });
 
     const todayStr = new Date().toISOString().split('T')[0];
-    XLSX.writeFile(wb, `ArtofAccounting_Students_${todayStr}.xlsx`);
+    const filterTag = filterMode === 'All' ? '' : `_${filterMode}`;
+    XLSX.writeFile(wb, `ArtofAccounting_Students_${todayStr}${filterTag}.xlsx`);
+}
+
+// ── Reads the Export Filter dropdown: "All" | "Paid" | "Unpaid" ──
+function getExportPayFilter() {
+    const el = document.getElementById('exportPayFilter');
+    return el ? el.value : 'All';
+}
+
+// ── Applies the Paid/Unpaid filter to a student list, based on currentMonth's status ──
+function applyExportPayFilter(list, filterMode) {
+    if (filterMode === 'Paid') {
+        return list.filter(s => s.monthlyData[currentMonth]?.isPaid);
+    }
+    if (filterMode === 'Unpaid') {
+        return list.filter(s => !s.monthlyData[currentMonth]?.isPaid);
+    }
+    return list; // "All"
 }
 
 function exportToCSV() {
+    const filterMode = getExportPayFilter();
+    const filteredStudents = applyExportPayFilter(students, filterMode);
+
+    if (filteredStudents.length === 0) {
+        alert(`"${filterMode}" filter එකට ගැලපෙන සිසුන් කිසිවෙක් ${currentMonth} මාසයේ නැත!`);
+        return;
+    }
+
     let csv = `Code,Name,Address,Mobile,Batch,Fee,Paid Status (${currentMonth})\n`;
-    students.forEach(s => {
+    filteredStudents.forEach(s => {
         csv += `\"${s.studentCode}\",\"${s.studentName}\",\"${s.address}\",\"${s.mobileNumber}\",\"${s.batch}\",${s.monthlyFee},\"${s.monthlyData[currentMonth]?.isPaid ? "Paid" : "Pending"}\"\n`;
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", `student_ledger_${currentMonth}.csv`);
+    const filterTag = filterMode === 'All' ? '' : `_${filterMode}`;
+    link.setAttribute("download", `student_ledger_${currentMonth}${filterTag}.csv`);
     link.click();
 }
 
@@ -1975,6 +1958,65 @@ function closeLoginHistory() {
     document.getElementById('loginHistoryModal').style.display = 'none';
 }
 
+// ── Monthly Summary Bill ──────────────────────────────────────────
+function openMonthlySummary() {
+    const tbody = document.getElementById('billTableBody');
+    tbody.innerHTML = '';
+
+    let totalCount = 0, totalPaid = 0, totalRevenue = 0;
+    const batchNames = batches.map(b => b.name);
+
+    batchNames.forEach(name => {
+        const batchStudents = students.filter(s => s.batch === name);
+        const count = batchStudents.length;
+        if (count === 0) return; // skip batches with no students
+
+        const paid    = batchStudents.filter(s => s.monthlyData[currentMonth]?.isPaid).length;
+        const unpaid  = count - paid;
+        const revenue = batchStudents.reduce((acc, s) => acc + (s.monthlyData[currentMonth]?.isPaid ? s.monthlyFee : 0), 0);
+
+        totalCount   += count;
+        totalPaid    += paid;
+        totalRevenue += revenue;
+
+        tbody.innerHTML += `
+            <tr style="border-bottom:1px solid #e7e9ef;">
+                <td style="padding:10px 6px; font-weight:600;">${name}</td>
+                <td style="padding:10px 6px; text-align:center;">${count}</td>
+                <td style="padding:10px 6px; text-align:center; color:#22a06b; font-weight:600;">${paid}</td>
+                <td style="padding:10px 6px; text-align:center; color:${unpaid > 0 ? '#d14343' : '#9aa3ba'}; font-weight:600;">${unpaid}</td>
+                <td style="padding:10px 6px; text-align:right;">Rs. ${revenue.toLocaleString()}.00</td>
+            </tr>`;
+    });
+
+    if (tbody.innerHTML === '') {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#9aa3ba;">මෙම මාසයේ batch දත්ත නැත.</td></tr>`;
+    }
+
+    const monthLabel = new Date(currentMonth + '-01T00:00:00').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    document.getElementById('billMonthLabel').textContent = monthLabel;
+
+    const now = new Date();
+    document.getElementById('billGeneratedOn').textContent =
+        'Generated: ' + now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+        ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    document.getElementById('billTotalCount').textContent   = totalCount;
+    document.getElementById('billTotalPaid').textContent    = totalPaid;
+    document.getElementById('billTotalUnpaid').textContent  = totalCount - totalPaid;
+    document.getElementById('billTotalRevenue').textContent = 'Rs. ' + totalRevenue.toLocaleString() + '.00';
+
+    document.getElementById('billModal').style.display = 'flex';
+}
+
+function closeMonthlySummary() {
+    document.getElementById('billModal').style.display = 'none';
+}
+
+function printMonthlySummary() {
+    window.print();
+}
+
 async function clearLoginHistory() {
     if (confirm('⚠️ Login history සියල්ල මකන්නද?')) {
         try {
@@ -2020,6 +2062,18 @@ window.onload = function() {
   // ── Expose supabase client globally for login history ────────
   window._supabase = supabase;
 
+  // ── Admin-only Revenue Visibility ───────────────────────────────
+  // Mevage "income stats + payment history ledger" elements valata
+  // .admin-only-revenue class eka denawa (HTML eke). Default display:none.
+  // ADMIN_EMAIL ekata witharak penna gahanawa, anith ekata hide.
+  const ADMIN_EMAIL = 'admin@gmail.com';
+  function applyAdminOnlyVisibility(email) {
+    const isAdmin = (email || '').trim().toLowerCase() === ADMIN_EMAIL;
+    document.querySelectorAll('.admin-only-revenue').forEach(el => {
+      el.style.display = isAdmin ? '' : 'none';
+    });
+  }
+
   // ── Page load: Supabase session check ──────────────────────────
   initPageAuth({
     loginEl: 'loginOverlay',
@@ -2034,6 +2088,8 @@ window.onload = function() {
       // Show user email
       const badge = document.getElementById('user-email-badge');
       if (badge) badge.textContent = user.email;
+      // Admin-only revenue sections
+      applyAdminOnlyVisibility(user.email);
       // Load all data from Supabase, then render
       await loadAllFromSupabase();
       renderAll();
@@ -2057,6 +2113,7 @@ window.onload = function() {
           window.location.href = './physical.html';
           return;
         }
+        applyAdminOnlyVisibility(u.email);
         await loadAllFromSupabase();
         renderAll();
       }
@@ -2175,6 +2232,80 @@ window.onload = function() {
                     <tr><td colspan="3" style="text-align:center; color:#6b7a9e; padding:20px;">No records</td></tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MONTHLY SUMMARY BILL MODAL ══ -->
+<div id="billModal" style="
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.82); z-index:99999;
+    justify-content:center; align-items:flex-start;
+    padding:34px 18px; overflow-y:auto;
+">
+    <div style="width:min(720px, 96vw); margin:0 auto;">
+
+        <!-- Action bar (hidden on print) -->
+        <div class="no-print" style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:14px;">
+            <button onclick="printMonthlySummary()" style="background:linear-gradient(135deg,#34d399,#22d3ee); color:#06281f; border:none; padding:10px 20px; border-radius:10px; font-weight:700; font-size:0.85rem; cursor:pointer;">🖨 Print / Save as PDF</button>
+            <button onclick="closeMonthlySummary()" style="background:rgba(255,255,255,0.1); color:#eef2ff; border:1px solid rgba(255,255,255,0.18); padding:10px 18px; border-radius:10px; font-weight:600; font-size:0.85rem; cursor:pointer;">✕ Close</button>
+        </div>
+
+        <!-- The printable bill itself -->
+        <div id="billPrintArea" style="
+            background:#fbfaf6;
+            color:#1c2230;
+            border-radius:16px;
+            padding:42px 38px 34px;
+            font-family:'Space Grotesk', sans-serif;
+            box-shadow:0 30px 80px rgba(0,0,0,0.45);
+            position:relative;
+            overflow:hidden;
+        ">
+            <div style="position:absolute; top:0; left:0; right:0; height:6px; background:linear-gradient(90deg,#5b9cf6,#22d3ee,#34d399,#fbbf24,#a78bfa);"></div>
+
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+                <div>
+                    <div style="font-size:1.55rem; font-weight:700; color:#161b27; letter-spacing:0.01em;">Art of Accounting</div>
+                    <div style="font-size:0.85rem; color:#5b6680; margin-top:3px;">Prabath Ariyasinghe &middot; ArtofAccounting.lk</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.09em; color:#8b96b3; font-weight:700;">Monthly Payment Summary</div>
+                    <div id="billMonthLabel" style="font-size:1.15rem; font-weight:700; color:#2563eb; margin-top:5px;">—</div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:0.78rem; color:#6b7488; margin:20px 0 22px; padding-top:14px; border-top:1px dashed #d8dbe4;">
+                <span>Student Type: <strong style="color:#1c2230;">Online Batches</strong></span>
+                <span id="billGeneratedOn">Generated: —</span>
+            </div>
+
+            <table style="width:100%; border-collapse:collapse; font-size:0.86rem;">
+                <thead>
+                    <tr style="border-bottom:2px solid #1c2230;">
+                        <th style="text-align:left; padding:9px 6px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:#5b6680;">Batch</th>
+                        <th style="text-align:center; padding:9px 6px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:#5b6680;">Total</th>
+                        <th style="text-align:center; padding:9px 6px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:#22a06b;">Paid</th>
+                        <th style="text-align:center; padding:9px 6px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:#d14343;">Unpaid</th>
+                        <th style="text-align:right; padding:9px 6px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:#5b6680;">Revenue (Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody id="billTableBody"></tbody>
+                <tfoot>
+                    <tr style="border-top:2px solid #1c2230;">
+                        <td style="padding:13px 6px; font-weight:700;">TOTAL</td>
+                        <td id="billTotalCount" style="text-align:center; padding:13px 6px; font-weight:700;">0</td>
+                        <td id="billTotalPaid" style="text-align:center; padding:13px 6px; font-weight:700; color:#22a06b;">0</td>
+                        <td id="billTotalUnpaid" style="text-align:center; padding:13px 6px; font-weight:700; color:#d14343;">0</td>
+                        <td id="billTotalRevenue" style="text-align:right; padding:13px 6px; font-weight:700;">Rs. 0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div style="margin-top:32px; padding-top:16px; border-top:1px dashed #d8dbe4; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:8px; font-size:0.72rem; color:#9aa3ba;">
+                <span>System-generated summary &mdash; Art of Accounting Management System.</span>
+                <span style="font-weight:700; color:#5b6680;">★ Confidential</span>
+            </div>
         </div>
     </div>
 </div>
