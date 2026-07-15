@@ -805,8 +805,7 @@
 <body>
 
 <!-- ══════════════════════════════════════════
-     ADMIN PIN LOCK SCREEN
-     Default PIN: 8888  (change ADMIN_PIN below)
+     ADMIN LOGIN SCREEN — Supabase Auth
 ═══════════════════════════════════════════ -->
 <style>
   #lock-overlay {
@@ -896,91 +895,28 @@
   <div class="lo-orb lo-orb2"></div>
   <div class="lock-card">
     <div class="lock-logo"><i class="fa-solid fa-shield-halved"></i></div>
-    <div class="lock-title">Admin Access</div>
+    <div class="lock-title">Admin Login</div>
     <div class="lock-sub">ArtofAccounting.lk &nbsp;·&nbsp; Private Dashboard</div>
-    <div class="pin-dots">
-      <div class="pin-dot" id="d0"></div>
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
-    </div>
-    <div class="numpad">
-      <button class="np-btn" onclick="pinInput('1')">1</button>
-      <button class="np-btn" onclick="pinInput('2')">2</button>
-      <button class="np-btn" onclick="pinInput('3')">3</button>
-      <button class="np-btn" onclick="pinInput('4')">4</button>
-      <button class="np-btn" onclick="pinInput('5')">5</button>
-      <button class="np-btn" onclick="pinInput('6')">6</button>
-      <button class="np-btn" onclick="pinInput('7')">7</button>
-      <button class="np-btn" onclick="pinInput('8')">8</button>
-      <button class="np-btn" onclick="pinInput('9')">9</button>
-      <button class="np-btn del" onclick="pinDelete()"><i class="fa-solid fa-delete-left"></i></button>
-      <button class="np-btn zero" onclick="pinInput('0')">0</button>
-    </div>
-    <div class="lock-err" id="lock-err"></div>
-    <div class="lock-hint">🔒 Private &nbsp;·&nbsp; Admin Only</div>
+    <form id="gateLoginForm" style="margin-top:22px; text-align:left;" autocomplete="on">
+      <div style="margin-bottom:14px;">
+        <label for="gateEmail" style="display:block; font-size:.7rem; color:#94a3b8; margin-bottom:6px; letter-spacing:.05em; text-transform:uppercase;">📧 Email</label>
+        <input type="email" id="gateEmail" required placeholder="admin@test.com" autocomplete="username"
+          style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid rgba(167,139,250,0.25); background:rgba(255,255,255,0.05); color:#f1f5f9; font-size:.9rem; outline:none;" />
+      </div>
+      <div style="margin-bottom:6px;">
+        <label for="gatePassword" style="display:block; font-size:.7rem; color:#94a3b8; margin-bottom:6px; letter-spacing:.05em; text-transform:uppercase;">🔑 Password</label>
+        <input type="password" id="gatePassword" required placeholder="••••••••" autocomplete="current-password"
+          style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid rgba(167,139,250,0.25); background:rgba(255,255,255,0.05); color:#f1f5f9; font-size:.9rem; outline:none;" />
+      </div>
+      <div class="lock-err" id="gateError" style="text-align:center;"></div>
+      <button type="submit" id="gateLoginBtn"
+        style="width:100%; margin-top:8px; padding:12px; border:none; border-radius:10px; background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; font-weight:700; font-size:.9rem; letter-spacing:.03em; cursor:pointer;">
+        Log In
+      </button>
+    </form>
+    <div class="lock-hint">🔒 Supabase Auth &nbsp;·&nbsp; Authorized Users Only</div>
   </div>
 </div>
-
-<script>
-(function () {
-  const ADMIN_PIN   = '2580';   /* ← PIN change කරන්න මෙතැනින් */
-  const SESSION_KEY = 'aoa_admin_auth';
-
-  if (sessionStorage.getItem(SESSION_KEY) === 'ok') {
-    document.getElementById('lock-overlay').style.display = 'none';
-    return;
-  }
-
-  let current = '';
-
-  function updateDots() {
-    for (let i = 0; i < 4; i++) {
-      document.getElementById('d' + i).classList.toggle('filled', i < current.length);
-      document.getElementById('d' + i).classList.remove('error');
-    }
-    document.getElementById('lock-err').textContent = '';
-  }
-
-  window.pinInput = function (digit) {
-    if (current.length >= 4) return;
-    current += digit;
-    updateDots();
-    if (current.length === 4) setTimeout(checkPin, 140);
-  };
-
-  window.pinDelete = function () {
-    current = current.slice(0, -1);
-    updateDots();
-  };
-
-  function checkPin() {
-    if (current === ADMIN_PIN) {
-      sessionStorage.setItem(SESSION_KEY, 'ok');
-      const ov = document.getElementById('lock-overlay');
-      ov.classList.add('unlocking');
-      setTimeout(() => ov.remove(), 500);
-    } else {
-      for (let i = 0; i < 4; i++) {
-        document.getElementById('d' + i).classList.remove('filled');
-        document.getElementById('d' + i).classList.add('error');
-      }
-      document.getElementById('lock-err').textContent = 'Incorrect PIN. Try again.';
-      setTimeout(() => {
-        for (let i = 0; i < 4; i++)
-          document.getElementById('d' + i).classList.remove('error');
-        current = '';
-        updateDots();
-      }, 750);
-    }
-  }
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key >= '0' && e.key <= '9') pinInput(e.key);
-    else if (e.key === 'Backspace') pinDelete();
-  });
-})();
-</script>
 
 <!-- BACKGROUND MUSIC -->
 <audio id="bgMusic" src="theme.mp3" loop preload="auto"></audio>
@@ -1043,6 +979,12 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#timetable-section" onclick="document.getElementById('timetable-section').scrollIntoView({behavior:'smooth'});return false;"><i class="fa-solid fa-calendar-days me-1"></i>Time Table</a>
+        </li>
+        <li class="nav-item d-flex align-items-center">
+          <span id="user-email-badge" style="font-size:.78rem; color:var(--muted); margin-right:10px;"></span>
+          <button class="nav-link" style="background:none; border:1px solid rgba(167,139,250,0.3); border-radius:8px; padding:5px 12px;" onclick="handleLogout()">
+            <i class="fa-solid fa-right-from-bracket me-1"></i>Logout
+          </button>
         </li>
       </ul>
     </div>
@@ -2141,48 +2083,67 @@
   const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monthLabel = monthNames[now.getMonth()] + ' ' + now.getFullYear();
 
-  /* ── read online tracker data ── */
-  function getOnlineStats() {
+  /* ── live Supabase stats (online) — window._authFns wired by module script below ── */
+  async function getOnlineStats() {
     try {
-      const students = JSON.parse(localStorage.getItem('tracker_students') || '[]');
+      if (!window._authFns) return null;
+      const students = await window._authFns.getOnlineStudents();
       if (!students.length) return null;
 
       const total   = students.length;
-      const paid    = students.filter(s => s.monthlyData?.[mKey]?.isPaid).length;
+      const batches = new Set(students.map(s => s.batch).filter(Boolean)).size;
+      let paid = 0, revenue = 0;
+      await Promise.all(students.map(async s => {
+        const payments = await window._authFns.getPayments(s.id, 'online');
+        const p = payments.find(p => p.month === mKey);
+        const isPaid = p && (p.status === 'Paid' || p.status === 'Half Paid' || p.status === 'Free Card');
+        if (isPaid) {
+          paid++;
+          let fee = 3000;
+          try { fee = JSON.parse(s.notes || '{}').fee || 3000; } catch (e) {}
+          revenue += fee;
+        }
+      }));
       const pending = total - paid;
-      const batches = [...new Set(students.map(s => s.batch).filter(Boolean))].length;
-      const revenue = students.reduce((acc, s) =>
-        acc + (s.monthlyData?.[mKey]?.isPaid ? (s.monthlyFee || 0) : 0), 0);
       return { total, paid, pending, batches, revenue };
-    } catch { return null; }
+    } catch (e) { console.error('getOnlineStats error:', e); return null; }
   }
 
-  /* ── read physical tracker data ── */
-  function getPhysicalStats() {
+  /* ── live Supabase stats (physical) ── */
+  async function getPhysicalStats() {
     try {
-      /* physical tracker might use a different key — try common ones */
-      const keys = ['physical_students', 'tracker_physical', 'physicalStudents'];
-      let students = null;
-      for (const k of keys) {
-        const raw = localStorage.getItem(k);
-        if (raw) { students = JSON.parse(raw); break; }
-      }
-      if (!students || !students.length) return null;
+      if (!window._authFns) return null;
+      const students = await window._authFns.getPhysicalStudents();
+      if (!students.length) return null;
 
       const total   = students.length;
-      const paid    = students.filter(s => s.monthlyData?.[mKey]?.isPaid).length;
+      const batches = new Set(students.map(s => s.batch).filter(Boolean)).size;
+      let paid = 0, revenue = 0;
+      await Promise.all(students.map(async s => {
+        const payments = await window._authFns.getPayments(s.id, 'physical');
+        const p = payments.find(p => p.month === mKey);
+        const isPaid = p && (p.status === 'Paid' || p.status === 'Half Paid' || p.status === 'Free Card');
+        if (isPaid) {
+          paid++;
+          let fee = 3000;
+          try { fee = JSON.parse(s.notes || '{}').fee || 3000; } catch (e) {}
+          revenue += fee;
+        }
+      }));
       const pending = total - paid;
-      const batches = [...new Set(students.map(s => s.batch).filter(Boolean))].length;
-      const revenue = students.reduce((acc, s) =>
-        acc + (s.monthlyData?.[mKey]?.isPaid ? (s.monthlyFee || 0) : 0), 0);
       return { total, paid, pending, batches, revenue };
-    } catch { return null; }
+    } catch (e) { console.error('getPhysicalStats error:', e); return null; }
   }
 
+  /* cache of last computed stats, used by the count-up animation below */
+  let lastOnlineStats = null, lastPhysicalStats = null;
+
   /* ── render ── */
-  function render() {
-    const on  = getOnlineStats();
-    const phy = getPhysicalStats();
+  async function render() {
+    const on  = await getOnlineStats();
+    const phy = await getPhysicalStats();
+    lastOnlineStats = on;
+    lastPhysicalStats = phy;
 
     /* status bar */
     $('sb-online').textContent   = on  ? on.total  : '—';
@@ -2241,9 +2202,13 @@
   }
   tick();
   setInterval(tick, 1000);
-  render();
-  /* re-render every 10s in case tracker is open in another tab */
-  setInterval(render, 10000);
+
+  /* render() needs a logged-in Supabase session (window._authFns), so the
+     module script at the bottom calls this once login succeeds, instead of
+     running immediately on page load. */
+  window.renderDashboardStats = render;
+  /* refresh every 30s while logged in */
+  setInterval(() => { if (window._authFns) render(); }, 30000);
 
   /* ── Scroll reveal for feat-cards ── */
   const cards = document.querySelectorAll('.feat-card');
@@ -2280,14 +2245,14 @@
 
   /* trigger count-up when each card becomes visible */
   const countTargets = [
-    { id:'c1-total',   src: () => getOnlineStats()?.total },
-    { id:'c1-paid',    src: () => getOnlineStats()?.paid },
-    { id:'c1-pending', src: () => getOnlineStats()?.pending },
-    { id:'c1-batches', src: () => getOnlineStats()?.batches },
-    { id:'c2-total',   src: () => getPhysicalStats()?.total },
-    { id:'c2-paid',    src: () => getPhysicalStats()?.paid },
-    { id:'c2-pending', src: () => getPhysicalStats()?.pending },
-    { id:'c2-batches', src: () => getPhysicalStats()?.batches },
+    { id:'c1-total',   src: () => lastOnlineStats?.total },
+    { id:'c1-paid',    src: () => lastOnlineStats?.paid },
+    { id:'c1-pending', src: () => lastOnlineStats?.pending },
+    { id:'c1-batches', src: () => lastOnlineStats?.batches },
+    { id:'c2-total',   src: () => lastPhysicalStats?.total },
+    { id:'c2-paid',    src: () => lastPhysicalStats?.paid },
+    { id:'c2-pending', src: () => lastPhysicalStats?.pending },
+    { id:'c2-batches', src: () => lastPhysicalStats?.batches },
   ];
 
   const ioCounts = new IntersectionObserver((entries) => {
@@ -2414,14 +2379,52 @@
 </script>
 
 <script type="module">
-  import { handleLogin } from './auth.js'; // ඔයාගේ js එකේ නම දාන්න
+  import {
+    supabase, initPageAuth, supabaseLogin, handleLogout,
+    getOnlineStudents, getPhysicalStudents, getPayments
+  } from './auth.js';
 
-  // Login බොත්තම ක්ලික් කළාම ක්‍රියාත්මක වීමට
-  document.getElementById('login-btn').addEventListener('click', () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    handleLogin(email, password);
+  // ── Wire the read-only functions this page needs onto window ──
+  window._authFns = { getOnlineStudents, getPhysicalStudents, getPayments };
+  window._supabase = supabase;
+
+  function routeByRole(user) {
+    const role = (user.user_metadata?.role || '').toLowerCase();
+    if (role === 'online')   { window.location.href = './online.html';   return true; }
+    if (role === 'physical') { window.location.href = './physical.html'; return true; }
+    return false; // admin / no role → stay on the combined dashboard
+  }
+
+  async function onAuthed(user) {
+    if (routeByRole(user)) return; // redirecting away, don't render this page
+    const badge = document.getElementById('user-email-badge');
+    if (badge) badge.textContent = user.email;
+    if (window.renderDashboardStats) await window.renderDashboardStats();
+  }
+
+  // ── Page load: Supabase session check (auto-login if session valid) ──
+  initPageAuth({
+    loginEl: 'lock-overlay',
+    onSuccess: onAuthed
   });
+
+  // ── Login form submit ──
+  document.getElementById('gateLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email    = document.getElementById('gateEmail').value;
+    const password = document.getElementById('gatePassword').value;
+    await supabaseLogin(email, password, {
+      loginEl: 'lock-overlay',
+      errorEl: 'gateError',
+      btnEl:   'gateLoginBtn',
+      onSuccess: onAuthed
+    });
+  });
+
+  // ── Logout ──
+  window.handleLogout = function() {
+    handleLogout({ loginEl: 'lock-overlay' });
+  };
 </script>
 
 </body>

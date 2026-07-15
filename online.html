@@ -746,7 +746,7 @@
             </div>
 
             <div class="pro-card accent-cyan">
-                <div class="card-title cyan">Tutes Control Panel</div>
+                <div class="card-title cyan">Tutes Control </div>
                 <div class="tute-manage" id="tuteManageContainer"></div>
             </div>
         </div>
@@ -908,6 +908,11 @@ async function loadAllFromSupabase() {
         // Load batches
         const sbBatches = await _authFns.getBatches('online');
         batches = sbBatches.map(b => ({ id: b.id, name: b.name }));
+
+        // Load tutes (now persisted in their own Supabase table —
+        // this is what makes Add/Delete tute survive a page refresh)
+        const sbTutes = await _authFns.getTutes('online');
+        tutes = sbTutes.map(t => ({ id: t.id, name: t.name, batch: t.batch, month: t.month }));
 
         // Load students
         const sbStudents = await _authFns.getOnlineStudents();
@@ -1072,7 +1077,8 @@ async function renameBatch(idx) {
     // Update all students' batch field in Supabase
     const studentsInBatch = students.filter(s => s.batch === oldName);
     await Promise.all(studentsInBatch.map(s => _authFns.updateOnlineStudent(s.id, { batch: trimmed })));
-    // Update tutes locally
+    // Keep the tutes table in sync too
+    await _authFns.updateTutesBatch(oldName, trimmed, 'online');
     tutes.forEach(t => { if (t.batch === oldName) t.batch = trimmed; });
     batches[idx].name = trimmed;
     students.forEach(s => { if (s.batch === oldName) s.batch = trimmed; });
@@ -1092,8 +1098,10 @@ async function deleteBatchOnline(idx) {
         const studentsInBatch = students.filter(s => s.batch === batchName);
         await Promise.all(studentsInBatch.map(s => _authFns.deleteOnlineStudent(s.id)));
         students = students.filter(s => s.batch !== batchName);
-        tutes = tutes.filter(t => t.batch !== batchName);
     }
+    // Remove any tutes tied to this batch too
+    await _authFns.deleteTutesByBatch(batchName, 'online');
+    tutes = tutes.filter(t => t.batch !== batchName);
     const batchId = batches[idx].id;
     await _authFns.deleteBatch(batchId);
     batches.splice(idx, 1);
@@ -1245,15 +1253,21 @@ function resetFormState() {
 
 async function handleAddTute(e) {
     e.preventDefault();
-    const newTute = {
-        id: Date.now(),
-        name: document.getElementById('tuteName').value,
-        batch: document.getElementById('tuteBatchAssign').value,
-        month: document.getElementById('tuteMonthAssign').value
-    };
-    tutes.push(newTute);
-    // Tutes are stored per-student in tutes_history JSONB — no separate table needed
-    // Just keep in local array for UI rendering; actual tute issue tracked per-student
+    const name  = document.getElementById('tuteName').value.trim();
+    const batch = document.getElementById('tuteBatchAssign').value;
+    const month = document.getElementById('tuteMonthAssign').value;
+    if (!name) return;
+
+    setLoadingOverlay(true);
+    const created = await _authFns.addTute(name, batch, month, 'online');
+    setLoadingOverlay(false);
+
+    if (!created) {
+        alert('⚠️ Tute එක save කිරීමට නොහැකි විය. නැවත try කරන්න.');
+        return;
+    }
+
+    tutes.push({ id: created.id, name: created.name, batch: created.batch, month: created.month });
     e.target.reset();
     renderAll();
 }
@@ -1649,9 +1663,36 @@ function renderAll() {
     renderLedgers();
 }
 
-function deleteTute(id) {
+async function deleteTute(id) {
+    if (!confirm('මෙම Tute එක delete කරන්නද?')) return;
+    setLoadingOverlay(true);
+
+    const tuteObj = tutes.find(t => t.id === id);
+
+    // IMPORTANT: also clean this tute out of every affected student's
+    // tutes_history JSONB. Otherwise, on next page load, loadAllFromSupabase()
+    // re-derives "phantom" tutes from leftover tutes_history entries and the
+    // deleted tute reappears even though its row in the `tutes` table is gone.
+    if (tuteObj) {
+        const affectedStudents = students.filter(s => s.batch === tuteObj.batch);
+        await Promise.all(affectedStudents.map(async (s) => {
+            const tutesHistory = { ...(s._raw?.tutes_history || {}) };
+            const dateStr = tutesHistory[tuteObj.name];
+            const entryMonth = dateStr ? dateStr.substring(0, 7) : null;
+            if (entryMonth === tuteObj.month) {
+                delete tutesHistory[tuteObj.name];
+                if (s._raw) s._raw.tutes_history = tutesHistory;
+                if (s.monthlyData[tuteObj.month]?.tutes) {
+                    delete s.monthlyData[tuteObj.month].tutes[tuteObj.id];
+                }
+                await saveTutesHistoryToSupabase(s.id, tutesHistory);
+            }
+        }));
+    }
+
+    await _authFns.deleteTute(id);
+    setLoadingOverlay(false);
     tutes = tutes.filter(t => t.id !== id);
-    // Tutes are managed locally for UI; tutes_history updated per-student on toggle
     renderAll();
 }
 
@@ -2049,14 +2090,16 @@ window.onload = function() {
     initPageAuth, supabaseLogin, handleLogout,
     getOnlineStudents, addOnlineStudent, updateOnlineStudent, deleteOnlineStudent,
     getBatches, addBatch, renameBatch, deleteBatch,
-    updatePayment, getPayments
+    updatePayment, getPayments,
+    getTutes, addTute, deleteTute, updateTutesBatch, deleteTutesByBatch
   } from './auth.js';
 
   // ── Wire auth functions to global ──────────────────────────────
   window._authFns = {
     getOnlineStudents, addOnlineStudent, updateOnlineStudent, deleteOnlineStudent,
     getBatches, addBatch, renameBatch, deleteBatch,
-    updatePayment, getPayments
+    updatePayment, getPayments,
+    getTutes, addTute, deleteTute, updateTutesBatch, deleteTutesByBatch
   };
 
   // ── Expose supabase client globally for login history ────────
