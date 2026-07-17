@@ -733,10 +733,10 @@
                     </div>
                     <div class="row g-2 mb-2">
                         <div class="col-6">
-                            <select id="tuteBatchAssign" class="form-select" required></select>
+                            <select id="tuteBatchAssign" class="form-select" required onchange="renderTuteManageList()"></select>
                         </div>
                         <div class="col-6">
-                            <select id="tuteMonthAssign" class="form-select" required>
+                            <select id="tuteMonthAssign" class="form-select" required onchange="renderTuteManageList()">
                                 <!-- Populated dynamically -->
                             </select>
                         </div>
@@ -746,7 +746,7 @@
             </div>
 
             <div class="pro-card accent-cyan">
-                <div class="card-title cyan">Tutes Control </div>
+                <div class="card-title cyan">Tutes Control <small class="text-muted" style="font-weight:400;">(ඉහත තෝරාගත් Batch &amp; Month සඳහා පමණි)</small></div>
                 <div class="tute-manage" id="tuteManageContainer"></div>
             </div>
         </div>
@@ -1268,7 +1268,7 @@ async function handleAddTute(e) {
     }
 
     tutes.push({ id: created.id, name: created.name, batch: created.batch, month: created.month });
-    e.target.reset();
+    document.getElementById('tuteName').value = '';
     renderAll();
 }
 
@@ -1527,10 +1527,13 @@ function renderAll() {
     allBatchNames.forEach(b => { batchFilterSelect.innerHTML += `<option value="${b}">${b}</option>`; });
     if (allBatchNames.includes(currentFilterVal)) batchFilterSelect.value = currentFilterVal;
 
-    // Update tute batch assign dropdown
+    // Update tute batch assign dropdown (preserve current selection across re-renders,
+    // so the Tutes Control filter below doesn't keep resetting to the first batch)
     const tuteBatchAssign = document.getElementById('tuteBatchAssign');
+    const currentTuteBatchVal = tuteBatchAssign.value;
     tuteBatchAssign.innerHTML = '';
     allBatchNames.forEach(b => { tuteBatchAssign.innerHTML += `<option value="${b}">${b}</option>`; });
+    if (allBatchNames.includes(currentTuteBatchVal)) tuteBatchAssign.value = currentTuteBatchVal;
 
     // Update student form batch dropdown
     const batchSelect = document.getElementById('batch');
@@ -1649,9 +1652,30 @@ function renderAll() {
     const revenue = students.reduce((acc, s) => acc + (s.monthlyData[currentMonth]?.isPaid ? s.monthlyFee : 0), 0);
     document.getElementById('totalIncome').innerText = `Rs. ${revenue.toLocaleString()}.00`;
 
+    renderTuteManageList();
+
+    renderLedgers();
+}
+
+// Tutes Control list — shows ONLY tutes matching the batch & month currently
+// selected in the "නව නිබන්ධනයක් (Tute) එකතු කිරීම" form above, instead of
+// every tute ever created. Re-run whenever that batch/month select changes,
+// or whenever the page does a full renderAll().
+function renderTuteManageList() {
     const tuteManageContainer = document.getElementById('tuteManageContainer');
+    if (!tuteManageContainer) return;
+
+    const selectedBatch = document.getElementById('tuteBatchAssign')?.value;
+    const selectedMonth = document.getElementById('tuteMonthAssign')?.value;
+
+    const relevantTutes = tutes.filter(t => t.batch === selectedBatch && t.month === selectedMonth);
+
     tuteManageContainer.innerHTML = "";
-    tutes.forEach(t => {
+    if (relevantTutes.length === 0) {
+        tuteManageContainer.innerHTML = `<div class="student-sub-text">මෙම Batch/Month සඳහා Tutes නැත.</div>`;
+        return;
+    }
+    relevantTutes.forEach(t => {
         const tuteIdEncoded = encodeURIComponent(t.id);
         tuteManageContainer.innerHTML += `
             <div class="tute-manage-item">
@@ -1659,8 +1683,6 @@ function renderAll() {
                 <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteTute(decodeURIComponent('${tuteIdEncoded}'))">×</button>
             </div>`;
     });
-
-    renderLedgers();
 }
 
 async function deleteTute(id) {

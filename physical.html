@@ -787,9 +787,26 @@
                                     <input type="time" id="sessionEndTime" required>
                                 </div>
                             </div>
+                            <div class="input-wrapper">
+                                <label>Tute Batch</label>
+                                <select id="sessionTuteBatchSelect" onchange="renderSessionTuteCandidates()"></select>
+                            </div>
+                            <div class="input-wrapper">
+                                <label>Tute Month</label>
+                                <select id="sessionTuteMonthSelect" onchange="renderSessionTuteCandidates()"></select>
+                            </div>
                             <div class="input-wrapper wide">
-                                <label>Target Month Tutes Asset List (Comma Separated Strings)</label>
-                                <input type="text" id="sessionTutesList" placeholder="ex: June Tute 01, June Tute 02, June Kuppiya">
+                                <label>Add New Tute (Selected Batch &amp; Month)</label>
+                                <div class="row-time">
+                                    <input type="text" id="sessionNewTuteName" placeholder="ex: June Tute 01" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addSessionTute();}">
+                                    <button type="button" class="btn-secondary" onclick="addSessionTute()" style="white-space:nowrap;"><i class="fa-solid fa-plus"></i> Add</button>
+                                </div>
+                            </div>
+                            <div class="input-wrapper wide">
+                                <label>Matching Tutes (Batch + Month සඳහා පමණි)</label>
+                                <div id="sessionTuteCandidates" class="group-tute-checkboxes" style="max-height:130px; overflow-y:auto;">
+                                    <span style="color:var(--text-secondary); font-size:0.78rem;">Batch සහ Month select කරන්න.</span>
+                                </div>
                             </div>
                         </div>
                         <button type="button" class="btn-primary" style="width: 100%; background: linear-gradient(135deg, #2563eb, #1d4ed8);" onclick="activateSession()">
@@ -1083,6 +1100,7 @@
         let activeSession = JSON.parse(localStorage.getItem('phys_active_session')) || null; // session is UI-only, keep local
         let batches = [];
         let centers = [];
+        let tutes = [];  // tutes: { id, name, batch, month } — persisted in the shared `tutes` Supabase table (type='physical')
         let instituteTutes = JSON.parse(localStorage.getItem('phys_institute_tutes') || '{}'); // { centerName: { 'YYYY-MM': ['tute name', ...] } }
         let targetAssigningStudentId = null;
         let currentUser = null;
@@ -1152,6 +1170,11 @@
                     }
                 }
                 centers = sbCenters.map(c => ({ id: c.id, name: c.name }));
+
+                // Load tutes (batch + month scoped tute inventory, used by the
+                // Session Deployment Matrix to show only the relevant tutes)
+                const sbTutes = await _authFns.getTutes('physical');
+                tutes = sbTutes.map(t => ({ id: t.id, name: t.name, batch: t.batch, month: t.month }));
 
                 // Load students
                 const sbStudents = await _authFns.getPhysicalStudents();
@@ -1232,6 +1255,7 @@
             calculateSessionMonths();
             renderBatchOptions();
             renderCenterOptions();
+            renderSessionTuteCandidates();
 
             if (activeSession) {
                 updateSessionUI();
@@ -1250,21 +1274,115 @@
         function renderBatchOptions() {
             const stuBatchSelect = document.getElementById('stuBatch');
             const filterBatchSelect = document.getElementById('filterBatch');
+            const sessionTuteBatchSelect = document.getElementById('sessionTuteBatchSelect');
             
             const currentSelectedStu = stuBatchSelect.value;
             const currentSelectedFilter = filterBatchSelect.value;
+            const currentSelectedTuteBatch = sessionTuteBatchSelect ? sessionTuteBatchSelect.value : '';
 
             stuBatchSelect.innerHTML = '<option value="">Select Target Batch</option>';
             filterBatchSelect.innerHTML = '<option value="ALL">All Batches Streams</option>';
+            if (sessionTuteBatchSelect) sessionTuteBatchSelect.innerHTML = '<option value="">-- Batch --</option>';
 
             batches.forEach(b => {
                 stuBatchSelect.innerHTML += `<option value="${b.name}">${b.name}</option>`;
                 filterBatchSelect.innerHTML += `<option value="${b.name}">${b.name}</option>`;
+                if (sessionTuteBatchSelect) sessionTuteBatchSelect.innerHTML += `<option value="${b.name}">${b.name}</option>`;
             });
 
             const batchNames = batches.map(b => b.name);
             if (batchNames.includes(currentSelectedStu)) stuBatchSelect.value = currentSelectedStu;
             if (batchNames.includes(currentSelectedFilter)) filterBatchSelect.value = currentSelectedFilter;
+            if (sessionTuteBatchSelect && batchNames.includes(currentSelectedTuteBatch)) sessionTuteBatchSelect.value = currentSelectedTuteBatch;
+
+            populateSessionTuteMonthSelect();
+        }
+
+        // Populates the Session Deployment Matrix month dropdown once (13 months:
+        // 6 months back to 3 months forward), same range convention as online.html.
+        function populateSessionTuteMonthSelect() {
+            const sel = document.getElementById('sessionTuteMonthSelect');
+            if (!sel || sel.options.length > 0) return;
+            const now = new Date();
+            const EN_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            for (let i = -6; i <= 3; i++) {
+                const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+                const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                const opt = document.createElement('option');
+                opt.value = val;
+                opt.textContent = `${EN_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+                if (i === 0) opt.selected = true;
+                sel.appendChild(opt);
+            }
+        }
+
+        // Shows tute checkboxes matching the currently selected Batch + Month only.
+        // These become the "Instant Issue Assets" for a newly deployed session.
+        function renderSessionTuteCandidates() {
+            const container = document.getElementById('sessionTuteCandidates');
+            if (!container) return;
+            const batch = document.getElementById('sessionTuteBatchSelect')?.value;
+            const month = document.getElementById('sessionTuteMonthSelect')?.value;
+
+            if (!batch || !month) {
+                container.innerHTML = '<span style="color:var(--text-secondary); font-size:0.78rem;">Batch සහ Month select කරන්න.</span>';
+                return;
+            }
+
+            const matching = tutes.filter(t => t.batch === batch && t.month === month);
+            if (matching.length === 0) {
+                container.innerHTML = '<span style="color:var(--text-secondary); font-size:0.78rem;">මෙම Batch/Month සඳහා Tutes නැත. උඩින් අලුතින් Add කරන්න.</span>';
+                return;
+            }
+
+            container.innerHTML = '';
+            matching.forEach((t, index) => {
+                const label = document.createElement('label');
+                label.className = 'item-checkbox-tute';
+                label.innerHTML = `
+                    <input type="checkbox" id="chk_session_tute_${index}" value="${t.name}" data-tute-id="${t.id}" checked>
+                    <span>${t.name}</span>
+                    <button type="button" onclick="deleteSessionTute('${t.id}')" style="margin-left:6px; background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.75rem;">&times;</button>
+                `;
+                container.appendChild(label);
+            });
+        }
+
+        async function addSessionTute() {
+            const batch = document.getElementById('sessionTuteBatchSelect')?.value;
+            const month = document.getElementById('sessionTuteMonthSelect')?.value;
+            const nameInput = document.getElementById('sessionNewTuteName');
+            const name = nameInput.value.trim();
+
+            if (!batch || !month) { alert('කරුණාකර පළමුව Batch සහ Month select කරන්න.'); return; }
+            if (!name) return;
+
+            if (tutes.some(t => t.batch === batch && t.month === month && t.name.toLowerCase() === name.toLowerCase())) {
+                alert('⚠️ මෙම Tute එක දැනටමත් මෙම Batch/Month සඳහා ඇත!');
+                return;
+            }
+
+            setLoadingOverlay(true);
+            const created = await _authFns.addTute(name, batch, month, 'physical');
+            setLoadingOverlay(false);
+
+            if (!created) {
+                alert('⚠️ Tute එක save කිරීමට නොහැකි විය. නැවත try කරන්න.');
+                return;
+            }
+
+            tutes.push({ id: created.id, name: created.name, batch: created.batch, month: created.month });
+            nameInput.value = '';
+            renderSessionTuteCandidates();
+        }
+
+        async function deleteSessionTute(id) {
+            if (!confirm('මෙම Tute එක delete කරන්නද?')) return;
+            setLoadingOverlay(true);
+            await _authFns.deleteTute(id);
+            setLoadingOverlay(false);
+            tutes = tutes.filter(t => t.id !== id);
+            renderSessionTuteCandidates();
         }
 
         function openBatchModal() {
@@ -1617,11 +1735,15 @@
             const studentsInBatch = students.filter(s => s.batch === oldName);
             await Promise.all(studentsInBatch.map(s => _authFns.updatePhysicalStudent(s.id, { batch: trimmed })));
             students.forEach(s => { if (s.batch === oldName) s.batch = trimmed; });
+            // Keep the tutes table in sync too
+            await _authFns.updateTutesBatch(oldName, trimmed, 'physical');
+            tutes.forEach(t => { if (t.batch === oldName) t.batch = trimmed; });
             batches[index].name = trimmed;
             setLoadingOverlay(false);
             renderBatchList();
             renderBatchOptions();
             renderRegistryTable();
+            renderSessionTuteCandidates();
         }
 
         async function addNewBatch() {
@@ -1665,9 +1787,13 @@
                 }
                 const batchId = batches[index].id;
                 await _authFns.deleteBatch(batchId);
+                // Remove any tutes tied to this batch too
+                await _authFns.deleteTutesByBatch(batchName, 'physical');
+                tutes = tutes.filter(t => t.batch !== batchName);
                 batches.splice(index, 1);
                 setLoadingOverlay(false);
                 renderBatchList();
+                renderSessionTuteCandidates();
                 renderBatchOptions();
                 renderRegistryTable();
             }
@@ -1793,14 +1919,16 @@
             const dateVal = document.getElementById('sessionDate').value;
             const startVal = document.getElementById('sessionStartTime').value;
             const endVal = document.getElementById('sessionEndTime').value;
-            const tutesInput = document.getElementById('sessionTutesList').value.trim();
 
             if(!dateVal || !startVal || !endVal) {
                 alert('Please map all telemetry configuration metrics correctly before launching context framework.');
                 return;
             }
 
-            const tutesArray = tutesInput ? tutesInput.split(',').map(t => t.trim()).filter(t => t !== "") : [];
+            // Tute list now comes from the checked candidates — matching the
+            // selected Tute Batch + Tute Month only (sourced from the tutes table)
+            const tutesArray = Array.from(document.querySelectorAll('#sessionTuteCandidates input[type="checkbox"]:checked'))
+                .map(chk => chk.value);
             const formattedTimeRange = `${format12HourTime(startVal)} - ${format12HourTime(endVal)}`;
 
             activeSession = {
@@ -2571,14 +2699,16 @@
     initPageAuth, supabaseLogin, handleLogout,
     getPhysicalStudents, addPhysicalStudent, updatePhysicalStudent, deletePhysicalStudent,
     getBatches, addBatch, renameBatch, deleteBatch,
-    updatePayment, getPayments
+    updatePayment, getPayments,
+    getTutes, addTute, deleteTute, updateTutesBatch, deleteTutesByBatch
   } from './auth.js';
 
   // ── Wire auth functions to global ──────────────────────────────
   window._authFns = {
     getPhysicalStudents, addPhysicalStudent, updatePhysicalStudent, deletePhysicalStudent,
     getBatches, addBatch, renameBatch, deleteBatch,
-    updatePayment, getPayments
+    updatePayment, getPayments,
+    getTutes, addTute, deleteTute, updateTutesBatch, deleteTutesByBatch
   };
 
   // ── Expose supabase client globally for login history ────────
